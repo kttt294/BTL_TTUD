@@ -1,5 +1,10 @@
 __pycache__/
 *.pyc
 .pytest_cache/
-runs/
+runs/*
+!runs/pilot_reserved_001/
+runs/pilot_reserved_001/*
+!runs/pilot_reserved_001/seed_20042/
+runs/pilot_reserved_001/seed_20042/*
+!runs/pilot_reserved_001/seed_20042/episode_256.pt
 report/
