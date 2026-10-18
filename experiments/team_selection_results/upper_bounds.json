@@ -1,0 +1,272 @@
+[
+  {
+    "case": "Q01",
+    "rules": [
+      20,
+      200,
+      1280
+    ],
+    "selected_types": [
+      20,
+      200,
+      1280
+    ],
+    "patrol_count": [
+      20,
+      200,
+      1280
+    ]
+  },
+  {
+    "case": "Q02",
+    "rules": [
+      20,
+      200,
+      1280
+    ],
+    "selected_types": [
+      20,
+      200,
+      1280
+    ],
+    "patrol_count": [
+      20,
+      200,
+      1280
+    ]
+  },
+  {
+    "case": "Q03",
+    "rules": [
+      20,
+      200,
+      1600
+    ],
+    "selected_types": [
+      20,
+      200,
+      1600
+    ],
+    "patrol_count": [
+      20,
+      200,
+      1600
+    ]
+  },
+  {
+    "case": "Q04",
+    "rules": [
+      20,
+      200,
+      1200
+    ],
+    "selected_types": [
+      20,
+      200,
+      900
+    ],
+    "patrol_count": [
+      20,
+      200,
+      900
+    ]
+  },
+  {
+    "case": "Q06",
+    "rules": [
+      15,
+      150,
+      1630
+    ],
+    "selected_types": [
+      15,
+      150,
+      1500
+    ],
+    "patrol_count": [
+      15,
+      150,
+      1500
+    ]
+  },
+  {
+    "case": "Q07",
+    "rules": [
+      15,
+      150,
+      1500
+    ],
+    "selected_types": [
+      15,
+      150,
+      1500
+    ],
+    "patrol_count": [
+      15,
+      150,
+      1500
+    ]
+  },
+  {
+    "case": "Q08",
+    "rules": [
+      15,
+      150,
+      1500
+    ],
+    "selected_types": [
+      15,
+      150,
+      1500
+    ],
+    "patrol_count": [
+      15,
+      150,
+      1500
+    ]
+  },
+  {
+    "case": "Q09",
+    "rules": [
+      15,
+      150,
+      1500
+    ],
+    "selected_types": [
+      15,
+      150,
+      1200
+    ],
+    "patrol_count": [
+      15,
+      150,
+      1200
+    ]
+  },
+  {
+    "case": "Q10",
+    "rules": [
+      15,
+      150,
+      1500
+    ],
+    "selected_types": [
+      15,
+      150,
+      1500
+    ],
+    "patrol_count": [
+      15,
+      150,
+      1500
+    ]
+  },
+  {
+    "case": "generated_8_2026",
+    "rules": [
+      8,
+      32,
+      192
+    ],
+    "selected_types": [
+      8,
+      32,
+      164
+    ],
+    "patrol_count": [
+      8,
+      32,
+      164
+    ]
+  },
+  {
+    "case": "generated_8_2027",
+    "rules": [
+      8,
+      32,
+      172
+    ],
+    "selected_types": [
+      8,
+      32,
+      156
+    ],
+    "patrol_count": [
+      8,
+      32,
+      156
+    ]
+  },
+  {
+    "case": "generated_16_2026",
+    "rules": [
+      12,
+      48,
+      244
+    ],
+    "selected_types": [
+      12,
+      48,
+      228
+    ],
+    "patrol_count": [
+      12,
+      48,
+      228
+    ]
+  },
+  {
+    "case": "generated_16_2027",
+    "rules": [
+      12,
+      48,
+      220
+    ],
+    "selected_types": [
+      12,
+      48,
+      200
+    ],
+    "patrol_count": [
+      12,
+      48,
+      200
+    ]
+  },
+  {
+    "case": "generated_32_2026",
+    "rules": [
+      12,
+      48,
+      232
+    ],
+    "selected_types": [
+      12,
+      48,
+      204
+    ],
+    "patrol_count": [
+      12,
+      48,
+      204
+    ]
+  },
+  {
+    "case": "generated_32_2027",
+    "rules": [
+      12,
+      48,
+      204
+    ],
+    "selected_types": [
+      12,
+      48,
+      188
+    ],
+    "patrol_count": [
+      12,
+      48,
+      188
+    ]
+  }
+]

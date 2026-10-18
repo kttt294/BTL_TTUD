@@ -1,6 +1,19 @@
 # Kế hoạch triển khai
 
+## Mở rộng chọn đội hình ngày 19 tháng 10
+
+- Giữ nguyên vị trí xuất phát, duyệt cách gán hai vai trò và luôn giữ ít nhất một xe tuần tra.
+- Sàng lọc ứng viên theo vị trí; giữ toàn tuần tra, từng xe tiếp tế và ba cấu hình của bộ chọn cũ.
+- Mô phỏng toàn trận một đội, cập nhật giao thông từ lịch sử xe; đánh giá lại ứng viên tốt trước khi chốt.
+- Tách ngân sách chọn đội hình với ngân sách lập kế hoạch ngày và không chấm trận bị cắt giữa chừng.
+- Đối chứng trên cấu hình BTC và bản đồ tự sinh; kiểm tra một số output bằng Practice riêng.
+- Cập nhật báo cáo Word, phân biệt rõ điểm offline và điểm BTC; chưa đánh giá giao thông đối thủ.
+
 ## Phạm vi
+
+Cập nhật ngày 19/10/2026: trọng tâm mở rộng là xây dựng và kiểm chứng môi trường mô phỏng.
+Mốc hiện tại dừng trước RL theo yêu cầu người dùng. Phần bàn giao nằm trong `simulator_handover.md`.
+Simulator đã có engine nhiều đội, 35 phương thức kiểm thử và sáu tập replay BTC đối chiếu.
 
 Xây dựng lại bài tập lớn bằng Python, chỉ dùng thuật toán tự cài đặt.
 Giữ tài liệu BTC Việt Nam làm nguồn luật; không chuyển nguyên code hoặc giả định từ bản cũ.
@@ -18,6 +31,11 @@ Giữ tài liệu BTC Việt Nam làm nguồn luật; không chuyển nguyên co
 7. Hoàn thiện demo, báo cáo mô hình, thuật toán, độ phức tạp và phân tích kết quả.
 
 ## Nguyên tắc đánh giá
+
+Bản triển khai ngày 18/10/2026 đã có mô hình, năm thuật toán tìm đường, simulator,
+Greedy, Lookahead hai điểm, lịch hẹn tiếp tế, bộ chọn loại xe và các lệnh chạy offline.
+Kết quả đo nằm trong `experiments/results`, báo cáo chính nằm tại `bao_cao.md`.
+Những quy ước chưa đối chiếu máy chủ được ghi tại `simulation_conventions.md`.
 
 - BFS tối ưu số cạnh, không mặc nhiên tối ưu thời gian trên đồ thị có trọng số.
 - Greedy Best-First tìm đường khác với Greedy chọn mục tiêu toàn trận.

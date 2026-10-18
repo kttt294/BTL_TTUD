@@ -1,6 +1,45 @@
+# Môi trường, thông tin đăng nhập và bộ nhớ đệm
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .venv/
-results/
-scratch/
+.env
+.env.*
+!.env.example
+~$*
+*.log
+*.pt
+*.pth
+*.ckpt
+
+# Dữ liệu sinh ra và tài liệu kiểm tra bố cục tại máy
+/results/
+/scratch/
+/experiments/archive/
+/experiments/leaderboard_inspection/
+/output/*
+!/output/docx/
+/output/docx/*
+!/output/docx/bao_cao_hexudon.docx
+
+# Phản hồi API, trạng thái từng ngày, replay và bài nộp
+/experiments/api_evidence/*
+!/experiments/api_evidence/summary.json
+!/experiments/api_evidence/manifest.json
+/experiments/legacy_branch_evidence/*
+!/experiments/legacy_branch_evidence/summary.json
+/experiments/rl_branch_evidence/*
+!/experiments/rl_branch_evidence/summary.json
+!/experiments/rl_branch_evidence/model_metadata.json
+/experiments/team_selection_api_evidence/*
+!/experiments/team_selection_api_evidence/summary.json
+/experiments/team_selection_results/*
+!/experiments/team_selection_results/summary.json
+!/experiments/team_selection_results/metadata.json
+!/experiments/team_selection_results/upper_bounds.json
+/examples/demo_replay.json
+/examples/types.json
+
+# Tài liệu BTC tải thêm tại máy; giữ đề và input mẫu đã có trong repo
+/Đề bài/Techinical_Presentation.pptx
+/docs/api/sample_games.json

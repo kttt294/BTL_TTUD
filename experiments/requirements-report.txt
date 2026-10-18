@@ -1,0 +1,4 @@
+# Chỉ cần thư viện này nếu muốn xuất lại báo cáo PDF.
+reportlab
+python-docx
+pdf2image

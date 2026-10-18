@@ -1,2 +1,2 @@
-# Chưa cần thư viện ngoài ở giai đoạn khởi tạo.
-# Bổ sung khi có thành phần thực sự cần sử dụng.
+# Chương trình thuật toán và thực nghiệm chỉ dùng thư viện chuẩn của Python.
+# ReportLab chỉ cần khi chạy riêng experiments/build_report.py để xuất lại PDF.
