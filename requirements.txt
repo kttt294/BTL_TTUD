@@ -1,2 +1,2 @@
-# Runtime uses only the Python standard library.
-# Tests require pytest: python -m pip install pytest
+# Chưa cần thư viện ngoài ở giai đoạn khởi tạo.
+# Bổ sung khi có thành phần thực sự cần sử dụng.
