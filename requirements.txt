@@ -1,2 +1,2 @@
-# Chương trình thuật toán và thực nghiệm chỉ dùng thư viện chuẩn của Python.
-# ReportLab chỉ cần khi chạy riêng experiments/build_report.py để xuất lại PDF.
+# Thuật toán truyền thống chỉ dùng thư viện chuẩn Python.
+# PyTorch là phụ thuộc tùy chọn, chỉ cần khi chạy phần RL trong phụ lục C.

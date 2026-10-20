@@ -1,20 +1,20 @@
 # Kết quả tour được BTC chấm
 
-## Kiểm chứng máy chủ ngày 20/10/2026
+Ngày kiểm chứng: 20/10/2026. Tám bản đồ Practice khác nhau, đội 62; Q02 trùng Q01 nên không tính là mẫu độc lập. Đội hình cố định theo lượt chọn đã lưu; planner dùng 5 giây/ngày và giao thông thật từ API mỗi ngày.
 
-Sau bảng offline, nhóm đã nộp thật 8 bản đồ khác nhau vào Practice riêng của đội 62. Đội hình lấy từ pipeline đã lưu, không chạy lại bộ chọn vai trò; planner dùng 5 giây/ngày và lấy giao thông thật mỗi ngày. Q02 trùng Q01, không tính thành mẫu độc lập.
+| Bài | Điểm BTC (U, D, Q) | Cận U, D |
+|---|---|---|
+| Q01 | (20, 200, 614) | (20, 200) |
+| Q03 | (20, 200, 659) | (20, 200) |
+| Q04 | (20, 200, 636) | (20, 200) |
+| Q06 | (15, 150, 735) | (15, 150) |
+| Q07 | (15, 150, 820) | (15, 150) |
+| Q08 | (15, 150, 685) | (15, 150) |
+| Q09 | (15, 150, 701) | (15, 150) |
+| Q10 | (15, 150, 698) | (15, 150) |
 
-| Bài | Greedy cũ, BTC | Tour mới, BTC | Đội 57, BTC |
-|---|---|---|---|
-| Q01 | (20, 101, 253) | (20, 200, 614) | (20, 200, 532) |
-| Q03 | (20, 84, 137) | (20, 200, 659) | (20, 200, 530) |
-| Q04 | (20, 72, 131) | (20, 200, 636) | (20, 200, 481) |
-| Q06 | (15, 72, 193) | (15, 150, 735) | (15, 150, 454) |
-| Q07 | (15, 75, 293) | (15, 150, 820) | (15, 150, 760) |
-| Q08 | (15, 104, 316) | (15, 150, 685) | (15, 150, 620) |
-| Q09 | (15, 72, 146) | (15, 150, 701) | (15, 150, 523) |
-| Q10 | (15, 82, 244) | (15, 150, 698) | (15, 150, 551) |
+Tổng cộng 80 kế hoạch ngày được nhận, 12.155 khung trạng thái và 188.902 giá trị được đối chiếu, không phát hiện sai khác ở các trường được kiểm tra. Đạt cận U và D chưa chứng minh tối ưu Q hoặc mọi trường hợp nhiều đội.
 
-Tổng cộng 80 kế hoạch ngày được nhận, 12155 frame và 188902 giá trị đối chiếu, không có sai khác. Các điểm mới là điểm BTC; bảng offline phía trên chỉ là lịch sử thử nghiệm. Đội 57 là mốc tham khảo từ điểm máy chủ đã đọc, không biết thuật toán/ngân sách của họ. Đạt cận U và D không chứng minh tối ưu Q.
+Số liệu gốc: `experiments/tour_api_evidence/summary.json`. Mốc điểm đội 57: `experiments/tour_results/server_baseline.json`; không biết thuật toán hoặc ngân sách của đội đó.
 
-Bản tổng hợp: `experiments/tour_api_evidence/summary.json`. Script `experiments/verify_tour_server.py` có reset/nộp Practice riêng đội 62 và sao lưu lịch sử trước reset; không dùng như lệnh chỉ đọc. Replay và kế hoạch chi tiết giữ tại máy, bị Git ignore.
+Script `experiments/verify_tour_server.py` có reset và nộp Practice riêng đội 62, sao lưu lịch sử trước reset và đối chiếu replay. Không dùng script này như lệnh chỉ đọc. ID mẫu cần đặt tại máy trong `docs/api/sample_games.json`; token đọc từ `.env`. Các replay chi tiết bị Git ignore. Giảng viên có thể kiểm tra trực tiếp trên website bằng tài khoản trong báo cáo.
