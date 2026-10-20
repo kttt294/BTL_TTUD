@@ -17,6 +17,10 @@ from docx.oxml.ns import qn
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.shared import Cm, Pt, RGBColor
 from PIL import Image, ImageOps
+from report_problem_sections import intro, problem_model, search_table, planning_table, rl_table
+from report_table_headers import apply_readable_headers
+from report_rl_appendix import restructure_rl
+from report_quality_sections import add_method, add_protocol, add_results, add_reproduction
 
 ROOT = Path(__file__).resolve().parents[1]
 TMP = ROOT / "scratch/algorithm_rewrite"
@@ -68,6 +72,15 @@ def heading(text, level=1):
 
 def section(text, level=1):
     return heading(text, level)
+
+
+def figure(filename, caption, width=15):
+    p = para()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.keep_with_next = True
+    p.add_run().add_picture(str(ROOT / 'docs/figures' / filename), width=Cm(width))
+    p = para(caption, center=True)
+    p.paragraph_format.keep_together = True
 
 
 def table(caption, headers, values, widths=None, size=11):
@@ -246,7 +259,7 @@ for index, element in enumerate(cover):
     if index == 2:
         for blip in p._p.xpath('.//a:blip'):
             part = doc.part.related_parts[blip.get(qn('r:embed'))]
-            im = ImageOps.grayscale(Image.open(BytesIO(part.blob))).convert("RGB")
+            im = Image.open(BytesIO(part.blob)).convert("RGB")
             data = BytesIO()
             im.save(data, "PNG")
             # Dùng quan hệ ảnh mới để giữ nguyên loại nội dung của ảnh tham chiếu.
@@ -254,11 +267,37 @@ for index, element in enumerate(cover):
             blip.set(qn('r:embed'), rid)
 
 new_section("lowerRoman")
-para("TÓM TẮT", bold=True, center=True)
-para("Trong bài tập lớn này, chúng em nghiên cứu cách phối hợp thuật toán tìm đường và heuristic "
-     "lập kế hoạch để điều khiển một đội xe trên bản đồ lục giác có giới hạn nhiên liệu và thời gian. "
-     "Bài toán được lấy cảm hứng từ HEXUDON của Procon Việt Nam 2026, nhưng mục tiêu báo cáo là "
-     "giải thích, cài đặt và so sánh các thuật toán thay vì tái hiện toàn bộ một cuộc thi.")
+para("LỜI MỞ ĐẦU", bold=True, center=True)
+para("Đề tài của nhóm sử dụng bài toán Tối ưu hóa lộ trình HEXUDON trong cuộc thi lập trình "
+     "Procon Việt Nam 2026, theo đề bài do Ban tổ chức (viết tắt là BTC) cung cấp [1]. "
+     "Chúng em chuyển đề thi thành bài tập lớn để nghiên cứu, cài đặt và so sánh các thuật "
+     "toán tìm đường và lập kế hoạch cho một đội xe trên bản đồ lục giác có giới hạn nhiên "
+     "liệu và thời gian. Bộ mô phỏng và website chấm bài được dùng để kiểm tra kết quả, "
+     "còn trọng tâm của báo cáo là cách ứng dụng và đánh giá thuật toán.")
+# Người dùng yêu cầu đưa tài khoản vào bản báo cáo gửi giảng viên.
+# Đọc từ .env để không ghi thông tin đăng nhập trực tiếp trong mã nguồn.
+review_credentials = {}
+for line in (ROOT / '.env').read_text(encoding='utf-8-sig').splitlines():
+    if '=' in line and not line.lstrip().startswith('#'):
+        key, value = line.split('=', 1)
+        review_credentials[key.strip()] = value.strip()
+website = para("Website tổ chức và chấm bài được nhóm sử dụng: ")
+link = OxmlElement('w:hyperlink')
+link.set(qn('r:id'), doc.part.relate_to('https://hexudon.hairbui76.id.vn/', RT.HYPERLINK, is_external=True))
+link_run = OxmlElement('w:r')
+link_text = OxmlElement('w:t')
+link_text.text = 'https://hexudon.hairbui76.id.vn/'
+link_run.append(link_text)
+link.append(link_run)
+website._p.append(link)
+website.add_run('. Giảng viên có thể truy cập để xem giao diện, các bài Practice và kết quả '
+                'thuộc tài khoản nhóm. Thông tin đăng nhập được cung cấp như sau:')
+for run in website.runs:
+    clean_run(run)
+account = para('Tên đăng nhập: ' + review_credentials['HEXUDON_REVIEW_USERNAME'] + '\n'
+               'Mật khẩu: ' + review_credentials['HEXUDON_REVIEW_PASSWORD'])
+account.alignment = WD_ALIGN_PARAGRAPH.LEFT
+account.paragraph_format.keep_together = True
 para("Ở lớp tìm đường, nhóm đối chiếu DFS, BFS, Greedy Best-First, Dijkstra và A* trên trạng thái "
      "có tài nguyên. Ở lớp lập kế hoạch, nhóm so sánh Greedy với Lookahead hai điểm và đánh giá "
      "cách chọn vai trò tuần tra hoặc tiếp tế bằng mô phỏng toàn trận. Bộ mô phỏng và bộ kiểm tra "
@@ -269,6 +308,9 @@ para("Kết quả cho thấy số tầng nhìn trước nhiều hơn không tự
      "cặp so với Greedy. Bộ chọn đội hình mới tốt hơn cấu hình toàn tuần tra ở 3 trong 9 nhãn bài "
      "BTC chạy offline và bằng ở 6 bài. Hai đội hình được kiểm chứng trên Practice có điểm khớp "
      "máy chủ qua 2.807 frame. Các cận trên được tính riêng và không được coi là điểm tối ưu đã biết.")
+para("Nhóm bổ sung quy hoạch động để tìm nghiệm tối ưu trên 24 bài nhỏ và đo hai heuristic "
+     "ở bốn ngân sách thời gian trên 30 input, tạo thêm 240 trận. Các phép đo này làm rõ "
+     "khoảng cách tới tối ưu trong phiên bản thu nhỏ và ảnh hưởng của thời gian tính toán.")
 para("Phần mở rộng đánh giá checkpoint MAPPO có sẵn, ghi nhận 256 episode, trong kiến trúc RL "
      "chọn mục tiêu và A* tạo tuyến. Cấu hình RL kết hợp Greedy thua Greedy/Lookahead ở cả 9 bài "
      "Practice đã thử. Nhóm chưa huấn luyện mô hình mới trên simulator hiện tại và chưa thực hiện "
@@ -283,18 +325,19 @@ p._p.append(field)
 new_section("decimal")
 
 section("1. Giới thiệu đề tài")
-section("1.1. Động cơ và câu hỏi nghiên cứu", 2)
+intro(section, para, table, figure)
+section("1.2. Động cơ và câu hỏi nghiên cứu", 2)
 para("Một tuyến ngắn chưa đủ để tạo kế hoạch thu thập tốt cho cả đội xe. Xe còn phải chọn điểm "
      "ghé, dành nhiên liệu cho những ngày sau và phối hợp với xe tiếp tế. Chúng em chọn bài toán "
      "này để quan sát trực tiếp cách các thuật toán đồ thị và heuristic tác động tới chất lượng "
      "một hệ thống hoàn chỉnh. Tên đề tài được giữ theo phạm vi môi trường mô phỏng, nhưng các "
      "quyết định thuật toán và bằng chứng thực nghiệm là trọng tâm của báo cáo.")
-para("Bốn câu hỏi chính được đặt ra: A* thay đổi lượng tìm kiếm so với Dijkstra ra sao khi có "
+para("Các câu hỏi chính được đặt ra: A* thay đổi lượng tìm kiếm so với Dijkstra ra sao khi có "
      "ràng buộc nhiên liệu; Lookahead có tăng điểm so với Greedy trong cùng ngân sách hay không; "
      "việc tìm kiếm vai trò xe có tốt hơn đội hình cố định không; và một checkpoint RL kết hợp "
      "các thuật toán này có vượt được đối chứng heuristic hay không. Mỗi câu hỏi được đánh giá "
      "ở đúng lớp quyết định, tránh lấy đường đi ngắn để suy ra điểm toàn trận tối ưu.")
-section("1.2. Phạm vi và các sản phẩm đã thực hiện", 2)
+section("1.3. Phạm vi và các sản phẩm đã thực hiện", 2)
 para("Nhóm xem xét một đội với nhiều xe hoạt động qua nhiều ngày. Vị trí xuất phát do BTC cho "
      "sẵn, còn vai trò xe được chọn trước trận và giữ cố định. Giao thông trong thực nghiệm được "
      "cập nhật từ lịch sử xe của chính đội mình. Mã simulator có giao diện nhiều đội nhưng phần "
@@ -304,46 +347,16 @@ para("Sản phẩm gồm năm thuật toán tìm đường có xét tài nguyên
      "chọn đội hình, bộ tính cận tiếp cận, simulator và validator, các phép đo có lưu input/output "
      "và công cụ đối chiếu API. Phần RL sử dụng bản chụp nhánh Procon2026 và checkpoint có sẵn; "
      "nhóm không trình bày checkpoint này như một mô hình vừa được huấn luyện trên nhánh ttud_clean.")
-section("1.3. Cách tổ chức và nguyên tắc đánh giá", 2)
+section("1.4. Cách tổ chức và nguyên tắc đánh giá", 2)
 para("Báo cáo đi từ mô hình tối thiểu ở mục 2 đến thuật toán tìm đường ở mục 3, lập kế hoạch và "
      "chọn đội hình ở mục 4, sau đó trình bày ứng dụng hỗ trợ RL ở mục 5. Mục 6 xác định các phép "
      "đối chứng; mục 7 trình bày số liệu và phân tích; mục 8 tổng hợp giới hạn. Chi tiết vận hành "
      "simulator và lệnh chạy được chuyển sang phụ lục để phần chính tập trung vào thuật toán.")
 
-section("2. Mô hình bài toán và mục tiêu tối ưu")
-section("2.1. Đầu vào và đầu ra", 2)
-para("Đầu vào gồm địa hình của lưới lục giác, điểm bán và loại udon, tồn kho mỗi ngày, vị trí "
-     "ban đầu của các xe, sức chứa nhiên liệu, số bước mỗi ngày và ngưỡng giao thông. Xe tuần tra "
-     "thu hàng và tiêu nhiên liệu khi đi; xe tiếp tế không thu hàng, không tiêu nhiên liệu và "
-     "nạp đầy cho xe tuần tra cùng đội khi cùng ô theo timeline [1], [2]. Kho riêng của đội được "
-     "bổ sung lại đầu ngày; mỗi xe chỉ lấy tối đa một suất ở mỗi điểm trong một ngày.")
-para("Đầu ra có hai phần: danh sách loại xe đầu trận và mảng lệnh của từng xe cho từng ngày. "
-     "Các số 0–5 chỉ một lệnh di chuyển sang ô kề; số âm −k chỉ chờ k step. Một lệnh di chuyển "
-     "có thể tiêu nhiều step tùy ô nguồn, nên số phần tử của output không bằng thời lượng ngày. "
-     "Mỗi xe phải dùng đúng quỹ bước riêng của ngày, không được phát lệnh đi khi thiếu bước hoặc "
-     "nhiên liệu. Chương trình kiểm tra trước khi xuất kết quả.")
-table("Bảng 1. Chi phí rời ô nguồn", ["Ô nguồn", "Step di chuyển", "Nhiên liệu tuần tra"],
-      [r for r in source_table(0)[1:]], [6, 5, 5], 11.5)
-section("2.2. Đồ thị và trạng thái tài nguyên", 2)
-reuse("3.1 ")
-para("Một trạng thái tìm đường lưu ô hiện tại, tổng step đã dùng, nhiên liệu đã tiêu và thông "
-     "tin truy vết. Đây là bài toán tìm đường có tài nguyên; việc chỉ lưu một khoảng cách cho "
-     "mỗi ô có thể loại mất tuyến chậm hơn nhưng còn đủ nhiên liệu để đến đích. Với chiến lược "
-     "toàn trận, trạng thái còn có vị trí và loại xe, tập loại udon đã thu, tổng loại theo ngày, "
-     "số suất và hai ngày lịch sử hiện diện trên đường.")
-section("2.3. Bộ điểm ưu tiên và giao thông theo ngày", 2)
-para("Chất lượng được biểu diễn bằng bộ (U, D, Q): U là số loại khác nhau toàn trận, D là tổng "
-     "số loại thu được của từng ngày và Q là tổng số suất. Hai phương án được so theo thứ tự từ "
-     "trái sang phải; tăng Q không bù được việc giảm U hoặc D. Nhóm không cộng ba thành phần "
-     "thành một điểm tùy ý khi đánh giá kết quả. Quy tắc thời gian nộp của BTC không được dùng "
-     "để xếp hạng tốc độ trong các phép đo offline.")
-para("Trạng thái đường cố định trong ngày và được tính lại từ lịch sử hai ngày trước. Trong "
-     "phạm vi một đội, mẫu số lưu lượng bằng 1 và chỉ xe đội mình đóng góp. Input cấu hình ban "
-     "đầu không chứa giao thông của mọi ngày; khi chạy trên BTC, chương trình đọc traffics đầu "
-     "ngày. Khi mô phỏng offline, giao thông được tính từ hành động đã thực thi, không bị cố "
-     "định thông thoáng sau ngày đầu [1], [4].")
+problem_model(section, para, table, figure)
 
 section("3. Các thuật toán tìm đường có ràng buộc tài nguyên")
+search_table(table)
 section("3.1. Các nhãn trạng thái và quy tắc loại nhãn", 2)
 reuse("3.3 ")
 para("Trong cài đặt, mỗi ô có thể giữ nhiều nhãn chưa bị trội. Dijkstra và A* mở rộng nhãn theo "
@@ -351,6 +364,7 @@ para("Trong cài đặt, mỗi ô có thể giữ nhiều nhãn chưa bị trộ
      "điều kiện loại nhãn để không phá mục tiêu ít cạnh. Vì vậy, độ phức tạp không thể được báo "
      "cáo chỉ bằng số ô như một bài Dijkstra không ràng buộc tài nguyên. Khi hết hạn, kết quả "
      "được đánh dấu cutoff; đó không phải bằng chứng đích không thể tới.")
+figure('resource_labels.png', 'Hình 1. Nhãn tài nguyên tại cùng một ô và quan hệ trội.')
 section("3.2. DFS và BFS làm đối chứng cấu trúc", 2)
 reuse("4.1 ")
 reuse("4.2 ")
@@ -359,18 +373,20 @@ para("Hai phương pháp này giúp tách ảnh hưởng của thứ tự duyệ
      "đường ít cạnh hay ít step. Khi địa hình có chi phí khác nhau, báo cáo không gọi một tuyến "
      "BFS ít cạnh hơn là tuyến nhanh hơn. Các tuyến đều phải qua cùng bước kiểm tra tài nguyên.")
 section("3.3. Dijkstra theo chi phí thời gian", 2)
+para("Dijkstra là cơ sở tìm đường theo trọng số không âm [10]. Khi đưa vào bài toán này, "
+     "nhóm mở rộng trạng thái bằng nhãn tài nguyên; bảo đảm tối ưu chỉ được dùng cho một "
+     "chặng với thời gian giao thông cố định và điều kiện loại nhãn đã nêu ở mục 3.1.")
 reuse("4.3 ")
 para("Trong một ngày có giao thông cố định, trọng số dương và quy tắc giữ nhãn đúng, Dijkstra "
      "là đối chứng tìm đường tối thiểu step dưới giới hạn nhiên liệu khi tìm kiếm kết thúc đầy "
      "đủ. Bảo đảm này áp dụng cho một truy vấn nguồn–đích, không áp dụng cho thứ tự ghé nhiều "
      "điểm hoặc điểm toàn trận. Cài đặt dùng heap nhị phân, không triển khai Fibonacci heap.")
 section("3.4. Greedy Best First và A*", 2)
+para("A* kết hợp chi phí đã đi với ước lượng chi phí còn lại; tài liệu gốc trình bày cơ sở "
+     "của tìm kiếm dùng heuristic [11]. Trong báo cáo, tính khả chấp và nhất quán của "
+     "heuristic lục giác được giải thích trực tiếp từ chi phí tối thiểu của một bước đi.")
 reuse("4.4 ")
 reuse("4.5 ")
-para("Heuristic của A* là khoảng cách lục giác tới đích. Vì mỗi lần đi sang ô kề tiêu ít nhất "
-     "một step, giá trị này không vượt chi phí thời gian còn lại; ao, núi hoặc tắc đường chỉ "
-     "có thể làm chi phí thực tăng. A* xếp nhãn theo f = g + h, trong khi Greedy Best-First "
-     "chỉ dùng h nên có thể bị hấp dẫn bởi đường gần về hình học nhưng tốn tài nguyên.")
 para("Để tính khoảng cách, chương trình đổi ô (row, col) sang tọa độ lập phương với "
      "x = col − (row + row mod 2)/2, y = row và z = −x − y. Khoảng cách là giá trị lớn nhất "
      "trong ba độ chênh tuyệt đối của x, y, z giữa hai ô. Các hàng chẵn và lẻ có bảng láng "
@@ -392,6 +408,7 @@ para("Phép so sánh thực nghiệm vì thế ghi thêm số nhãn mở rộng 
      "mà tất cả đã tìm được tuyến hợp lệ.")
 
 section("4. Thuật toán lập kế hoạch và chọn đội hình")
+planning_table(table)
 section("4.1. Greedy chọn điểm và phân biệt với tìm đường tham lam", 2)
 reuse("5.1 ")
 reuse("5.2 ")
@@ -449,6 +466,7 @@ para("Cận toàn trận lấy hợp loại cuối trận và cộng các cận 
      "không được gọi là tỷ lệ tối ưu. Chi phí chủ yếu là các lượt Dijkstra và quét điểm theo "
      "ngày; phần này dùng Dijkstra một trọng số, khác bộ tìm đường nhiều nhãn ở mục 3.")
 
+add_method(section, para, figure)
 section("5. Ứng dụng các thuật toán trong phương pháp kết hợp RL")
 section("5.1. Câu hỏi và phạm vi thử nghiệm RL", 2)
 para("Học tăng cường được đưa vào như một hướng ứng dụng của các thuật toán đã xây dựng: "
@@ -495,6 +513,7 @@ para("Client gốc dùng giao thức khác API Việt Nam nên nhóm viết adap
      "từ bản chụp nhánh. Adapter nộp một phương án cuối cho mỗi ngày thay vì nộp tạm Greedy rồi "
      "nộp cải thiện. Toàn bộ xe là tuần tra theo mặc định run_play; chưa kết hợp bộ chọn đội "
      "hình mới vào lượt RL này.")
+rl_table(table)
 section("5.5. Mục tiêu học và các giới hạn diễn giải", 2)
 para("Mã huấn luyện trong nhánh có phần thưởng trọng số cho loại mới, loại theo ngày và số "
      "suất, cùng cơ chế shaping theo khoảng cách. Phần thưởng số thực này không mặc nhiên "
@@ -537,7 +556,7 @@ para("Điểm simulator, điểm BTC và cận trên được phân biệt trong
      "Mảng lệnh đã lưu cho phép tái hiện chính xác một phép chấm mà không chạy lại bộ lập kế hoạch.")
 section("6.3. Simulator và kiểm chứng API làm công cụ đánh giá", 2)
 para("Simulator chạy timeline chung của các xe, kiểm tra nhiên liệu, tiếp tế, thu hàng và giao "
-     "thông rồi trả trạng thái ngày sau. Bộ kiểm thử có 44 phương thức, bao gồm tìm đường đối "
+     "thông rồi trả trạng thái ngày sau. Bộ kiểm thử có 47 phương thức, bao gồm tìm đường đối "
      "chiếu vét cạn nhỏ, chi phí ô nguồn, nhiều loại lỗi output, tiếp tế và các cận tiếp cận. "
      "Đối với dữ liệu BTC, nhóm nộp vào Practice riêng của đội 62, lưu request/response không "
      "kèm token và chạy lại cùng output để so từng frame. Đây là bằng chứng về những kế hoạch "
@@ -545,7 +564,7 @@ para("Simulator chạy timeline chung của các xe, kiểm tra nhiên liệu, t
 para("Các endpoint được sử dụng gồm config, day, agent-types, practice/actions, practice/reset, "
      "actions, replay, state và result dưới /api/game. Thư mục bằng chứng tách riêng lượt "
      "kiểm chứng simulator, Greedy/Lookahead nhánh cũ, RL và chọn đội hình. Giảng viên có thể "
-     "kiểm tra JSON offline hoặc xem lại trên website bằng tài khoản có quyền; báo cáo không "
+     "kiểm tra JSON tổng hợp offline hoặc xem website bằng tài khoản có quyền; dữ liệu thô chỉ lưu tại máy. Báo cáo không "
      "đính kèm thông tin xác thực. Những lần đặt lại Practice đều lưu lịch sử trước đó.")
 section("6.4. Điều kiện riêng của đối chứng RL", 2)
 para("Baseline của lượt RL là Greedy/Lookahead trong cùng nhánh Procon2026 với adapter tương "
@@ -558,6 +577,7 @@ para("Practice đang hiển thị Q01–Q04 và Q06–Q10 trong danh sách đã 
      "kết luận chỉ bao phủ checkpoint, cấu hình adapter và các input này; không có nhiều seed "
      "huấn luyện hoặc kiểm định thống kê để suy rộng thành ưu thế của một họ phương pháp.")
 
+add_protocol(section, para)
 section("7. Kết quả và phân tích thuật toán")
 section("7.1. So sánh năm thuật toán tìm đường", 2)
 data = source_table(3)
@@ -571,6 +591,7 @@ para("Kết quả này cho thấy cần đọc đồng thời tỷ lệ hoàn th
      "rất nhanh ở các lần thành công nhưng bỏ nhiều truy vấn không mặc nhiên phù hợp hơn cho "
      "hệ thống. Các so sánh độ dài tuyến ở bảng 5 đã được giới hạn về tập truy vấn chung; việc "
      "lọc này không làm mất thông tin thất bại vì bảng 4 vẫn báo riêng đầy đủ.")
+figure('path_comparison.png', 'Hình 2. Dijkstra và A* trên 90 truy vấn, chia theo cỡ bản đồ.', 16)
 section("7.2. Greedy và Lookahead trong cùng ngân sách", 2)
 data = source_table(5)
 table("Bảng 6. Điểm trung bình toàn trận của nhánh TTUD", ["Cỡ / chiến lược", "U trung bình", "D trung bình", "Q trung bình"],
@@ -583,7 +604,7 @@ para("Lookahead thắng 3 cặp và thua 27 cặp trong 30 cấu hình. Ở 8×8
      "cả 10 cặp mỗi cỡ; ở 32×32, nó thắng 3 và thua 7 cặp. Vì vậy, nhóm chưa có cơ sở gọi "
      "Lookahead là cải tiến chất lượng trên cấu hình đang đo. Mức nhìn trước hai điểm làm "
      "tăng số truy vấn A*; dưới cùng thời hạn 0,25 giây, chi phí đó có thể làm giảm số tuyến "
-     "hoàn thiện. Cần thí nghiệm theo nhiều mức ngân sách để xác định vai trò riêng của yếu tố "
+     "hoàn thiện. Mục 7.7 bổ sung phép đo theo nhiều ngân sách để khảo sát yếu tố "
      "này, thay vì kết luận mọi phương pháp nhìn trước đều kém.")
 section("7.3. Kết quả chọn đội hình và ý nghĩa của cận trên", 2)
 official = [r for r in teams if r["case"].startswith("Q")]
@@ -663,6 +684,7 @@ para("Sáu tập replay kiểm tra 6.331 frame và 97.345 giá trị, không ph�
      "báo cáo riêng ở bảng 13. Bộ cận còn được kiểm tra trên 456 ngày thuộc các kế hoạch "
      "đối chứng đã lưu; không có điểm nào vượt cận tương ứng [6].")
 
+add_results(ROOT, section, para, table, figure)
 section("8. Đánh giá giới hạn và kết luận")
 section("8.1. Những kết luận có thể rút ra", 2)
 para("Bài tập lớn đã thể hiện ba lớp ứng dụng thuật toán. A* và Dijkstra xử lý tìm đường có "
@@ -674,6 +696,12 @@ para("Các đối chứng cho thấy A* có lợi trong lượng tìm kiếm c�
      "một cách ổn định. Chọn đội hình có thể nâng điểm ở một số input, nhưng phụ thuộc bộ "
      "điều khiển dùng để đánh giá. Simulator và API làm cơ sở kiểm tra số liệu thay vì thay "
      "thế phần phân tích thuật toán.")
+para("Đối chứng quy hoạch động bổ sung mốc tối ưu thực sự cho 24 bài thu nhỏ: Greedy "
+     "khớp tối ưu ở 12 bài và Lookahead ở 15 bài. Phép đo 240 trận cho thấy khi tăng "
+     "ngân sách từ 0,05 lên 3 giây/ngày, Lookahead tăng số cặp thắng từ 3 lên 11 trong "
+     "30 cặp mỗi mức, nhưng vẫn còn 14 cặp thua ở mức 3 giây. Hai kết quả cho thấy "
+     "cần phân biệt tiềm năng của nhìn trước trên bài nhỏ với hiệu quả thực thi dưới "
+     "ràng buộc thời gian; chúng không chứng minh Lookahead luôn vượt Greedy.")
 section("8.2. Giới hạn của các kết luận", 2)
 para("Các bản đồ BTC đã thử chủ yếu có kích thước lớn và số nhãn bài độc lập ít hơn số tên "
      "do Q01/Q02 trùng config. Nhóm bổ sung dữ liệu tự sinh nhưng hai seed mỗi cỡ trong thí "
@@ -687,7 +715,7 @@ para("Phần RL chỉ có một checkpoint với metadata 256 episode, chưa có
      "đối chiếu với replay BTC nhiều đội. Mức tương thích API cũng chỉ được khẳng định trong "
      "phạm vi kế hoạch và luật đã kiểm tra.")
 section("8.3. Các hướng cải tiến có thể kiểm chứng", 2)
-para("Ưu tiên tiếp theo là so sánh nhiều mức ngân sách cho Greedy/Lookahead, đánh giá đội "
+para("Sau phép đo nhiều ngân sách ở mục 7.7, hướng tiếp theo là đánh giá đội "
      "hình bằng một bộ điều khiển nhất quán hơn và thử cải thiện tuyến bằng tìm kiếm cục bộ. "
      "Những phép đổi tuyến phải được kiểm lại step, nhiên liệu và lịch tiếp tế; báo cáo chưa "
      "cài 2-opt, 3-opt hoặc beam search. Việc bổ sung tên thuật toán chỉ có ý nghĩa khi có "
@@ -716,8 +744,14 @@ references = [
     "[8] C. Yu và cộng sự. The Surprising Effectiveness of PPO in Cooperative, Multi-Agent Games. 2022. https://arxiv.org/abs/2103.01955.",
     "[9] Mã nguồn nhánh Procon2026, commit b6df084c253503b5673721c126ff261430cd0021. https://github.com/kttt294/Procon2026/tree/b6df084c253503b5673721c126ff261430cd0021. Checkpoint episode_256.pt; SHA-256: " + metadata["sha256"] + ".",
 ]
+references += [
+    "[10] E. W. Dijkstra. A note on two problems in connexion with graphs. Numerische Mathematik 1, 269–271, 1959. https://doi.org/10.1007/BF01386390.",
+    "[11] P. E. Hart, N. J. Nilsson và B. Raphael. A Formal Basis for the Heuristic Determination of Minimum Cost Paths. IEEE Transactions on Systems Science and Cybernetics 4(2), 100–107, 1968. https://doi.org/10.1109/TSSC.1968.300136.",
+]
 for text in references:
-    para(text).alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p = para(text)
+    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.paragraph_format.keep_together = True
 
 section("Phụ lục A. Luật thực thi và kiểm chứng")
 section("A.1. Các quy tắc timeline cần giữ nhất quán", 2)
@@ -758,7 +792,7 @@ commands = [
     'python -X utf8 src/main.py select --config "Đề bài/input_sample.json" --starts 558 998 130 955 --seconds 20 --output results/types.json --selection-log results/selection.json',
     'python -X utf8 src/main.py plan --config "Đề bài/input_sample.json" --starts 558 998 130 955 --types-file results/types.json --output results/output.txt',
     'python -X utf8 src/main.py validate --config "Đề bài/input_sample.json" --starts 558 998 130 955 --types-file results/types.json --actions results/output.txt',
-    "python -X utf8 src/main.py bounds --config output/team_selection/Q04/config.json --types-file output/team_selection/Q04/types.json --output results/bounds.json",
+    'python -X utf8 src/main.py bounds --config "Đề bài/input_sample.json" --starts 558 998 130 955 --types-file results/types.json --output results/bounds.json',
 ]
 for command in commands:
     para(command).alignment = WD_ALIGN_PARAGRAPH.LEFT
@@ -772,11 +806,45 @@ for command in ["python -X utf8 experiments/benchmark.py --games 10 --sizes 8 16
                 "python -X utf8 experiments/benchmark_team_selection.py",
                 "python -X utf8 experiments/calculate_bounds.py"]:
     para(command).alignment = WD_ALIGN_PARAGRAPH.LEFT
-para("Nhóm kết quả RL đã lưu có thể được kiểm tra từ summary.json, model_metadata.json và "
-     "audit.json trong experiments/rl_branch_evidence. Script evaluate_legacy_branch.py --rl "
-     "là công cụ đánh giá snapshot và có thao tác đặt lại/nộp Practice; người chạy cần đọc "
-     "phạm vi trước khi dùng. Nó không phải lệnh huấn luyện và không được chạy nếu chỉ muốn "
-     "xem lại bằng chứng. Các kế hoạch xuất sẵn và vai trò đội hình được lưu dưới output/team_selection.")
+para("Nhóm kết quả RL đi kèm repo có thể được kiểm tra từ summary.json và model_metadata.json "
+     "trong experiments/rl_branch_evidence. File audit.json, replay và output từng ngày chỉ "
+     "lưu tại máy. Script evaluate_legacy_branch.py --rl có thao tác đặt lại/nộp Practice; "
+     "người chạy cần đọc phạm vi trước khi dùng. Script không huấn luyện mô hình và không "
+     "được chạy nếu chỉ muốn xem lại số liệu. Các file dưới output/team_selection cũng chỉ "
+     "lưu tại máy; người chạy cần tạo lại trước khi dùng các công cụ phụ thuộc chúng.")
+add_reproduction(section, para, table)
+
+# Đánh lại số theo thứ tự xuất hiện, đồng thời cập nhật các dẫn chiếu trong văn bản.
+number_map = {}
+captions = {}
+counts = {"Bảng": 0, "Hình": 0}
+for p in doc.paragraphs:
+    match = re.match(r"^(Bảng|Hình) ([TX]?\d+)\. (.*)", p.text)
+    if match:
+        kind, original, text = match.groups()
+        counts[kind] += 1
+        number_map[(kind.lower(), original)] = str(counts[kind])
+        captions[p._p] = (kind, str(counts[kind]), text)
+for p in doc.paragraphs:
+    if p._p in captions:
+        kind, number, text = captions[p._p]
+        p.text = f"{kind} {number}. {text}"
+        for run in p.runs:
+            clean_run(run)
+            run.bold = kind == "Bảng"
+    else:
+        def replace_reference(match):
+            kind, old = match.groups()
+            return kind + " " + number_map.get((kind.lower(), old), old)
+        for run in p.runs:
+            updated = re.sub(r"(?i)\b(bảng|hình) (\d+)\b", replace_reference, run.text)
+            if updated != run.text:
+                run.text = updated
+
+apply_readable_headers(doc, clean_run)
+final_table_count = restructure_rl(doc, ROOT, section, para, table, clean_run)
+from report_ablation import add_ablation
+final_table_count = add_ablation(doc, ROOT, section, para, table, figure)
 
 # Chuẩn hóa phần kế thừa, kể cả các run nằm trong hyperlink và footer.
 for s in doc.sections:
@@ -815,7 +883,7 @@ check = Document(destination)
 assert len(check.sections) == 3
 assert all(p.text != "NHÓM 2" for p in check.paragraphs)
 assert sum(p.text.startswith("5. ") for p in check.paragraphs) == 1
-assert len(check.tables) == 20
+assert len(check.tables) == final_table_count
 assert sum(sum(d["mode"] == "rl" for d in r["days"]) for r in rl) == 43
 (TMP / "build_audit.json").write_text(json.dumps({"reference_sha256": EXPECTED_HASH,
     "tables": len(check.tables), "sections": len(check.sections), "rl_questions": len(rl),

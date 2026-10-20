@@ -43,3 +43,32 @@ Những quy ước chưa đối chiếu máy chủ được ghi tại `simulatio
 - Không coi một đường thất bại là đường có chi phí bằng không.
 - Thời gian chạy offline được báo cáo riêng với thời gian phản hồi mà máy chủ cuộc thi ghi nhận.
 - Quy ước bổ sung phải được công bố; chưa gọi simulator tương thích hoàn toàn máy chủ khi chưa đối chiếu.
+
+## Bổ sung đánh giá thuật toán ngày 19/10/2026
+
+- Dùng quy hoạch động chính xác làm đối chứng trên 24 bài nhỏ, một xe, hai ngày;
+  không mở rộng kết luận tối ưu sang bài nhiều xe có đường và tiếp tế.
+- So bộ giải với vét cạn lệnh trên sáu cấu hình và phát lại 72 hành trình đã lưu.
+- Đo Greedy/Lookahead ở bốn ngân sách trên 30 input, giữ CSV và thông số máy.
+- Bổ sung hình nhãn tài nguyên, so sánh A*/Dijkstra, tuyến bài nhỏ và độ nhạy thời gian.
+- Cập nhật báo cáo DOCX, phân biệt dữ liệu được bàn giao trong repo với replay chỉ lưu tại máy.
+
+## Tách phần học tăng cường và thử bộ chọn nhiều ngày
+
+- Chuyển kiến trúc, điều kiện thử nghiệm và mọi kết quả RL sang phụ lục C; phần chính
+  chỉ nhắc ngắn như một hướng mở rộng và không dùng điểm RL để kết luận thuật toán môn học.
+- Giữ checkpoint cũ, thử argmax và ba mẫu mục tiêu, bỏ chuỗi lệnh trùng nhau.
+- So Greedy khởi tạo, rollout không RL, RL chọn một ngày và RL chọn tới cuối trận.
+- Bộ chọn nhiều ngày luôn giữ một kế hoạch hoàn chỉnh làm dự phòng; chỉ nhận cải thiện
+  có mô phỏng hoàn tất và hợp lệ, tính cả nhiên liệu và giao thông qua các ngày.
+- Kiểm chứng riêng Q04/Q06 trên Practice của đội, lưu lịch sử trước khi đặt lại trận.
+
+## Huấn luyện RL với đối chứng không fallback
+
+- Tạo chính sách PPO chia sẻ giữa các xe, chọn từng mục tiêu trong ngày từ đầu.
+- Giữ bộ thực thi đường đi cố định, không chọn mục tiêu bằng Greedy/Lookahead.
+- Huấn luyện ba seed trên tập bản đồ sinh riêng; dùng checkpoint cuối, không chọn
+  theo bài BTC; kiểm tra mạng trước và sau học trên cùng các input chưa dùng để học.
+- Đo đối chứng ngẫu nhiên và gần nhất với cùng mặt nạ, bộ tìm đường và simulator.
+- Báo cáo đủ các seed, số lần cập nhật, hash checkpoint và kết quả cả khi không tốt;
+  mọi kết quả mới tiếp tục đặt ở phụ lục C, không đưa học máy vào phần chính.

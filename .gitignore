@@ -43,3 +43,17 @@ __pycache__/
 # Tài liệu BTC tải thêm tại máy; giữ đề và input mẫu đã có trong repo
 /Đề bài/Techinical_Presentation.pptx
 /docs/api/sample_games.json
+
+# Thử nghiệm RL mở rộng: giữ tổng hợp, không đưa mọi kế hoạch/ngày lên GitHub.
+/experiments/rl_extension_results/*
+!/experiments/rl_extension_results/summary.json
+!/experiments/rl_extension_results/metadata.json
+!/experiments/rl_extension_results/audit.json
+/experiments/rl_extension_api_evidence/*
+!/experiments/rl_extension_api_evidence/summary.json
+
+# RL học lại: lưu số liệu tổng hợp, bỏ checkpoint và mọi output chi tiết.
+/experiments/rl_policy_results/*
+!/experiments/rl_policy_results/training_metadata.json
+!/experiments/rl_policy_results/evaluation_summary.json
+!/experiments/rl_policy_results/evaluation_audit.json

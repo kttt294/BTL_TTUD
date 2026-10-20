@@ -25,6 +25,8 @@ try {
             $toc.Range.Font.Name = "Times New Roman"
             $toc.Range.Font.Size = 12.5
             $toc.Range.Font.Color = 0
+            $toc.Range.ParagraphFormat.SpaceBefore = 0
+            $toc.Range.ParagraphFormat.SpaceAfter = 0
         }
         $document.Repaginate()
         foreach ($toc in $document.TablesOfContents) { $toc.UpdatePageNumbers() }

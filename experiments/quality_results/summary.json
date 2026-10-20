@@ -1,0 +1,330 @@
+{
+  "exact": [
+    {
+      "size": 2,
+      "strategy": "greedy",
+      "n": 12,
+      "optimal": 7,
+      "mean_u_gap": 0,
+      "same_u": 12,
+      "same_ud": 7,
+      "mean_d_gap_given_u": 0.4166666666666667,
+      "mean_q_gap_given_ud": 0
+    },
+    {
+      "size": 2,
+      "strategy": "lookahead",
+      "n": 12,
+      "optimal": 7,
+      "mean_u_gap": 0,
+      "same_u": 12,
+      "same_ud": 7,
+      "mean_d_gap_given_u": 0.4166666666666667,
+      "mean_q_gap_given_ud": 0
+    },
+    {
+      "size": 3,
+      "strategy": "greedy",
+      "n": 12,
+      "optimal": 5,
+      "mean_u_gap": 0,
+      "same_u": 12,
+      "same_ud": 8,
+      "mean_d_gap_given_u": 0.3333333333333333,
+      "mean_q_gap_given_ud": 0.5
+    },
+    {
+      "size": 3,
+      "strategy": "lookahead",
+      "n": 12,
+      "optimal": 8,
+      "mean_u_gap": 0,
+      "same_u": 12,
+      "same_ud": 11,
+      "mean_d_gap_given_u": 0.08333333333333333,
+      "mean_q_gap_given_ud": 0.2727272727272727
+    }
+  ],
+  "budget_comparisons": [
+    {
+      "size": 8,
+      "budget": 0.05,
+      "wins": 0,
+      "ties": 0,
+      "losses": 10,
+      "means": {
+        "greedy": {
+          "u": 8,
+          "d": 32,
+          "q": 67.4,
+          "searches": 581.4,
+          "seconds": 0.20483773999949334
+        },
+        "lookahead": {
+          "u": 8,
+          "d": 30.4,
+          "q": 39.6,
+          "searches": 904.9,
+          "seconds": 0.20465922000003048
+        }
+      }
+    },
+    {
+      "size": 8,
+      "budget": 0.25,
+      "wins": 0,
+      "ties": 0,
+      "losses": 10,
+      "means": {
+        "greedy": {
+          "u": 8,
+          "d": 32,
+          "q": 140.6,
+          "searches": 1007.9,
+          "seconds": 0.48128573000140024
+        },
+        "lookahead": {
+          "u": 8,
+          "d": 32,
+          "q": 113.2,
+          "searches": 2513.2,
+          "seconds": 0.9244313900017005
+        }
+      }
+    },
+    {
+      "size": 8,
+      "budget": 1.0,
+      "wins": 1,
+      "ties": 5,
+      "losses": 4,
+      "means": {
+        "greedy": {
+          "u": 8,
+          "d": 32,
+          "q": 141.5,
+          "searches": 1009.1,
+          "seconds": 0.485785290000058
+        },
+        "lookahead": {
+          "u": 8,
+          "d": 32,
+          "q": 140.6,
+          "searches": 2583.3,
+          "seconds": 1.1516721900006814
+        }
+      }
+    },
+    {
+      "size": 8,
+      "budget": 3.0,
+      "wins": 1,
+      "ties": 5,
+      "losses": 4,
+      "means": {
+        "greedy": {
+          "u": 8,
+          "d": 32,
+          "q": 141.5,
+          "searches": 1009.1,
+          "seconds": 0.4925274199988053
+        },
+        "lookahead": {
+          "u": 8,
+          "d": 32,
+          "q": 141.2,
+          "searches": 2582.2,
+          "seconds": 1.0932501099989167
+        }
+      }
+    },
+    {
+      "size": 16,
+      "budget": 0.05,
+      "wins": 0,
+      "ties": 0,
+      "losses": 10,
+      "means": {
+        "greedy": {
+          "u": 12,
+          "d": 29.9,
+          "q": 31.4,
+          "searches": 229.4,
+          "seconds": 0.20503357999841682
+        },
+        "lookahead": {
+          "u": 11.8,
+          "d": 21.5,
+          "q": 22.9,
+          "searches": 367,
+          "seconds": 0.20599019000146654
+        }
+      }
+    },
+    {
+      "size": 16,
+      "budget": 0.25,
+      "wins": 1,
+      "ties": 0,
+      "losses": 9,
+      "means": {
+        "greedy": {
+          "u": 12,
+          "d": 47.4,
+          "q": 87.5,
+          "searches": 852.4,
+          "seconds": 1.0068407300052058
+        },
+        "lookahead": {
+          "u": 12,
+          "d": 44.7,
+          "q": 55.3,
+          "searches": 1225.7,
+          "seconds": 1.0072292300043046
+        }
+      }
+    },
+    {
+      "size": 16,
+      "budget": 1.0,
+      "wins": 3,
+      "ties": 0,
+      "losses": 7,
+      "means": {
+        "greedy": {
+          "u": 12,
+          "d": 48,
+          "q": 147.5,
+          "searches": 1528.3,
+          "seconds": 2.1557757699978537
+        },
+        "lookahead": {
+          "u": 12,
+          "d": 48,
+          "q": 143.4,
+          "searches": 3396.5,
+          "seconds": 3.5027614599996015
+        }
+      }
+    },
+    {
+      "size": 16,
+      "budget": 3.0,
+      "wins": 5,
+      "ties": 0,
+      "losses": 5,
+      "means": {
+        "greedy": {
+          "u": 12,
+          "d": 48,
+          "q": 147.5,
+          "searches": 1528.9,
+          "seconds": 2.114770559998578
+        },
+        "lookahead": {
+          "u": 12,
+          "d": 48,
+          "q": 148.4,
+          "searches": 3388.4,
+          "seconds": 3.5167456499984837
+        }
+      }
+    },
+    {
+      "size": 32,
+      "budget": 0.05,
+      "wins": 3,
+      "ties": 5,
+      "losses": 2,
+      "means": {
+        "greedy": {
+          "u": 8.3,
+          "d": 16.1,
+          "q": 16.2,
+          "searches": 107.1,
+          "seconds": 0.20868289999925765
+        },
+        "lookahead": {
+          "u": 8.3,
+          "d": 16,
+          "q": 16.1,
+          "searches": 158.9,
+          "seconds": 0.20917578999506076
+        }
+      }
+    },
+    {
+      "size": 32,
+      "budget": 0.25,
+      "wins": 3,
+      "ties": 2,
+      "losses": 5,
+      "means": {
+        "greedy": {
+          "u": 10.5,
+          "d": 22.3,
+          "q": 22.8,
+          "searches": 195,
+          "seconds": 1.0088022399984766
+        },
+        "lookahead": {
+          "u": 10.2,
+          "d": 20.3,
+          "q": 20.5,
+          "searches": 296.9,
+          "seconds": 1.0095100900012768
+        }
+      }
+    },
+    {
+      "size": 32,
+      "budget": 1.0,
+      "wins": 2,
+      "ties": 0,
+      "losses": 8,
+      "means": {
+        "greedy": {
+          "u": 11.6,
+          "d": 40,
+          "q": 48.1,
+          "searches": 520.9,
+          "seconds": 3.9438504300000203
+        },
+        "lookahead": {
+          "u": 11.8,
+          "d": 37.2,
+          "q": 42.5,
+          "searches": 796.9,
+          "seconds": 3.9606298700004117
+        }
+      }
+    },
+    {
+      "size": 32,
+      "budget": 3.0,
+      "wins": 5,
+      "ties": 0,
+      "losses": 5,
+      "means": {
+        "greedy": {
+          "u": 11.9,
+          "d": 44,
+          "q": 65.2,
+          "searches": 743.3,
+          "seconds": 6.0536268200005
+        },
+        "lookahead": {
+          "u": 11.8,
+          "d": 44.2,
+          "q": 66,
+          "searches": 1309.4,
+          "seconds": 7.416280899999402
+        }
+      }
+    }
+  ],
+  "budget_games": 240,
+  "fallbacks": 0,
+  "dp_max_seconds": 0.020828599997912534,
+  "dp_max_states": 1220
+}

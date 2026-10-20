@@ -1,0 +1,129 @@
+{
+  "config": {
+    "map": {
+      "height": 3,
+      "width": 3,
+      "cells": [
+        [
+          0,
+          0,
+          2
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "spots": [
+      {
+        "pos": 4,
+        "brand": 0,
+        "stocks": 1
+      },
+      {
+        "pos": 7,
+        "brand": 1,
+        "stocks": 1
+      },
+      {
+        "pos": 3,
+        "brand": 2,
+        "stocks": 1
+      },
+      {
+        "pos": 6,
+        "brand": 0,
+        "stocks": 1
+      }
+    ],
+    "agents": [
+      0
+    ],
+    "daySteps": [
+      6,
+      6
+    ],
+    "fuelLimits": 7,
+    "busyThreshold": 3,
+    "jammedThreshold": 4,
+    "players": 1
+  },
+  "optimal_score": [
+    3,
+    6,
+    7
+  ],
+  "optimal_actions": [
+    [
+      [
+        4,
+        2,
+        3
+      ]
+    ],
+    [
+      [
+        0,
+        4,
+        0
+      ]
+    ]
+  ],
+  "states": 1067,
+  "seconds": 0.020828599997912534,
+  "heuristics": {
+    "greedy": {
+      "score": [
+        3,
+        6,
+        7
+      ],
+      "actions": [
+        [
+          [
+            4,
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            0,
+            5,
+            3
+          ]
+        ]
+      ]
+    },
+    "lookahead": {
+      "score": [
+        3,
+        6,
+        7
+      ],
+      "actions": [
+        [
+          [
+            4,
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            0,
+            5,
+            3
+          ]
+        ]
+      ]
+    }
+  }
+}

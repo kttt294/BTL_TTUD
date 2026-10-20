@@ -39,6 +39,19 @@ công cụ chỉ đọc và đối chiếu. Công cụ không gọi endpoint n�
 
 ## Chạy nhanh
 
+### Tự động lấy đề và nộp từng ngày từ ID trận
+
+```powershell
+python -X utf8 play_match.py ID_TRAN --algorithm greedy
+```
+
+Script tự chọn vai trò khi cần, lấy vị trí/nhiên liệu/road thật mỗi ngày, kiểm tra
+output và nộp tới khi hết trận. Có `--algorithm lookahead` hoặc `--algorithm rollout`,
+`--mode timed|practice`, `--inspect` và `--dry-run`. Token đọc từ `.env`; mặc định tối
+đa 20 giây lập kế hoạch/ngày, chừa bốn giây gửi bài. Script không reset trận.
+Xem [hướng dẫn đầy đủ](docs/auto_submit.md), gồm phạm vi kiểm thử và cách tiếp tục
+sau khi ngắt. Competitive Practice dùng timeline chung chưa được tích hợp.
+
 Các lệnh dưới đây chạy từ thư mục gốc dự án.
 
 ```powershell
@@ -151,6 +164,81 @@ Trình dựng cần bản mẫu NLP và bản chụp báo cáo trước khi vi�
 để chạy thuật toán. Các trình dựng báo cáo cũ có thể ghi đè nội dung mới nên không
 được dùng để cập nhật bản Word hiện hành.
 Greedy là chiến lược mặc định; dùng `--strategy lookahead` để chạy bản nhìn trước hai điểm.
+
+## Đối chứng tối ưu và độ nhạy thời gian
+
+```powershell
+python -X utf8 experiments/verify_quality.py
+python -X utf8 experiments/benchmark_quality.py --mode exact --cases 12
+python -X utf8 experiments/benchmark_quality.py --mode budgets --cases 10
+python -X utf8 experiments/summarize_quality.py
+```
+
+Bộ dữ liệu `experiments/quality_results` giữ 24 input nhỏ cùng nghiệm tối ưu và hai
+hành trình heuristic để kiểm tra lại bằng lệnh đầu tiên. Quy hoạch động chỉ giải
+trường hợp một xe tuần tra, không tiếp tế và không có ô đường; nó không chứng minh
+tối ưu cho trận nhiều xe. Bộ kiểm thử còn đối chiếu quy hoạch động với vét cạn lệnh.
+
+Phép đo ngân sách có 240 trận trên 30 input, dùng 0,05 / 0,25 / 1 / 3 giây mỗi ngày.
+CSV, seed và thông số máy được giữ trong repo; chuỗi lệnh của 240 trận này không được
+lưu. Chạy lại theo deadline thực có thể đổi kết quả và sẽ ghi đè CSV cũ. Chỉ lệnh vẽ
+hình cần Matplotlib; các phép đo và kiểm tra mới dùng thư viện chuẩn, không gọi API.
+
+## Tách đóng góp từng thành phần
+
+```powershell
+python -X utf8 experiments/audit_ablation.py
+python -X utf8 experiments/analyze_ablation.py
+```
+
+Thư mục `experiments/ablation_results` bàn giao input và hành trình của 77 trận,
+294 kế hoạch ngày. Các phép đo dùng planner sao chép không có deadline để tách tác
+dụng của phối hợp mục tiêu, nhìn trước và chọn vai trò. Xem `docs/ablation_experiment.md`
+để biết giao thức, lệnh chạy lại và giới hạn; các điểm mới đều là điểm offline.
+
+## Phần mở rộng học tăng cường trong phụ lục C
+
+Bản huấn luyện mới không dùng cơ chế chọn lại bằng heuristic:
+
+```powershell
+python -X utf8 experiments/train_rl_policy.py --episodes 1024 --seeds 71 72 73
+python -X utf8 experiments/evaluate_rl_policy.py
+```
+
+PPO được học từ đầu trên bản đồ sinh riêng; mạng chọn mọi mục tiêu, Dijkstra chỉ
+chuyển mục tiêu thành tuyến. Các đối chứng mạng chưa học, ngẫu nhiên và gần nhất
+dùng cùng bộ thực thi. Không chọn checkpoint/seed theo điểm BTC, không gọi Greedy
+hoặc Lookahead từ bản RL này. Xem `docs/rl_policy_training.md` để biết reward,
+mặt nạ khả thi, tập dữ liệu và giới hạn. PyTorch là phụ thuộc tùy chọn cho RL.
+Kết quả mới nằm trong `experiments/rl_policy_results`, tách khỏi các lượt lai cũ.
+
+Các thí nghiệm hệ thống lai trước đó được giữ lại để đối chiếu lịch sử:
+
+Phần chính của báo cáo tập trung vào thuật toán truyền thống. Kiến trúc RL, kết quả
+Practice cũ và phép đo mở rộng được đặt riêng ở phụ lục C. Bản mở rộng giữ nguyên
+checkpoint, lấy mẫu thêm mục tiêu và chọn kế hoạch bằng mô phỏng tới cuối trận;
+nó không huấn luyện lại mạng hoặc để mạng chọn trực tiếp từng hướng di chuyển.
+
+```powershell
+python -X utf8 experiments/rl_extension.py
+python -X utf8 experiments/audit_rl_extension.py
+```
+
+Các lệnh trên chạy offline, cần các phụ thuộc của nhánh `Procon2026`, snapshot tại
+`scratch/Procon2026_rl_eval`, checkpoint và cấu hình BTC đã tải. Bốn cấu hình được
+so trên cùng kế hoạch Greedy khởi tạo của từng input. Kết quả tổng hợp nằm trong
+`experiments/rl_extension_results`; kế hoạch chi tiết vẫn chỉ lưu tại máy. Bộ chọn
+giữ kế hoạch tốt nhất nhằm không giảm điểm dự đoán so với kế hoạch khởi tạo trong
+môi trường một đội; tính chất này không phải bảo đảm về chất lượng học của RL.
+
+Lệnh sau có đặt lại và nộp Practice riêng của đội, chỉ dùng khi cần kiểm chứng BTC:
+
+```powershell
+python -X utf8 experiments/verify_rl_extension_server.py --questions Q04 Q06
+```
+
+Bằng chứng mới được lưu riêng trong `experiments/rl_extension_api_evidence`, bao gồm
+lịch sử trước khi reset và kết quả đối chiếu replay. Không dùng lệnh này chỉ để đọc số liệu.
 
 Phần xuất báo cáo PDF chạy riêng bằng `experiments/build_report.py` và cần ReportLab.
 Thư viện này chỉ dùng để tạo tài liệu, không phải phụ thuộc của các thuật toán.

@@ -2,3 +2,6 @@
 reportlab
 python-docx
 pdf2image
+Pillow
+pypdf
+matplotlib

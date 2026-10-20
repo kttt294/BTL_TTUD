@@ -1,0 +1,26 @@
+{
+  "matches": 36,
+  "verified_days": 360,
+  "invalid_plans": 0,
+  "replay_score_mismatches": 0,
+  "incumbent_monotonicity_violations": 0,
+  "max_decision_seconds": 6.495400799998606,
+  "rl_rollout_selected_days": 2,
+  "comparison_rl_rollout": {
+    "greedy": {
+      "wins": 5,
+      "ties": 4,
+      "losses": 0
+    },
+    "rollout_no_rl": {
+      "wins": 5,
+      "ties": 4,
+      "losses": 0
+    },
+    "rl_daily": {
+      "wins": 7,
+      "ties": 0,
+      "losses": 2
+    }
+  }
+}
