@@ -12,6 +12,7 @@ import heapq
 import random
 import time
 
+from .model import Agent, State
 from .simulator import simulate_day
 
 # Trọng số (step, nhiên liệu) của ba kiểu đường: nhanh, cân bằng, tiết kiệm.
@@ -98,6 +99,8 @@ class DayProblem:
         self.allowance = allowance
         self.limit = board.fuel_limit
         self.reserves = {}
+        # anchors: ô xe tuần tra phải dừng cuối ngày để ngày mai đi đủ loại.
+        self.anchors, self.coverages, self.alpha = {}, {}, 1.0
 
     def reserve(self, pos):
         if not self.hubs:
@@ -117,6 +120,9 @@ class DayProblem:
         return best
 
     def run(self, car, stops, variant):
+        anchor = self.anchors.get(car)
+        if anchor is not None and (not stops or stops[-1] != anchor):
+            stops = list(stops) + [anchor]
         agent = self.state.agents[car]
         pos, t, fuel, spent_since = agent.pos, 0, agent.fuel, 0
         visited = {pos} if pos in self.spot_at else set()
@@ -196,6 +202,40 @@ class DayProblem:
         future = self.beta * sum(self.value(r.end) for r in runs.values()) if self.beta else 0
         return new, len(brands), portions + future, -spent, -steps
 
+    def coverage(self, runs):
+        """Số loại tối đa ngày mai theo bản dựng chỉ nhắm loại, giao thông hôm nay làm dự báo."""
+        return self.coverage_from(tuple((runs[c].end, runs[c].fuel) for c in self.patrols))
+
+    def coverage_from(self, key):
+        if not self.next_steps:
+            return 0
+        ends = dict(zip(self.patrols, key))
+        if key not in self.coverages:
+            hubs = iter([hub for hub, _ in self.hubs])
+            agents = []
+            for car, agent in enumerate(self.state.agents):
+                if agent.kind == 0:
+                    agents.append(Agent(0, *ends[car]))
+                else:
+                    agents.append(Agent(1, next(hubs, agent.pos), 0))
+            tomorrow = State(agents, self.state.traffic, set(), day=self.state.day + 1)
+            problem = DayProblem(self.board, tomorrow, self.next_steps, [(h, 0) for h, _ in self.hubs],
+                                 allowances(self.board, tomorrow, self.next_steps, self.alpha))
+            problem.legs = self.legs
+            best = 0
+            for variant in ((0,) if self.hubs else (0, 2)):
+                result = construct(problem, variant, types_only=True)
+                if result is not None:
+                    best = max(best, result[0][1])
+                if best == self.brand_count:
+                    break
+            self.coverages[key] = best
+        return self.coverages[key]
+
+    @property
+    def brand_count(self):
+        return len({s["brand"] for s in self.board.spots})
+
 
 def car_insertions(problem, car, route, variant, current, positions=3):
     """Phương án chèn rẻ nhất cho từng điểm vào tuyến của một xe."""
@@ -227,7 +267,8 @@ def car_insertions(problem, car, route, variant, current, positions=3):
     return options
 
 
-def insert_greedy(problem, routes, variants, runs, rng=None, noise=0.0, deadline=None):
+def insert_greedy(problem, routes, variants, runs, rng=None, noise=0.0, deadline=None,
+                  types_only=False):
     spot_at, brands_before = problem.spot_at, problem.state.brands
     cache = {}
     while deadline is None or time.perf_counter() < deadline:
@@ -242,7 +283,7 @@ def insert_greedy(problem, routes, variants, runs, rng=None, noise=0.0, deadline
                 brand = info["brand"]
                 gain = (brand not in brands_before and brand not in today,
                         brand not in today, counts[spot] < info["stocks"])
-                if not any(gain):
+                if not any(gain) or types_only and not gain[1]:
                     continue
                 if rng is not None and noise:
                     delta *= 1 + noise * rng.random()
@@ -256,14 +297,34 @@ def insert_greedy(problem, routes, variants, runs, rng=None, noise=0.0, deadline
         del cache[car]
 
 
-def construct(problem, variant, deadline=None):
+def construct(problem, variant, deadline=None, types_only=False, rng=None, noise=0.0):
     routes = {c: [] for c in problem.patrols}
     variants = {c: variant for c in problem.patrols}
     runs = {c: problem.run(c, [], variant) for c in problem.patrols}
     if not all(r.feasible for r in runs.values()):
         return None
-    insert_greedy(problem, routes, variants, runs, deadline=deadline)
+    insert_greedy(problem, routes, variants, runs, rng, noise, deadline, types_only)
     return problem.score(runs), routes, variants, runs
+
+
+def cover_types(candidates, deadline, rng, variants, best):
+    """Dựng lại nhiều lần chỉ nhắm loại, có nhiễu, rồi chèn thêm suất vào khung đủ loại nhất."""
+    attempt = 0
+    while time.perf_counter() < deadline:
+        _, option, problem = candidates[attempt % len(candidates)]
+        variant = variants[(attempt // len(candidates)) % len(variants)]
+        attempt += 1
+        skeleton = construct(problem, variant, deadline, True, rng, 1.0 + rng.random())
+        if skeleton is None or skeleton[0][1] < best[0][0][1]:
+            continue
+        _, routes, chosen, runs = skeleton
+        insert_greedy(problem, routes, chosen, runs, deadline=deadline)
+        score = problem.score(runs)
+        if score > best[0][0]:
+            best = (score, routes, chosen, runs), option, problem
+        if best[0][0][1] == problem.brand_count:
+            break
+    return best
 
 
 def improve(problem, solution, deadline, rng):
@@ -353,6 +414,35 @@ def allowances(board, state, steps, alpha):
     return {i: int(a.fuel * share) for i, a in enumerate(state.agents)}
 
 
+def find_anchors(problem, runs, deadline, rng):
+    """Leo đồi trên ô dừng cuối ngày của từng xe để ngày mai phủ đủ loại, đi ít step nhất."""
+    reach = {}
+    for car in problem.patrols:
+        options = {}
+        for spot in problem.spot_at:
+            run = problem.run(car, [spot], 0)
+            if run.feasible:
+                options[spot] = run
+        if not options:
+            return None
+        reach[car] = options
+    current = {c: runs[c].end if runs[c].end in reach[c] else rng.choice(list(reach[c])) for c in problem.patrols}
+
+    def key(anchors):
+        ends = tuple((a, reach[c][a].fuel) for c, a in anchors.items())
+        return problem.coverage_from(ends), -sum(reach[c][a].steps for c, a in anchors.items())
+
+    best = key(current)
+    while time.perf_counter() < deadline:
+        trial = dict(current)
+        for car in rng.sample(problem.patrols, rng.randint(1, min(2, len(problem.patrols)))):
+            trial[car] = rng.choice(list(reach[car]))
+        score = key(trial)
+        if score >= best:
+            current, best = trial, score
+    return current, best[0]
+
+
 def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0, beta=0.0):
     started = time.perf_counter()
     deadline = started + max(0.0, seconds)
@@ -367,7 +457,7 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0, beta=0.0):
         options = [o + [(car, c)] for o in options for c in cands][:12]
     # Đội không có tiếp tế phải tiết kiệm nhiên liệu nên thử cả ba kiểu đường khi dựng.
     variants = (0,) if supplies else (0, 1, 2)
-    best = None
+    best, candidates = None, []
     for index, option in enumerate(options):
         problem = DayProblem(board, state, steps, [hub for _, hub in option], allowance, following, beta)
         problem.legs, problem.values = base.legs, base.values
@@ -376,10 +466,43 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0, beta=0.0):
             if best is not None and time.perf_counter() >= started + seconds * 0.4:
                 break
             result = construct(problem, variant, None if best is None else deadline)
-            if result is not None and (best is None or result[0] > best[0][0]):
+            if result is None:
+                continue
+            if (option, problem) not in [(o, p) for _, o, p in candidates]:
+                candidates.append((result, option, problem))
+            if best is None or result[0] > best[0][0]:
                 best = result, option, problem
     if best is None:
         return None
+    if best[0][0][1] < base.brand_count and best[2].patrols:
+        # Ngày ngắn: phủ đủ loại là bài toán chặt, chèn tham lam một lượt dễ thiếu một loại.
+        cover_until = time.perf_counter() + max(0.0, deadline - time.perf_counter()) * 0.4
+        best = cover_types(candidates, cover_until, rng, variants if supplies else (0, 2), best)
     solution, option, problem = best
+    problem.alpha = alpha
+    if following and problem.patrols:
+        # Kiểm tra ngày mai có đi đủ loại từ vị trí cuối ngày không. Nếu thiếu, tìm ô neo cho
+        # từng xe rồi lập lại tuyến phải dừng ở ô neo; chỉ nhận khi (loại hôm nay, loại ngày mai)
+        # không kém, vì D xếp trên Q.
+        remaining = lambda: max(0.0, deadline - time.perf_counter())
+        solution = improve(problem, solution, time.perf_counter() + remaining() * 0.3, rng)
+        covered = problem.coverage(solution[3])
+        if covered < problem.brand_count:
+            found = find_anchors(problem, solution[3], time.perf_counter() + remaining() * 0.25, rng)
+            if found is not None and found[1] > covered:
+                anchored = DayProblem(board, state, steps, problem.hubs, allowance, following, beta)
+                anchored.legs, anchored.values, anchored.coverages = problem.legs, problem.values, problem.coverages
+                anchored.anchors, anchored.alpha = found[0], alpha
+                trial = None
+                for variant in variants:
+                    result = construct(anchored, variant, deadline)
+                    if result is not None and (trial is None or result[0] > trial[0]):
+                        trial = result
+                if trial is not None:
+                    trial = improve(anchored, trial, time.perf_counter() + remaining() * 0.5, rng)
+                    old_key = solution[0][:2] + (covered,)
+                    new_key = trial[0][:2] + (anchored.coverage(trial[3]),)
+                    if new_key > old_key:
+                        problem, solution = anchored, trial
     _, _, _, runs = improve(problem, solution, deadline, rng)
     return commands(problem, runs, {car: hub for car, hub in option})

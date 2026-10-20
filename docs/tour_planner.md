@@ -40,6 +40,24 @@ U thường đạt cận trên (số chuỗi trong config) với cả hai planne
 3. Chuyển thành lệnh, kiểm tra bằng simulator. Nếu lỗi thì dùng Greedy cũ với thời gian còn lại
    thay vì đứng chờ cả ngày.
 
+## Bảo vệ D ở ngày ngắn
+
+Thiếu một loại trong một ngày là thua dù Q cao hơn nhiều (D xếp trên Q). Các lần mất D đều rơi
+vào ngày ngắn (Q01 ngày 6: 69 step, Q03 ngày 5: 72 step, Q06 ngày 6: 62 step). Có hai cơ chế:
+
+- **Phủ loại nhiều lần (`cover_types`)**: nếu phương án tốt nhất hôm nay còn thiếu loại, dựng lại
+  nhiều lần chỉ nhắm loại, có nhiễu, trên mọi phương án điểm hẹn; khung phủ nhiều loại nhất được
+  chèn thêm suất. Dùng tới 40% thời gian còn lại, dừng sớm khi đủ loại. Chạy lại đúng các ngày
+  từng lỗi: trước đó 19/20 loại, sau đó 15/16 lượt đủ 20.
+- **Ô neo cho ngày mai (`find_anchors`)**: sau 30% thời gian, ước lượng số loại ngày mai đi được từ
+  vị trí và nhiên liệu cuối ngày (dựng chỉ nhắm loại, giao thông hôm nay làm dự báo). Nếu thiếu,
+  leo đồi trên ô dừng cuối ngày của từng xe để ước lượng ngày mai cao nhất, rồi lập lại tuyến hôm
+  nay buộc dừng ở ô neo. Chỉ nhận khi `(loại mới, loại hôm nay, loại ngày mai)` tốt hơn.
+
+Đo trên 6 bài khó (Q01, Q03, Q04, Q06, Q09, Q10) với đội hình đã chọn: ở 1 giây/ngày còn 5/48
+lượt mất D; ở 5 giây/ngày là 0/36. Khi thi nên để ngân sách mỗi ngày từ 5 giây trở lên
+(mặc định runner là 20 giây). Ước lượng ngày mai còn bi quan vì chỉ dựng một lượt tham lam.
+
 ## Chọn vai trò
 
 `select_types(..., strategy="tour")` mô phỏng các đội hình song song bằng nhiều tiến trình
@@ -47,29 +65,28 @@ U thường đạt cận trên (số chuỗi trong config) với cả hai planne
 nhất. Nếu bản đồ quá lớn để chạy hết trận trong hạn, chọn theo số ngày đã mô phỏng rồi điểm.
 `play_match.py --algorithm tour` mặc định dành 20 giây cho bước này.
 
-## Kết quả offline (20/10/2026)
+## Kết quả offline (20/10/2026, sau khi thêm bảo vệ D)
 
 `experiments/compare_pipeline.py`, mô phỏng một đội, máy 16 nhân. Bản cũ: chọn vai trò bằng
 Greedy 8 giây + Greedy. Bản mới: chọn vai trò bằng `tour` 20 giây + `tour` 5 giây/ngày.
 
-| Case | Bản cũ (U, D, Q) | Bản mới (U, D, Q) | Đội hình mới | Cận (U, D, Q) theo đội hình mới |
+| Case | Bản cũ (U, D, Q) | Bản mới (U, D, Q) | Đội hình mới | Đội 57, BTC chấm |
 |---|---|---|---|---|
-| Q01 | (20, 101, 253) | (20, 200, 614) | 1 tiếp tế | (20, 200, 960) |
-| Q03 | (20, 84, 137) | (20, 200, 675) | 1 tiếp tế | (20, 200, 1280) |
-| Q04 | (20, 200, 518) | (20, 200, 641) | 1 tiếp tế | (20, 200, 900) |
-| Q06 | (15, 72, 193) | (15, 150, 743) | 1 tiếp tế | (15, 150, 1500) |
-| Q07 | (15, 75, 293) | (15, 150, 846) | 1 tiếp tế | (15, 150, 1200) |
-| Q08 | (15, 104, 316) | (15, 150, 684) | 1 tiếp tế | (15, 150, 1200) |
-| Q09 | (15, 72, 146) | (15, 150, 695) | 1 tiếp tế | (15, 150, 1200) |
-| Q10 | (15, 82, 244) | (15, 149, 704) | 1 tiếp tế | (15, 150, 1200) |
-| generated_8_2026 | (8, 32, 163) | (8, 32, 164) | 1 tiếp tế | (8, 32, 164) |
-| generated_16_2026 | (12, 48, 145) | (12, 48, 173) | 1 tiếp tế | (12, 48, 228) |
-| generated_32_2026 | (12, 45, 64) | (12, 48, 78) | 2 tiếp tế | (12, 48, 164) |
-| generated_8_2027 | (8, 32, 155) | (8, 32, 156) | 1 tiếp tế | (8, 32, 156) |
-| generated_16_2027 | (12, 48, 129) | (12, 48, 175) | 1 tiếp tế | (12, 48, 200) |
-| generated_32_2027 | (12, 45, 65) | (12, 48, 65) | 2 tiếp tế | (12, 48, 152) |
+| Q01 | (20, 101, 253) | (20, 200, 597) | 1 tiếp tế | (20, 200, 532) |
+| Q03 | (20, 84, 137) | (20, 200, 656) | 1 tiếp tế | (20, 200, 530) |
+| Q04 | (20, 72, 131) | (20, 200, 643) | 1 tiếp tế | (20, 200, 481) |
+| Q06 | (15, 82, 194) | (15, 150, 727) | 1 tiếp tế | (15, 150, 454) |
+| Q07 | (15, 82, 301) | (15, 150, 837) | 1 tiếp tế | (15, 150, 760) |
+| Q08 | (15, 93, 307) | (15, 150, 684) | 1 tiếp tế | (15, 150, 620) |
+| Q09 | (15, 72, 146) | (15, 150, 701) | 1 tiếp tế | (15, 150, 523) |
+| Q10 | (15, 90, 246) | (15, 150, 698) | 1 tiếp tế | (15, 150, 551) |
 
-Bản mới thắng cả 14 trường hợp theo thứ tự từ điển; không có lần nào phải dùng Greedy dự phòng.
+Bản đồ tự sinh (chạy trước khi thêm cơ chế bảo vệ D, commit `f7eac58`): bản mới thắng hoặc hòa
+cả 6 bản đồ; xem `experiments/tour_results/pipeline.json`.
+
+Điểm đội 57 là điểm máy chủ BTC, do người dùng đọc từ tài khoản đội đó; điểm của ta là simulator
+một đội. Simulator đã tái hiện đúng điểm máy chủ `(20, 101, 253)` của lượt Practice Q01 bằng Greedy.
+Bản mới đạt cận trên U và D ở cả 8 bài BTC; không có lần nào phải dùng Greedy dự phòng.
 Cận Q là `Σ min(kho, số xe tuần tra) × số ngày`, bỏ qua giới hạn step nên không đạt được ở ngày ngắn.
 Q01 và Q02 cùng cấu hình nên chỉ chạy Q01. Một lượt chạy cho mỗi case; kết quả dao động theo đồng hồ.
 

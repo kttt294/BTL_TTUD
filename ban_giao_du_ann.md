@@ -28,7 +28,7 @@ Greedy chọn **đích**, A* chọn **đường**; Greedy lập kế hoạch kh�
 
 ## 3. Kết quả và giới hạn bằng chứng
 
-- **Planner `tour` (20/10/2026, offline một đội):** thắng Greedy ở 14/14 case. Trên 8 config BTC, U và D đạt cận trên (trừ Q10 thiếu 1 D); Q tăng 1,2–4,9 lần, ví dụ Q01 `(20, 101, 253)` → `(20, 200, 614)`. Bảng đầy đủ trong `docs/tour_planner.md`, dữ liệu trong `experiments/tour_results/pipeline.json`. Chưa nộp thử trên máy chủ.
+- **Planner `tour` (20/10/2026, offline một đội):** trên 8 config BTC đạt cận trên U và D, Q 597–837; cao hơn điểm BTC của đội 57 ở cả 8 bài (ví dụ Q01 597 so với 532, Q10 698 so với 551). Có cơ chế bảo vệ D ở ngày ngắn (phủ loại nhiều lần, ô neo cho ngày mai); cần ngân sách ≥ 5 giây/ngày. Bảng trong `docs/tour_planner.md`. Chưa nộp thử trên máy chủ.
 - Nguyên nhân chính của bản cũ: Greedy tiêu hết nhiên liệu trong 3 ngày đầu; khi U, D đã tối đa thì Q quyết định thắng thua.
 
 - Thí nghiệm offline ban đầu: 30 cặp toàn trận ở ngân sách 0,25 giây/ngày, Lookahead thắng 3 và thua 27 so với Greedy. Đây không phải kết luận cho mọi ngân sách hay mọi input.

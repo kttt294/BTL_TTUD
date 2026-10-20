@@ -11,7 +11,7 @@ from hexudon.model import Agent, Board, State
 from hexudon.planner import plan_day
 from hexudon.simulator import simulate_day
 from hexudon.team_selection import select_types
-from hexudon.tour import allowances, plan_tour
+from hexudon.tour import DayProblem, allowances, find_anchors, plan_tour
 
 
 def line_board(fuel=40, days=(30, 30, 30)):
@@ -68,6 +68,22 @@ class TourTests(unittest.TestCase):
         checked = simulate_day(board, state, plan.actions, 30)
         self.assertTrue(checked.valid)
         self.assertGreater(checked.state.portions, 0)
+
+    def test_anchor_forces_end_position_and_improves_next_day(self):
+        # Ngày mai chỉ 4 step: xe phải dừng sẵn cạnh điểm thì mới thu được loại đó.
+        board = line_board(days=(30, 4))
+        state = State.initial(board, [0, 0])
+        problem = DayProblem(board, state, 30, [], allowances(board, state, 30, 1.0), next_steps=4)
+        problem.anchors = {0: 12}
+        run = problem.run(0, [2], 0)
+        self.assertTrue(run.feasible)
+        self.assertEqual(run.end, 12)
+        runs = {c: problem.run(c, [], 0) for c in problem.patrols}
+        before = problem.coverage(runs)
+        problem.anchors = {}
+        anchors, covered = find_anchors(problem, runs, time.perf_counter() + 0.3, __import__("random").Random(1))
+        self.assertGreater(covered, before)
+        self.assertEqual(set(anchors), {0, 1})
 
     def test_parallel_selection_returns_valid_roles(self):
         board = line_board()

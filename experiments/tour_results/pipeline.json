@@ -61,9 +61,9 @@
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 7.33,
-   "longest_day_seconds": 0.69,
-   "elapsed": 9.4
+   "selection_seconds": 7.53,
+   "longest_day_seconds": 1.68,
+   "elapsed": 12.6
   },
   "new": {
    "pipeline": "new",
@@ -76,7 +76,7 @@
    "score": [
     20,
     200,
-    614
+    597
    ],
    "bound_for_types": [
     20,
@@ -86,19 +86,15 @@
    "days": [
     [
      20,
-     91
+     90
     ],
     [
      20,
-     46
+     49
     ],
     [
      20,
-     53
-    ],
-    [
-     20,
-     44
+     39
     ],
     [
      20,
@@ -106,19 +102,23 @@
     ],
     [
      20,
-     24
+     39
     ],
     [
      20,
-     77
+     25
     ],
     [
      20,
-     89
+     82
     ],
     [
      20,
-     74
+     85
+    ],
+    [
+     20,
+     72
     ],
     [
      20,
@@ -126,9 +126,9 @@
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 10.58,
-   "longest_day_seconds": 4.51,
-   "elapsed": 55.6
+   "selection_seconds": 12.48,
+   "longest_day_seconds": 4.57,
+   "elapsed": 57.7
   },
   "winner": "new"
  },
@@ -195,9 +195,9 @@
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 7.12,
-   "longest_day_seconds": 0.44,
-   "elapsed": 7.8
+   "selection_seconds": 7.54,
+   "longest_day_seconds": 0.99,
+   "elapsed": 9.1
   },
   "new": {
    "pipeline": "new",
@@ -211,7 +211,7 @@
    "score": [
     20,
     200,
-    675
+    656
    ],
    "bound_for_types": [
     20,
@@ -221,23 +221,11 @@
    "days": [
     [
      20,
-     62
+     61
     ],
     [
      20,
-     65
-    ],
-    [
-     20,
-     81
-    ],
-    [
-     20,
-     92
-    ],
-    [
-     20,
-     30
+     64
     ],
     [
      20,
@@ -245,25 +233,37 @@
     ],
     [
      20,
-     95
-    ],
-    [
-     20,
-     49
-    ],
-    [
-     20,
      83
     ],
     [
      20,
-     41
+     31
+    ],
+    [
+     20,
+     76
+    ],
+    [
+     20,
+     89
+    ],
+    [
+     20,
+     54
+    ],
+    [
+     20,
+     82
+    ],
+    [
+     20,
+     39
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 10.78,
+   "selection_seconds": 12.93,
    "longest_day_seconds": 4.51,
-   "elapsed": 55.8
+   "elapsed": 58.1
   },
   "winner": "new"
  },
@@ -273,78 +273,78 @@
    "types": [
     0,
     0,
-    1,
+    0,
     0
    ],
    "score": [
     20,
-    200,
-    518
+    72,
+    131
    ],
    "bound_for_types": [
     20,
     200,
-    900
+    1200
    ],
    "days": [
     [
      20,
-     42
-    ],
-    [
-     20,
-     45
-    ],
-    [
-     20,
-     72
-    ],
-    [
-     20,
-     55
+     62
     ],
     [
      20,
      37
     ],
     [
-     20,
-     78
+     4,
+     4
     ],
     [
-     20,
-     43
+     4,
+     4
     ],
     [
-     20,
-     37
+     4,
+     4
     ],
     [
-     20,
-     69
+     4,
+     4
     ],
     [
-     20,
-     40
+     4,
+     4
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     4
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 7.04,
-   "longest_day_seconds": 1.08,
-   "elapsed": 13.8
+   "selection_seconds": 7.49,
+   "longest_day_seconds": 0.74,
+   "elapsed": 9.0
   },
   "new": {
    "pipeline": "new",
    "types": [
+    0,
+    0,
     1,
-    0,
-    0,
     0
    ],
    "score": [
     20,
     200,
-    641
+    643
    ],
    "bound_for_types": [
     20,
@@ -354,7 +354,7 @@
    "days": [
     [
      20,
-     56
+     55
     ],
     [
      20,
@@ -362,11 +362,11 @@
     ],
     [
      20,
-     83
+     85
     ],
     [
      20,
-     65
+     64
     ],
     [
      20,
@@ -378,25 +378,25 @@
     ],
     [
      20,
-     61
+     62
     ],
     [
      20,
-     44
+     46
     ],
     [
      20,
-     77
+     79
     ],
     [
      20,
-     59
+     56
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 10.59,
-   "longest_day_seconds": 4.5,
-   "elapsed": 55.6
+   "selection_seconds": 11.62,
+   "longest_day_seconds": 4.51,
+   "elapsed": 56.8
   },
   "winner": "new"
  },
@@ -413,8 +413,8 @@
    ],
    "score": [
     15,
-    72,
-    193
+    82,
+    194
    ],
    "bound_for_types": [
     15,
@@ -428,45 +428,45 @@
     ],
     [
      15,
-     89
+     88
+    ],
+    [
+     9,
+     9
     ],
     [
      7,
-     8
+     7
     ],
     [
-     5,
+     6,
      6
     ],
     [
-     5,
+     6,
      6
     ],
     [
-     5,
+     6,
      6
     ],
     [
-     5,
+     6,
      6
     ],
     [
-     5,
+     6,
      6
     ],
     [
-     5,
-     6
-    ],
-    [
-     5,
+     6,
      6
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 7.19,
-   "longest_day_seconds": 0.8,
-   "elapsed": 8.5
+   "selection_seconds": 7.51,
+   "longest_day_seconds": 1.71,
+   "elapsed": 10.3
   },
   "new": {
    "pipeline": "new",
@@ -481,7 +481,7 @@
    "score": [
     15,
     150,
-    743
+    727
    ],
    "bound_for_types": [
     15,
@@ -495,11 +495,11 @@
     ],
     [
      15,
-     102
+     100
     ],
     [
      15,
-     48
+     49
     ],
     [
      15,
@@ -511,29 +511,29 @@
     ],
     [
      15,
-     41
+     42
     ],
     [
      15,
-     114
+     110
     ],
     [
      15,
-     66
+     59
     ],
     [
      15,
-     100
+     96
     ],
     [
      15,
-     52
+     51
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 10.63,
+   "selection_seconds": 12.4,
    "longest_day_seconds": 4.51,
-   "elapsed": 55.7
+   "elapsed": 57.5
   },
   "winner": "new"
  },
@@ -549,8 +549,8 @@
    ],
    "score": [
     15,
-    75,
-    293
+    82,
+    301
    ],
    "bound_for_types": [
     15,
@@ -560,31 +560,31 @@
    "days": [
     [
      15,
-     139
+     136
     ],
     [
      15,
-     107
+     111
+    ],
+    [
+     11,
+     13
     ],
     [
      8,
-     10
+     8
     ],
     [
-     7,
-     7
+     6,
+     6
     ],
     [
-     5,
-     5
+     6,
+     6
     ],
     [
-     5,
-     5
-    ],
-    [
-     5,
-     5
+     6,
+     6
     ],
     [
      5,
@@ -600,9 +600,9 @@
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 7.33,
-   "longest_day_seconds": 0.95,
-   "elapsed": 9.1
+   "selection_seconds": 7.51,
+   "longest_day_seconds": 1.96,
+   "elapsed": 11.3
   },
   "new": {
    "pipeline": "new",
@@ -616,7 +616,7 @@
    "score": [
     15,
     150,
-    846
+    837
    ],
    "bound_for_types": [
     15,
@@ -634,19 +634,19 @@
     ],
     [
      15,
-     60
+     59
     ],
     [
      15,
-     103
+     105
     ],
     [
      15,
-     56
+     51
     ],
     [
      15,
-     111
+     107
     ],
     [
      15,
@@ -654,11 +654,11 @@
     ],
     [
      15,
-     93
+     94
     ],
     [
      15,
-     80
+     78
     ],
     [
      15,
@@ -666,9 +666,9 @@
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 10.68,
+   "selection_seconds": 12.12,
    "longest_day_seconds": 4.51,
-   "elapsed": 55.7
+   "elapsed": 57.3
   },
   "winner": "new"
  },
@@ -684,8 +684,8 @@
    ],
    "score": [
     15,
-    104,
-    316
+    93,
+    307
    ],
    "bound_for_types": [
     15,
@@ -703,49 +703,49 @@
     ],
     [
      15,
-     92
+     87
     ],
     [
      15,
-     37
-    ],
-    [
-     9,
-     10
+     45
     ],
     [
      7,
      7
     ],
     [
-     7,
-     7
+     6,
+     6
     ],
     [
-     7,
-     7
+     5,
+     5
     ],
     [
-     7,
-     7
+     5,
+     5
     ],
     [
-     7,
-     7
+     5,
+     5
+    ],
+    [
+     5,
+     5
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 7.33,
-   "longest_day_seconds": 0.84,
-   "elapsed": 9.6
+   "selection_seconds": 7.5,
+   "longest_day_seconds": 1.84,
+   "elapsed": 12.6
   },
   "new": {
    "pipeline": "new",
    "types": [
     0,
-    0,
-    0,
     1,
+    0,
+    0,
     0
    ],
    "score": [
@@ -761,27 +761,27 @@
    "days": [
     [
      15,
-     101
+     98
     ],
     [
      15,
-     36
+     41
     ],
     [
      15,
-     85
+     82
     ],
     [
      15,
-     54
+     56
     ],
     [
      15,
-     75
+     76
     ],
     [
      15,
-     47
+     45
     ],
     [
      15,
@@ -789,21 +789,21 @@
     ],
     [
      15,
-     60
+     62
     ],
     [
      15,
-     105
+     104
     ],
     [
      15,
-     89
+     88
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 10.68,
-   "longest_day_seconds": 4.5,
-   "elapsed": 55.7
+   "selection_seconds": 12.33,
+   "longest_day_seconds": 4.51,
+   "elapsed": 57.5
   },
   "winner": "new"
  },
@@ -870,15 +870,15 @@
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 7.0,
-   "longest_day_seconds": 0.43,
-   "elapsed": 7.9
+   "selection_seconds": 7.52,
+   "longest_day_seconds": 1.0,
+   "elapsed": 9.6
   },
   "new": {
    "pipeline": "new",
    "types": [
-    1,
     0,
+    1,
     0,
     0,
     0
@@ -886,7 +886,7 @@
    "score": [
     15,
     150,
-    695
+    701
    ],
    "bound_for_types": [
     15,
@@ -896,27 +896,7 @@
    "days": [
     [
      15,
-     54
-    ],
-    [
-     15,
-     92
-    ],
-    [
-     15,
-     79
-    ],
-    [
-     15,
-     90
-    ],
-    [
-     15,
-     55
-    ],
-    [
-     15,
-     55
+     50
     ],
     [
      15,
@@ -924,21 +904,41 @@
     ],
     [
      15,
-     80
+     76
     ],
     [
      15,
-     46
+     91
     ],
     [
      15,
-     49
+     61
+    ],
+    [
+     15,
+     55
+    ],
+    [
+     15,
+     93
+    ],
+    [
+     15,
+     86
+    ],
+    [
+     15,
+     41
+    ],
+    [
+     15,
+     53
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 10.64,
-   "longest_day_seconds": 4.5,
-   "elapsed": 55.7
+   "selection_seconds": 12.41,
+   "longest_day_seconds": 4.51,
+   "elapsed": 57.5
   },
   "winner": "new"
  },
@@ -954,8 +954,8 @@
    ],
    "score": [
     15,
-    82,
-    244
+    90,
+    246
    ],
    "bound_for_types": [
     15,
@@ -965,19 +965,23 @@
    "days": [
     [
      15,
-     135
+     131
     ],
     [
      15,
-     52
+     48
     ],
     [
-     14,
-     18
+     15,
+     22
+    ],
+    [
+     12,
+     12
     ],
     [
      7,
-     8
+     7
     ],
     [
      6,
@@ -998,16 +1002,12 @@
     [
      5,
      5
-    ],
-    [
-     5,
-     5
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 7.25,
-   "longest_day_seconds": 1.04,
-   "elapsed": 8.9
+   "selection_seconds": 7.51,
+   "longest_day_seconds": 1.83,
+   "elapsed": 10.8
   },
   "new": {
    "pipeline": "new",
@@ -1020,8 +1020,8 @@
    ],
    "score": [
     15,
-    149,
-    704
+    150,
+    698
    ],
    "bound_for_types": [
     15,
@@ -1031,49 +1031,49 @@
    "days": [
     [
      15,
-     116
+     115
     ],
     [
      15,
-     44
+     43
     ],
     [
      15,
-     31
+     30
     ],
     [
      15,
-     106
+     107
     ],
     [
      15,
-     78
-    ],
-    [
-     14,
-     32
+     79
     ],
     [
      15,
-     75
+     29
     ],
     [
      15,
-     56
+     72
     ],
     [
      15,
-     82
+     57
     ],
     [
      15,
      84
+    ],
+    [
+     15,
+     82
     ]
    ],
    "fallbacks": 0,
-   "selection_seconds": 10.68,
-   "longest_day_seconds": 4.51,
-   "elapsed": 55.7
+   "selection_seconds": 12.37,
+   "longest_day_seconds": 4.52,
+   "elapsed": 57.5
   },
   "winner": "new"
  },
@@ -1160,7 +1160,8 @@
    "longest_day_seconds": 4.5,
    "elapsed": 28.4
   },
-  "winner": "new"
+  "winner": "new",
+  "note": "ch\u1ea1y tr\u01b0\u1edbc khi th\u00eam c\u01a1 ch\u1ebf b\u1ea3o v\u1ec7 D (commit f7eac58)"
  },
  "generated_16_2026": {
   "old": {
@@ -1245,7 +1246,8 @@
    "longest_day_seconds": 4.5,
    "elapsed": 28.4
   },
-  "winner": "new"
+  "winner": "new",
+  "note": "ch\u1ea1y tr\u01b0\u1edbc khi th\u00eam c\u01a1 ch\u1ebf b\u1ea3o v\u1ec7 D (commit f7eac58)"
  },
  "generated_32_2026": {
   "old": {
@@ -1330,7 +1332,8 @@
    "longest_day_seconds": 4.5,
    "elapsed": 28.4
   },
-  "winner": "new"
+  "winner": "new",
+  "note": "ch\u1ea1y tr\u01b0\u1edbc khi th\u00eam c\u01a1 ch\u1ebf b\u1ea3o v\u1ec7 D (commit f7eac58)"
  },
  "generated_8_2027": {
   "old": {
@@ -1415,7 +1418,8 @@
    "longest_day_seconds": 4.5,
    "elapsed": 28.4
   },
-  "winner": "new"
+  "winner": "new",
+  "note": "ch\u1ea1y tr\u01b0\u1edbc khi th\u00eam c\u01a1 ch\u1ebf b\u1ea3o v\u1ec7 D (commit f7eac58)"
  },
  "generated_16_2027": {
   "old": {
@@ -1500,7 +1504,8 @@
    "longest_day_seconds": 4.5,
    "elapsed": 28.4
   },
-  "winner": "new"
+  "winner": "new",
+  "note": "ch\u1ea1y tr\u01b0\u1edbc khi th\u00eam c\u01a1 ch\u1ebf b\u1ea3o v\u1ec7 D (commit f7eac58)"
  },
  "generated_32_2027": {
   "old": {
@@ -1585,6 +1590,7 @@
    "longest_day_seconds": 4.5,
    "elapsed": 28.4
   },
-  "winner": "new"
+  "winner": "new",
+  "note": "ch\u1ea1y tr\u01b0\u1edbc khi th\u00eam c\u01a1 ch\u1ebf b\u1ea3o v\u1ec7 D (commit f7eac58)"
  }
 }
