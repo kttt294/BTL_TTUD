@@ -1,0 +1,445 @@
+{
+  "observed_on": "2026-10-20",
+  "source": "GET /api/game/practice/score; GET /api/game/practice/peer",
+  "roster_teams": 23,
+  "teams_with_complete_runs": 7,
+  "distinct_maps": 8,
+  "complete_runs_excluding_duplicate_Q02": 36,
+  "runs_at_U_bound": 36,
+  "runs_at_D_bound": 33,
+  "note": "Ảnh chụp các lượt đã hoàn tất, không phải chứng minh cho mọi đội hoặc mọi input.",
+  "completed_observations": [
+    {
+      "team_id": "53",
+      "team": "IUH 1",
+      "case": "Q01",
+      "read_at_utc": "2026-10-20T13:54:18.275033+00:00",
+      "score": [
+        20,
+        200,
+        514
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "53",
+      "team": "IUH 1",
+      "case": "Q03",
+      "read_at_utc": "2026-10-20T13:54:20.587757+00:00",
+      "score": [
+        20,
+        195,
+        436
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "53",
+      "team": "IUH 1",
+      "case": "Q04",
+      "read_at_utc": "2026-10-20T13:54:21.783438+00:00",
+      "score": [
+        20,
+        200,
+        540
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "53",
+      "team": "IUH 1",
+      "case": "Q06",
+      "read_at_utc": "2026-10-20T13:54:22.786783+00:00",
+      "score": [
+        15,
+        150,
+        524
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "53",
+      "team": "IUH 1",
+      "case": "Q07",
+      "read_at_utc": "2026-10-20T13:54:23.772707+00:00",
+      "score": [
+        15,
+        150,
+        579
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "53",
+      "team": "IUH 1",
+      "case": "Q08",
+      "read_at_utc": "2026-10-20T13:54:24.990778+00:00",
+      "score": [
+        15,
+        150,
+        583
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "53",
+      "team": "IUH 1",
+      "case": "Q09",
+      "read_at_utc": "2026-10-20T13:54:26.054034+00:00",
+      "score": [
+        15,
+        150,
+        595
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "53",
+      "team": "IUH 1",
+      "case": "Q10",
+      "read_at_utc": "2026-10-20T13:54:27.249743+00:00",
+      "score": [
+        15,
+        150,
+        575
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "55",
+      "team": "Test_HMI",
+      "case": "Q10",
+      "read_at_utc": "2026-10-20T13:54:37.263003+00:00",
+      "score": [
+        15,
+        147,
+        447
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "case": "Q01",
+      "read_at_utc": "2026-10-20T13:54:35.342729+00:00",
+      "score": [
+        20,
+        200,
+        532
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "case": "Q03",
+      "read_at_utc": "2026-10-20T13:54:37.377836+00:00",
+      "score": [
+        20,
+        200,
+        530
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "case": "Q04",
+      "read_at_utc": "2026-10-20T13:54:39.086562+00:00",
+      "score": [
+        20,
+        200,
+        481
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "case": "Q06",
+      "read_at_utc": "2026-10-20T13:54:40.115443+00:00",
+      "score": [
+        15,
+        150,
+        454
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "case": "Q07",
+      "read_at_utc": "2026-10-20T13:54:41.156018+00:00",
+      "score": [
+        15,
+        150,
+        760
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "case": "Q08",
+      "read_at_utc": "2026-10-20T13:54:42.271451+00:00",
+      "score": [
+        15,
+        150,
+        620
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "case": "Q09",
+      "read_at_utc": "2026-10-20T13:54:43.546036+00:00",
+      "score": [
+        15,
+        150,
+        523
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "case": "Q10",
+      "read_at_utc": "2026-10-20T13:54:44.643891+00:00",
+      "score": [
+        15,
+        150,
+        551
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "case": "Q01",
+      "read_at_utc": "2026-10-20T13:54:56.105015+00:00",
+      "score": [
+        20,
+        200,
+        614
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "case": "Q03",
+      "read_at_utc": "2026-10-20T13:54:58.303178+00:00",
+      "score": [
+        20,
+        200,
+        659
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "case": "Q04",
+      "read_at_utc": "2026-10-20T13:54:59.266097+00:00",
+      "score": [
+        20,
+        200,
+        636
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "case": "Q06",
+      "read_at_utc": "2026-10-20T13:55:00.236678+00:00",
+      "score": [
+        15,
+        150,
+        735
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "case": "Q07",
+      "read_at_utc": "2026-10-20T13:55:01.328955+00:00",
+      "score": [
+        15,
+        150,
+        820
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "case": "Q08",
+      "read_at_utc": "2026-10-20T13:55:02.476687+00:00",
+      "score": [
+        15,
+        150,
+        685
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "case": "Q09",
+      "read_at_utc": "2026-10-20T13:55:03.476351+00:00",
+      "score": [
+        15,
+        150,
+        701
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "case": "Q10",
+      "read_at_utc": "2026-10-20T13:55:04.599486+00:00",
+      "score": [
+        15,
+        150,
+        698
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "65",
+      "team": "HAUI 3",
+      "case": "Q01",
+      "read_at_utc": "2026-10-20T13:55:11.950469+00:00",
+      "score": [
+        20,
+        200,
+        563
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "65",
+      "team": "HAUI 3",
+      "case": "Q03",
+      "read_at_utc": "2026-10-20T13:55:14.070291+00:00",
+      "score": [
+        20,
+        200,
+        540
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "65",
+      "team": "HAUI 3",
+      "case": "Q04",
+      "read_at_utc": "2026-10-20T13:55:15.146519+00:00",
+      "score": [
+        20,
+        200,
+        597
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "65",
+      "team": "HAUI 3",
+      "case": "Q06",
+      "read_at_utc": "2026-10-20T13:55:16.249784+00:00",
+      "score": [
+        15,
+        150,
+        677
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "65",
+      "team": "HAUI 3",
+      "case": "Q07",
+      "read_at_utc": "2026-10-20T13:55:17.313080+00:00",
+      "score": [
+        15,
+        150,
+        795
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "65",
+      "team": "HAUI 3",
+      "case": "Q08",
+      "read_at_utc": "2026-10-20T13:55:18.424042+00:00",
+      "score": [
+        15,
+        150,
+        617
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "65",
+      "team": "HAUI 3",
+      "case": "Q09",
+      "read_at_utc": "2026-10-20T13:55:19.535246+00:00",
+      "score": [
+        15,
+        150,
+        608
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "65",
+      "team": "HAUI 3",
+      "case": "Q10",
+      "read_at_utc": "2026-10-20T13:55:21.071253+00:00",
+      "score": [
+        15,
+        150,
+        637
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "78",
+      "team": "DAU 2",
+      "case": "Q01",
+      "read_at_utc": "2026-10-20T13:55:22.225398+00:00",
+      "score": [
+        20,
+        200,
+        566
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "81",
+      "team": "CTU 1",
+      "case": "Q01",
+      "read_at_utc": "2026-10-20T13:55:37.278515+00:00",
+      "score": [
+        20,
+        199,
+        610
+      ],
+      "submitted_days": 10
+    },
+    {
+      "team_id": "81",
+      "team": "CTU 1",
+      "case": "Q03",
+      "read_at_utc": "2026-10-20T13:55:39.572580+00:00",
+      "score": [
+        20,
+        200,
+        670
+      ],
+      "submitted_days": 10
+    }
+  ]
+}

@@ -1,0 +1,787 @@
+{
+  "matched": {
+    "Q01": {
+      "greedy": {
+        "runs": 3,
+        "mean_score": [
+          20,
+          152.67,
+          198.33
+        ],
+        "full_U": 3,
+        "full_D": 0,
+        "min_D": 115,
+        "max_D": 196,
+        "Q_range": [
+          119,
+          320
+        ],
+        "mean_day_seconds": 0.993,
+        "max_day_seconds": 1.032
+      },
+      "full": {
+        "runs": 3,
+        "mean_score": [
+          20,
+          199,
+          550
+        ],
+        "full_U": 3,
+        "full_D": 2,
+        "min_D": 197,
+        "max_D": 200,
+        "Q_range": [
+          471,
+          597
+        ],
+        "mean_day_seconds": 0.952,
+        "max_day_seconds": 2.012
+      }
+    },
+    "Q03": {
+      "greedy": {
+        "runs": 3,
+        "mean_score": [
+          20,
+          197,
+          341
+        ],
+        "full_U": 3,
+        "full_D": 0,
+        "min_D": 196,
+        "max_D": 199,
+        "Q_range": [
+          313,
+          359
+        ],
+        "mean_day_seconds": 0.951,
+        "max_day_seconds": 1.004
+      },
+      "full": {
+        "runs": 3,
+        "mean_score": [
+          20,
+          200,
+          653.33
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 200,
+        "max_D": 200,
+        "Q_range": [
+          650,
+          656
+        ],
+        "mean_day_seconds": 0.903,
+        "max_day_seconds": 0.905
+      }
+    },
+    "Q04": {
+      "greedy": {
+        "runs": 3,
+        "mean_score": [
+          20,
+          198.67,
+          425
+        ],
+        "full_U": 3,
+        "full_D": 1,
+        "min_D": 197,
+        "max_D": 200,
+        "Q_range": [
+          397,
+          457
+        ],
+        "mean_day_seconds": 0.901,
+        "max_day_seconds": 1.005
+      },
+      "full": {
+        "runs": 3,
+        "mean_score": [
+          20,
+          200,
+          620.33
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 200,
+        "max_D": 200,
+        "Q_range": [
+          611,
+          628
+        ],
+        "mean_day_seconds": 0.903,
+        "max_day_seconds": 0.905
+      }
+    },
+    "Q06": {
+      "greedy": {
+        "runs": 3,
+        "mean_score": [
+          15,
+          148,
+          325
+        ],
+        "full_U": 3,
+        "full_D": 1,
+        "min_D": 145,
+        "max_D": 150,
+        "Q_range": [
+          254,
+          361
+        ],
+        "mean_day_seconds": 0.988,
+        "max_day_seconds": 1.007
+      },
+      "full": {
+        "runs": 3,
+        "mean_score": [
+          15,
+          150,
+          702
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 150,
+        "max_D": 150,
+        "Q_range": [
+          687,
+          718
+        ],
+        "mean_day_seconds": 0.904,
+        "max_day_seconds": 0.907
+      }
+    },
+    "Q07": {
+      "greedy": {
+        "runs": 3,
+        "mean_score": [
+          15,
+          130,
+          225.67
+        ],
+        "full_U": 3,
+        "full_D": 0,
+        "min_D": 121,
+        "max_D": 141,
+        "Q_range": [
+          177,
+          318
+        ],
+        "mean_day_seconds": 1.008,
+        "max_day_seconds": 1.029
+      },
+      "full": {
+        "runs": 3,
+        "mean_score": [
+          15,
+          150,
+          804.67
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 150,
+        "max_D": 150,
+        "Q_range": [
+          798,
+          818
+        ],
+        "mean_day_seconds": 0.905,
+        "max_day_seconds": 0.912
+      }
+    },
+    "Q08": {
+      "greedy": {
+        "runs": 3,
+        "mean_score": [
+          15,
+          144.67,
+          240.33
+        ],
+        "full_U": 3,
+        "full_D": 0,
+        "min_D": 138,
+        "max_D": 148,
+        "Q_range": [
+          219,
+          257
+        ],
+        "mean_day_seconds": 0.985,
+        "max_day_seconds": 1.011
+      },
+      "full": {
+        "runs": 3,
+        "mean_score": [
+          15,
+          150,
+          647
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 150,
+        "max_D": 150,
+        "Q_range": [
+          632,
+          665
+        ],
+        "mean_day_seconds": 0.949,
+        "max_day_seconds": 2.189
+      }
+    },
+    "Q09": {
+      "greedy": {
+        "runs": 3,
+        "mean_score": [
+          15,
+          135.67,
+          264.33
+        ],
+        "full_U": 3,
+        "full_D": 0,
+        "min_D": 110,
+        "max_D": 149,
+        "Q_range": [
+          147,
+          355
+        ],
+        "mean_day_seconds": 1.01,
+        "max_day_seconds": 1.042
+      },
+      "full": {
+        "runs": 3,
+        "mean_score": [
+          15,
+          150,
+          675
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 150,
+        "max_D": 150,
+        "Q_range": [
+          672,
+          679
+        ],
+        "mean_day_seconds": 0.958,
+        "max_day_seconds": 2.012
+      }
+    },
+    "Q10": {
+      "greedy": {
+        "runs": 3,
+        "mean_score": [
+          15,
+          123,
+          203
+        ],
+        "full_U": 3,
+        "full_D": 1,
+        "min_D": 99,
+        "max_D": 150,
+        "Q_range": [
+          149,
+          259
+        ],
+        "mean_day_seconds": 1.0,
+        "max_day_seconds": 1.052
+      },
+      "full": {
+        "runs": 3,
+        "mean_score": [
+          15,
+          150,
+          653.67
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 150,
+        "max_D": 150,
+        "Q_range": [
+          647,
+          659
+        ],
+        "mean_day_seconds": 0.906,
+        "max_day_seconds": 0.947
+      }
+    },
+    "G8": {
+      "greedy": {
+        "runs": 3,
+        "mean_score": [
+          8,
+          32,
+          132
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 32,
+        "max_D": 32,
+        "Q_range": [
+          130,
+          133
+        ],
+        "mean_day_seconds": 0.217,
+        "max_day_seconds": 0.786
+      },
+      "full": {
+        "runs": 3,
+        "mean_score": [
+          8,
+          32,
+          140.67
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 32,
+        "max_D": 32,
+        "Q_range": [
+          140,
+          141
+        ],
+        "mean_day_seconds": 0.906,
+        "max_day_seconds": 0.942
+      }
+    },
+    "G16": {
+      "greedy": {
+        "runs": 3,
+        "mean_score": [
+          12,
+          48,
+          110.67
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 48,
+        "max_D": 48,
+        "Q_range": [
+          99,
+          120
+        ],
+        "mean_day_seconds": 0.57,
+        "max_day_seconds": 1.027
+      },
+      "full": {
+        "runs": 3,
+        "mean_score": [
+          12,
+          48,
+          136.67
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 48,
+        "max_D": 48,
+        "Q_range": [
+          135,
+          138
+        ],
+        "mean_day_seconds": 0.902,
+        "max_day_seconds": 0.904
+      }
+    },
+    "G32": {
+      "greedy": {
+        "runs": 3,
+        "mean_score": [
+          12,
+          36,
+          43
+        ],
+        "full_U": 3,
+        "full_D": 0,
+        "min_D": 26,
+        "max_D": 43,
+        "Q_range": [
+          26,
+          58
+        ],
+        "mean_day_seconds": 0.957,
+        "max_day_seconds": 1.006
+      },
+      "full": {
+        "runs": 3,
+        "mean_score": [
+          12,
+          44.67,
+          66.33
+        ],
+        "full_U": 3,
+        "full_D": 0,
+        "min_D": 42,
+        "max_D": 46,
+        "Q_range": [
+          55,
+          75
+        ],
+        "mean_day_seconds": 0.937,
+        "max_day_seconds": 1.31
+      }
+    }
+  },
+  "ablation_practice": {
+    "full": {
+      "runs": 9,
+      "mean_score": [
+        18.33,
+        183,
+        624.11
+      ],
+      "full_U": 9,
+      "full_D": 8,
+      "min_D": 150,
+      "max_D": 200,
+      "Q_range": [
+        471,
+        718
+      ],
+      "mean_day_seconds": 0.919,
+      "max_day_seconds": 2.012
+    },
+    "no_local": {
+      "runs": 9,
+      "mean_score": [
+        18.33,
+        183.11,
+        609.56
+      ],
+      "full_U": 9,
+      "full_D": 7,
+      "min_D": 149,
+      "max_D": 200,
+      "Q_range": [
+        547,
+        693
+      ],
+      "mean_day_seconds": 0.499,
+      "max_day_seconds": 1.565
+    },
+    "no_cover": {
+      "runs": 9,
+      "mean_score": [
+        18.33,
+        182.89,
+        630.44
+      ],
+      "full_U": 9,
+      "full_D": 7,
+      "min_D": 149,
+      "max_D": 200,
+      "Q_range": [
+        556,
+        726
+      ],
+      "mean_day_seconds": 0.943,
+      "max_day_seconds": 2.999
+    },
+    "no_anchor": {
+      "runs": 9,
+      "mean_score": [
+        18.33,
+        182.89,
+        640.11
+      ],
+      "full_U": 9,
+      "full_D": 6,
+      "min_D": 150,
+      "max_D": 200,
+      "Q_range": [
+        577,
+        720
+      ],
+      "mean_day_seconds": 0.905,
+      "max_day_seconds": 1.021
+    }
+  },
+  "ablation_generated": {
+    "full": {
+      "runs": 9,
+      "mean_score": [
+        10.67,
+        41.56,
+        114.56
+      ],
+      "full_U": 9,
+      "full_D": 6,
+      "min_D": 32,
+      "max_D": 48,
+      "Q_range": [
+        55,
+        141
+      ],
+      "mean_day_seconds": 0.915,
+      "max_day_seconds": 1.31
+    },
+    "no_local": {
+      "runs": 9,
+      "mean_score": [
+        10.67,
+        40.33,
+        107.56
+      ],
+      "full_U": 9,
+      "full_D": 6,
+      "min_D": 32,
+      "max_D": 48,
+      "Q_range": [
+        48,
+        137
+      ],
+      "mean_day_seconds": 0.397,
+      "max_day_seconds": 1.612
+    },
+    "no_cover": {
+      "runs": 9,
+      "mean_score": [
+        10.67,
+        41.44,
+        114
+      ],
+      "full_U": 9,
+      "full_D": 6,
+      "min_D": 32,
+      "max_D": 48,
+      "Q_range": [
+        50,
+        141
+      ],
+      "mean_day_seconds": 0.933,
+      "max_day_seconds": 1.984
+    },
+    "no_anchor": {
+      "runs": 9,
+      "mean_score": [
+        10.67,
+        41.11,
+        115.67
+      ],
+      "full_U": 9,
+      "full_D": 6,
+      "min_D": 32,
+      "max_D": 48,
+      "Q_range": [
+        69,
+        141
+      ],
+      "mean_day_seconds": 0.925,
+      "max_day_seconds": 1.632
+    }
+  },
+  "pairs": {
+    "greedy": {
+      "wins": 33,
+      "ties": 0,
+      "losses": 0
+    },
+    "no_local": {
+      "wins": 17,
+      "ties": 0,
+      "losses": 1
+    },
+    "no_cover": {
+      "wins": 9,
+      "ties": 2,
+      "losses": 7
+    },
+    "no_anchor": {
+      "wins": 7,
+      "ties": 2,
+      "losses": 9
+    }
+  },
+  "roles": {
+    "greedy_all_patrol": {
+      "runs": 3,
+      "mean_score": [
+        20,
+        147.67,
+        232.33
+      ],
+      "full_U": 3,
+      "full_D": 0,
+      "min_D": 135,
+      "max_D": 156,
+      "Q_range": [
+        219,
+        249
+      ],
+      "mean_day_seconds": 0.597,
+      "max_day_seconds": 1.009
+    },
+    "greedy_one_supply": {
+      "runs": 3,
+      "mean_score": [
+        20,
+        152.67,
+        198.33
+      ],
+      "full_U": 3,
+      "full_D": 0,
+      "min_D": 115,
+      "max_D": 196,
+      "Q_range": [
+        119,
+        320
+      ],
+      "mean_day_seconds": 0.993,
+      "max_day_seconds": 1.032
+    },
+    "full_all_patrol": {
+      "runs": 3,
+      "mean_score": [
+        20,
+        185.67,
+        323.67
+      ],
+      "full_U": 3,
+      "full_D": 0,
+      "min_D": 184,
+      "max_D": 187,
+      "Q_range": [
+        317,
+        332
+      ],
+      "mean_day_seconds": 0.926,
+      "max_day_seconds": 1.187
+    },
+    "full_one_supply": {
+      "runs": 3,
+      "mean_score": [
+        20,
+        199,
+        550
+      ],
+      "full_U": 3,
+      "full_D": 2,
+      "min_D": 197,
+      "max_D": 200,
+      "Q_range": [
+        471,
+        597
+      ],
+      "mean_day_seconds": 0.952,
+      "max_day_seconds": 2.012
+    }
+  },
+  "budget": {
+    "Q01": {
+      "1.0": {
+        "runs": 3,
+        "mean_score": [
+          20,
+          199,
+          550
+        ],
+        "full_U": 3,
+        "full_D": 2,
+        "min_D": 197,
+        "max_D": 200,
+        "Q_range": [
+          471,
+          597
+        ],
+        "mean_day_seconds": 0.952,
+        "max_day_seconds": 2.012
+      },
+      "3.0": {
+        "runs": 3,
+        "mean_score": [
+          20,
+          200,
+          594.67
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 200,
+        "max_D": 200,
+        "Q_range": [
+          590,
+          600
+        ],
+        "mean_day_seconds": 2.705,
+        "max_day_seconds": 2.711
+      }
+    },
+    "Q06": {
+      "1.0": {
+        "runs": 3,
+        "mean_score": [
+          15,
+          150,
+          702
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 150,
+        "max_D": 150,
+        "Q_range": [
+          687,
+          718
+        ],
+        "mean_day_seconds": 0.904,
+        "max_day_seconds": 0.907
+      },
+      "3.0": {
+        "runs": 3,
+        "mean_score": [
+          15,
+          150,
+          733.33
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 150,
+        "max_D": 150,
+        "Q_range": [
+          727,
+          741
+        ],
+        "mean_day_seconds": 2.705,
+        "max_day_seconds": 2.735
+      }
+    },
+    "G16": {
+      "1.0": {
+        "runs": 3,
+        "mean_score": [
+          12,
+          48,
+          136.67
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 48,
+        "max_D": 48,
+        "Q_range": [
+          135,
+          138
+        ],
+        "mean_day_seconds": 0.902,
+        "max_day_seconds": 0.904
+      },
+      "3.0": {
+        "runs": 3,
+        "mean_score": [
+          12,
+          48,
+          139
+        ],
+        "full_U": 3,
+        "full_D": 3,
+        "min_D": 48,
+        "max_D": 48,
+        "Q_range": [
+          136,
+          141
+        ],
+        "mean_day_seconds": 2.704,
+        "max_day_seconds": 2.727
+      }
+    }
+  },
+  "overall": {
+    "valid_runs": 135,
+    "daily_plans": 1062,
+    "max_day_seconds": 2.999249000000418
+  }
+}

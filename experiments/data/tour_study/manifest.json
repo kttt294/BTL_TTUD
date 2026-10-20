@@ -1,0 +1,174 @@
+{
+  "source_revision": "dccaaf9da936fd10ff09bc07d48513dbe16f3535",
+  "source_hashes": {
+    "src/hexudon/__init__.py": "55c77a20188bff004691aab7087215035aa737842234dc6b0081ecc42eb35247",
+    "src/hexudon/__main__.py": "84302ec222e52be662a7e4643bbf1a92a50b5a0794c35e5649b82814d794c034",
+    "src/hexudon/api.py": "95a5dcc8150f92a13924b11771f59d5eec5c67c8f78d7366ee92119bc25cc575",
+    "src/hexudon/bounds.py": "f6954dae8cf808b3f6ba76a62b074bddc45c07ab1756840c778fea15adf90a13",
+    "src/hexudon/exact.py": "0006f3ec5a8da1d9618e71229d4ae0352ad17b6a45bdc985583e819f300e7b8d",
+    "src/hexudon/generator.py": "95fb453e223b8d39f16b2b4876ae6c23e798b3f5fb9e79ecb5a733f3cea8602a",
+    "src/hexudon/live.py": "5ddd3af78933a25c74a0663c2f60400a92968a4624ec2251c94d7187624a6c21",
+    "src/hexudon/live_api.py": "9d49d83c26c4eef968fe99ee81d25016bf8ed713f196ebac3bbf786514714f14",
+    "src/hexudon/live_storage.py": "b2a0988fbff0d4ee956d7c3d355a8fbcfbf52d16d138e105014fb2576f3f568c",
+    "src/hexudon/model.py": "eb5b7f725dd4daa6dd767d53aecc173926a516bd1bb22245061825e7dc11f6e3",
+    "src/hexudon/planner.py": "7ddd0928eaa7520498907ae5ca9f8ae684e939cb6df005e07d8243804208c83e",
+    "src/hexudon/search.py": "19693c98bc67d8a69ecef45a876f595c6cfcee2b57a210dd21fb42066345b8b9",
+    "src/hexudon/simulator.py": "8b0583b87fc068cd667db92bb834700ae0c4ebb5467587e3beb981f2ec35f9a8",
+    "src/hexudon/team_selection.py": "c9dec7d27ea85225384f22e6eeb5936faf4f7a3c109f493e6baffaa60d261fd6",
+    "src/hexudon/tour.py": "6432875907e06ae6fb13a358e46084171fde54ca52be7d7d0e47154b9b2a91b5",
+    "src/main.py": "98f48677c7a4b05265da665bf033497c28e59027ffb6330dd132d2f00b49da7e"
+  },
+  "seeds": [
+    71,
+    72,
+    73
+  ],
+  "seconds_per_day": 1.0,
+  "workers": 3,
+  "ablation_cases": [
+    "Q01",
+    "Q04",
+    "Q06",
+    "G8",
+    "G16",
+    "G32"
+  ],
+  "cases": [
+    {
+      "case": "Q01",
+      "source": "practice",
+      "types": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "Q03",
+      "source": "practice",
+      "types": [
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "case": "Q04",
+      "source": "practice",
+      "types": [
+        0,
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "case": "Q06",
+      "source": "practice",
+      "types": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "Q07",
+      "source": "practice",
+      "types": [
+        0,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "Q08",
+      "source": "practice",
+      "types": [
+        0,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "Q09",
+      "source": "practice",
+      "types": [
+        0,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "Q10",
+      "source": "practice",
+      "types": [
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "G8",
+      "source": "generated",
+      "size": 8,
+      "map_seed": 20261029,
+      "types": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "G16",
+      "source": "generated",
+      "size": 16,
+      "map_seed": 20261037,
+      "types": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "G32",
+      "source": "generated",
+      "size": 32,
+      "map_seed": 20261053,
+      "types": [
+        1,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "input_hashes": {
+    "G16.json": "05b29f569371a69c2b48264288d9e0a7d9f9bfdd610645c37004bb9df4c914c0",
+    "G32.json": "4b7de567da0724da9848b45094786a80b08bdde20f2565ff72ac5f1336b2f2f2",
+    "G8.json": "ce099edf97c36b8a95b6b3cbccbd3b4ba454fad102ca66877922b195763da26a",
+    "Q01.json": "0f0d34876291d2c23ea2f7b39895426fb65e4b1744664f46b38bbb8f6f6b2885",
+    "Q03.json": "6aa7298e97968b1da45f60e7ffb699913b3830b17a6f8adabd5d621e2f3c6da2",
+    "Q04.json": "e060fb874af06b22a75488e17168c2775bbffc99b78c19caa967e4cfa0221a43",
+    "Q06.json": "c822caca98aa16135662ec24fcca6494ff02b675f4cbfdf6aeb74de64a17c92f",
+    "Q07.json": "97478f7c5c5efcfe32b32d1d761f9bd057d9cc2d599df12773e0f1d6bd666d27",
+    "Q08.json": "e5346ce1eac65a62a092803cc400fc857862d76bf7bd4cf801eac047aaff5ab3",
+    "Q09.json": "08bad09755c29da75b36944a2e7d0754ed450bde0a508266760508d7fdf947f7",
+    "Q10.json": "b7d59408aaac053801ef8d271eac50968abc7df32de5cc2a7ed50cbe702370a6"
+  }
+}

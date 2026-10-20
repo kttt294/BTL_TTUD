@@ -21,6 +21,8 @@ Các công cụ trong nhóm API giữ nguyên hành vi nộp hoặc reset đư�
 
 ## Mục lục
 
+- [Đối chứng có kiểm soát cho tour](#thuc-nghiem-tour)
+
 1. [Hướng dẫn chạy và nộp bài](#su-dung)
 2. [Kết quả hiện tại được Ban tổ chức chấm](#ket-qua)
 3. [Hướng dẫn kiểm chứng và API đã sử dụng](#kiem-chung)
@@ -715,3 +717,22 @@ Trong 90 ngày, mô hình đã tạo 90 ứng viên; bộ chọn đã dùng RL c
 Theo thứ tự ưu tiên ba thành phần điểm, lượt RL kết hợp Greedy tốt hơn ở 0 bài, kém hơn ở 9 bài và bằng nhau ở 0 bài. Thống kê này bao gồm hai nhãn Q01/Q02 có input trùng nhau. Đây là so sánh hai cấu hình hoàn chỉnh, không tách riêng tác động của chính sách RL và các heuristic hỗ trợ.
 <!-- end:rl_branch_evaluation.md -->
 
+
+<a id="thuc-nghiem-tour"></a>
+
+## 11. Đối chứng có kiểm soát cho phương pháp tour
+
+Bộ đo bổ sung gồm 135 lượt và 1.062 kế hoạch ngày: tám bản đồ Practice khác nhau, ba bản đồ sinh 8×8/16×16/32×32, ba lượt lặp. Hai planner dùng cùng đội hình và ngân sách yêu cầu 1 giây/ngày. Phép tách thành phần chạy trên sáu input; phép tăng ngân sách dùng 3 giây/ngày trên ba input. Đây là số liệu offline, không ghi đè các lượt Practice trên website. Các ngưỡng thời gian là giới hạn mềm, không phải cam kết đáp ứng deadline cứng.
+
+```powershell
+# Chấm lại toàn bộ hành trình đã lưu, không gọi API
+python -X utf8 experiments/run.py tour_study --audit-only
+# Tính lại các bảng tổng hợp từ kết quả đã lưu
+python -X utf8 experiments/run.py summarize_tour_study
+# Chạy bộ đo; các lượt đã có được bỏ qua
+python -X utf8 experiments/run.py tour_study --workers 3
+```
+
+Dữ liệu nằm trong `experiments/data/tour_study/`: `inputs/` giữ 11 cấu hình, `manifest.json` giữ đội hình, seed và dấu kiểm tra mã nguồn; `results.json` chứa mọi chuỗi lệnh và trạng thái cuối ngày; `summary.json`, `audit.json` và `machine.json` chứa thống kê và điều kiện đo. Có thể chuyển `results.json` sang một tên dự phòng trước khi chạy để đo lại từ đầu; thời hạn thực và tải máy có thể làm kết quả khác lần đã lưu. Việc chạy lại dùng kết quả mới, không bảo đảm lặp đúng từng chữ số. Bộ kiểm tra không cần checkpoint RL hoặc token.
+
+Các biến thể chỉ thay đổi một thành phần: bỏ hàm cải thiện tuyến, bỏ lượt dựng lại để phủ loại hôm nay, hoặc bỏ tìm điểm neo. Những thành phần còn lại, simulator và luật chấm được giữ nguyên. Có thêm đối chứng 2×2 trên Q01 để phân biệt tác động của planner với việc đổi đội hình.
