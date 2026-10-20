@@ -1,0 +1,32 @@
+[
+  {
+    "question": "Q04",
+    "variant": "rl_rollout",
+    "game_id": "83f54883-4731-472e-bec2-f36f161b1374:62",
+    "server_score": [
+      20,
+      138,
+      149
+    ],
+    "accepted_days": 10,
+    "checked_frames": 1565,
+    "checked_values": 21564,
+    "mismatches": 0,
+    "selected_rl_days": 1
+  },
+  {
+    "question": "Q06",
+    "variant": "rl_rollout",
+    "game_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3:62",
+    "server_score": [
+      15,
+      142,
+      184
+    ],
+    "accepted_days": 10,
+    "checked_frames": 1242,
+    "checked_values": 22656,
+    "mismatches": 0,
+    "selected_rl_days": 0
+  }
+]

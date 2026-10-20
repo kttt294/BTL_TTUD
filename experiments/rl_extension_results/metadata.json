@@ -1,0 +1,35 @@
+{
+  "branch_commit": "b6df084c253503b5673721c126ff261430cd0021",
+  "checkpoint": "scratch\\Procon2026_rl_eval\\runs\\pilot_reserved_001\\seed_20042\\episode_256.pt",
+  "checkpoint_sha256": "0a7d045eb8c6b2476060aa2f569fbcc48dc8b50de5bdede9a9ede6d555e89919",
+  "episodes_completed": 256,
+  "torch_version": "2.14.1+cpu",
+  "device": "cpu",
+  "new_training": false,
+  "sampled_joint_targets": 3,
+  "argmax_joint_targets": 1,
+  "daily_planner_seconds": 0.12,
+  "continuation_planner_seconds": 0.03,
+  "decision_deadline_seconds": 20,
+  "agent_types": "all_patrol",
+  "simulator": "ttud_clean, one team",
+  "rollout_horizon": "all_remaining_days",
+  "variants": [
+    "greedy",
+    "rollout_no_rl",
+    "rl_daily",
+    "rl_rollout"
+  ],
+  "questions": [
+    "Q01",
+    "Q02",
+    "Q03",
+    "Q04",
+    "Q06",
+    "Q07",
+    "Q08",
+    "Q09",
+    "Q10"
+  ],
+  "baseline_cache_shared_between_variants": true
+}

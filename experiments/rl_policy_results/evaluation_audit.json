@@ -1,0 +1,22 @@
+{
+  "matches": 378,
+  "replay_verified_days": 2916,
+  "invalid_plans": 0,
+  "replay_score_mismatches": 0,
+  "fallback_calls": 0,
+  "official_used_for_training": false,
+  "official_used_for_checkpoint_selection": false,
+  "notes": "Mỗi ngày chạy đúng một chuỗi quyết định; không chọn tốt nhất trong nhiều mẫu. Đánh giá thêm lấy mẫu sau khi chẩn đoán argmax chọn chờ trên Q04 và một bản đồ sinh; không đổi trọng số hoặc chọn checkpoint theo các điểm này.",
+  "checkpoint_hashes_verified": 3,
+  "changed_weight_tensors_verified": [
+    8,
+    8,
+    8
+  ],
+  "policy_source_imports_planner": false,
+  "source_sha256": {
+    "rl_policy.py": "96f5c0397fffc7023869dc0ae0c2c76acaaf5a61bd17120e3f8510ec1f205387",
+    "train_rl_policy.py": "b49f1a4cfcaaca3dc22af7ea5d23446a4556cf9c4bf9990dbe5ce8f1fd1a421d",
+    "evaluate_rl_policy.py": "a93bb2272aa220a8e4301a2eebcde77d96b1238adf11398021b6fe6397759c59"
+  }
+}

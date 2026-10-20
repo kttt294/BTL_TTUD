@@ -1,0 +1,16 @@
+{
+  "case_count": 15,
+  "hashes": {
+    "src/hexudon/team_selection.py": "3512fa387b607f5fdcf0fa92e22384c2b13611a18aebd4fafebbd94b1b3f8ad4",
+    "src/hexudon/planner.py": "64c3962191f35a742e60ecc54db95dcc63a9a50cc5a91545172e8f2eab330d25",
+    "src/hexudon/search.py": "19693c98bc67d8a69ecef45a876f595c6cfcee2b57a210dd21fb42066345b8b9",
+    "src/hexudon/simulator.py": "034f5ce69b8547fd10877c08f8c5edfa220ff9d27a1ffe574bf02a54f81387a2",
+    "experiments/benchmark_team_selection.py": "df8de62a3766e72719af333a2e7dd3ad08e506b71eba0bbf146679bccade2f5a"
+  },
+  "score_source": "offline_simulator_except_Q04_Q06_separately_verified_on_BTC",
+  "strategy": "greedy",
+  "evaluation_seconds_per_day": 0.15,
+  "selection_seconds_BTC_configs": 12,
+  "selection_seconds_generated": 4,
+  "single_team_only": true
+}
