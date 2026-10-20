@@ -140,7 +140,7 @@ Nguồn trước khi hợp nhất: `tour_server_results.md`.
 <!-- begin:tour_server_results.md -->
 Ngày kiểm chứng: 20/10/2026. Tám bản đồ Practice khác nhau, đội 62; Q02 trùng Q01 nên không tính là mẫu độc lập. Đội hình cố định theo lượt chọn đã lưu; planner dùng 5 giây/ngày và giao thông thật từ API mỗi ngày.
 
-| Bài | Điểm BTC (U, D, Q) | Cận U, D |
+| Bài | Điểm BTC (U, D, Q) | Cận U, D tối đa theo đề bài |
 |---|---|---|
 | Q01 | (20, 200, 614) | (20, 200) |
 | Q03 | (20, 200, 659) | (20, 200) |
