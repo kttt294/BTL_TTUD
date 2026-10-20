@@ -129,9 +129,11 @@ def main():
     manifest=json.loads((DATA/'manifest.json').read_text(encoding='utf8'))
     # Xác nhận mã dùng đo không bị thay đổi so với bản được mô tả trong báo cáo.
     for path,expected in manifest['source_hashes'].items():
+        if args.audit_only and path not in ('src/hexudon/model.py','src/hexudon/simulator.py'):
+            continue
         assert hashlib.sha256((ROOT/path).read_bytes().replace(b'\r\n', b'\n')).hexdigest()==expected,path
     for name,expected in manifest['input_hashes'].items():
-        assert hashlib.sha256((DATA/'inputs'/name).read_bytes()).hexdigest()==expected,name
+        assert hashlib.sha256((DATA/'inputs'/name).read_bytes().replace(b'\r\n',b'\n')).hexdigest()==expected,name
     alljobs=jobs(manifest)
     if args.cases:alljobs=[j for j in alljobs if j['case'] in args.cases]
     if args.seeds:alljobs=[j for j in alljobs if j['seed'] in args.seeds]

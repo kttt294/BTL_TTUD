@@ -46,37 +46,35 @@ Chạy `play_match.py` tại thư mục dự án. Script dùng API của website
 ### Cách chạy
 
 ```powershell
-python -X utf8 play_match.py ID_TRAN --algorithm greedy
+python -X utf8 play_match.py ID_TRAN --algorithm tour
 ```
 
 Nếu không truyền ID, script sẽ hỏi ID trong cửa sổ lệnh:
 
 ```powershell
-python -X utf8 play_match.py --algorithm greedy
+python -X utf8 play_match.py --algorithm tour
 ```
 
-Các lựa chọn thuật toán:
+Luồng nộp bài chỉ sử dụng `tour`, cũng là mặc định. Công tắc `--predict` là tên thay thế của `--algorithm`. Nếu tour không tạo được kế hoạch hợp lệ, chương trình dừng trước khi gửi; nó không tự chuyển sang Greedy.
 
-| Công tắc | Ý nghĩa |
-|---|---|
-| `--algorithm greedy` | Chọn mục tiêu Greedy, tìm đường A* có ràng buộc. Đây là mặc định. |
-| `--algorithm lookahead` | Nhìn trước hai điểm, tìm đường A* có ràng buộc. |
-| `--algorithm rollout` | Tạo kế hoạch Greedy/Lookahead rồi so kết quả dự báo tới cuối trận bằng mô phỏng một đội. |
+Greedy được giữ trong `src/hexudon/planner.py` để xem mã và chạy đối chứng offline, không dùng trong `play_match.py`. Ví dụ tạo kế hoạch trên bản đồ mẫu mà không nộp bài:
 
-`--predict` là tên thay thế của `--algorithm`. Script này chưa tích hợp mô hình RL. Rollout luôn lấy lại đường thật vào ngày tiếp theo; phần dự báo tương lai không biết bài nộp của đội khác, nên không bảo đảm tối ưu trong trận nhiều đội.
+```powershell
+python -X utf8 src/main.py demo --size 8 --strategy greedy --seconds 1
+```
 
 ### Loại trận và vai trò xe
 
 Mặc định `--mode auto` phân biệt trận tính giờ và Practice theo trường thời gian trong trạng thái máy chủ. ID Practice có hậu tố `:ID_DOI` được nhận dạng là Practice; website cũng cho phép tài khoản đội dùng ID trần và tự ánh xạ sang Practice của đội mình. Nếu API không có đủ dấu hiệu để phân biệt, script yêu cầu chỉ định mode thay vì đoán endpoint.
 
 ```powershell
-python -X utf8 play_match.py ID_TRAN --mode timed --algorithm greedy
-python -X utf8 play_match.py ID_TRAN --mode practice --algorithm lookahead
+python -X utf8 play_match.py ID_TRAN --mode timed --algorithm tour
+python -X utf8 play_match.py ID_TRAN --mode practice --algorithm tour
 ```
 
 Trận tính giờ nộp qua `/api/game/actions`; Practice nộp qua `/api/game/practice/actions`. Script không gọi API reset và không sửa các ngày trước. Chế độ Competitive Practice dùng timeline chung và endpoint `/competitive/actions` chưa được tích hợp; không dùng `--mode practice` để thay cho chế độ đó. Địa chỉ mặc định là `https://hexudon.hairbui76.id.vn`; giao thức này không tự tương thích máy chủ thi chính thức khác hoặc giao thức `/setting`, `/agent`, `/` của nhánh cũ.
 
-Mặc định `--roles auto` dành tối đa tám giây để chọn vai trò bằng mô phỏng trước trận, giới hạn thêm theo cửa sổ chọn vai trò của máy chủ. Có thể chỉ định:
+Mặc định `--roles auto` dành tối đa 20 giây để chọn vai trò bằng mô phỏng trước trận, giới hạn thêm theo cửa sổ chọn vai trò của máy chủ. Có thể chỉ định:
 
 ```powershell
 python -X utf8 play_match.py ID_TRAN --roles all-patrol
@@ -91,10 +89,10 @@ python -X utf8 play_match.py ID_TRAN --types 0 1 0 0
 Mặc định thuật toán được tối đa 20 giây mỗi ngày; script luôn giới hạn lại theo thời gian còn lại máy chủ báo và chừa bốn giây cho kiểm tra, truyền bài. Thời gian lựa chọn vai trò tách khỏi thời gian lập kế hoạch ngày. Không cố định ngân sách thí nghiệm 0,25 giây.
 
 ```powershell
-python -X utf8 play_match.py ID_TRAN --algorithm greedy --seconds 20 --reserve 4
+python -X utf8 play_match.py ID_TRAN --algorithm tour --seconds 20 --reserve 4
 ```
 
-Mỗi ngày, script dùng `/api/game/day` để đọc `traffics`, vị trí và nhiên liệu, đồng thời lấy các loại udon đội mình đã thu từ trạng thái máy chủ. Nó không dùng giao thông do simulator dự báo thay cho giao thông thật. Các kế hoạch của đội khác không được tải. Trạng thái đường trong tương lai của rollout vẫn chỉ là giả định một đội. `reserve` là khoảng đệm, không phải bảo đảm mạng luôn trả lời đúng hạn; nếu đã quá hạn, script không gửi bài của ngày cũ.
+Mỗi ngày, script dùng `/api/game/day` để đọc `traffics`, vị trí và nhiên liệu, đồng thời lấy các loại udon đội mình đã thu từ trạng thái máy chủ. Nó không dùng giao thông do simulator dự báo thay cho giao thông thật. Các kế hoạch của đội khác không được tải. `reserve` là khoảng đệm, không phải bảo đảm mạng luôn trả lời đúng hạn; nếu đã quá hạn, script không gửi bài của ngày cũ.
 
 ### Tiếp tục sau khi ngắt
 
@@ -112,7 +110,7 @@ Khi trận tính giờ đã có bài nộp trong ngày nhưng không có checkpo
 
 ```powershell
 python -X utf8 play_match.py ID_TRAN --inspect
-python -X utf8 play_match.py ID_TRAN --algorithm greedy --dry-run
+python -X utf8 play_match.py ID_TRAN --algorithm tour --dry-run
 ```
 
 `--inspect` chỉ đọc cấu hình/trạng thái. `--dry-run` tạo và kiểm tra output cho ngày đang chạy nhưng không POST; nếu đang ở bước chọn vai trò, nó chỉ đề xuất vai trò rồi dừng. Checkpoint chạy thử được lưu riêng, không đánh dấu như bài đã nộp thật. Có thể dùng `--max-days 1` để giới hạn một ngày được xác nhận trong một lượt kiểm tra có nộp bài.
@@ -736,3 +734,23 @@ python -X utf8 experiments/run.py tour_study --workers 3
 Dữ liệu nằm trong `experiments/data/tour_study/`: `inputs/` giữ 11 cấu hình, `manifest.json` giữ đội hình, seed và dấu kiểm tra mã nguồn; `results.json` chứa mọi chuỗi lệnh và trạng thái cuối ngày; `summary.json`, `audit.json` và `machine.json` chứa thống kê và điều kiện đo. Có thể chuyển `results.json` sang một tên dự phòng trước khi chạy để đo lại từ đầu; thời hạn thực và tải máy có thể làm kết quả khác lần đã lưu. Việc chạy lại dùng kết quả mới, không bảo đảm lặp đúng từng chữ số. Bộ kiểm tra không cần checkpoint RL hoặc token.
 
 Các biến thể chỉ thay đổi một thành phần: bỏ hàm cải thiện tuyến, bỏ lượt dựng lại để phủ loại hôm nay, hoặc bỏ tìm điểm neo. Những thành phần còn lại, simulator và luật chấm được giữ nguyên. Có thêm đối chứng 2×2 trên Q01 để phân biệt tác động của planner với việc đổi đội hình.
+
+
+<a id="do-ben-vung"></a>
+
+## 12. Đánh giá trên 30 bản đồ tự sinh
+
+Bộ dữ liệu `experiments/data/tour_robustness/` gồm 10 bản đồ ở mỗi cỡ 8×8, 16×16 và 32×32. Các input thay đổi seed, nhiên liệu và quỹ step; đội hình luôn là một xe tiếp tế và ba xe tuần tra. Mỗi phương án chạy ba lượt. Phép đo mới sử dụng phiên bản có kiểm tra thời gian trong vòng chèn và dự báo ngày sau; nó được tách khỏi số liệu trước lần bổ sung này.
+
+```powershell
+# Phát lại đúng các output được báo cáo, không cần token
+python -X utf8 experiments/run.py tour_robustness --audit-only
+# Chạy bộ đo; các lượt đã lưu được dùng lại
+python -X utf8 experiments/run.py tour_robustness --workers 4
+```
+
+Muốn tính lại từ đầu, chuyển `experiments/data/tour_robustness/results.json` và thư mục `results/tour_robustness_runs/` (nếu có) sang chỗ dự phòng trước khi chạy. Có 180 lượt Greedy/tour cùng đội hình ở ngân sách yêu cầu 1 giây/ngày; phép tách thành phần trên sáu bản đồ ở 1 và 5 giây dùng thêm 126 lượt, tổng cộng 306 lượt và 1.224 kế hoạch ngày. Ba lượt Greedy là đo lặp, vì Greedy không sử dụng seed. Giao thông chỉ được cập nhật từ đội đang mô phỏng.
+
+`summary.json` giữ thống kê theo kích thước, theo input, các cặp thắng/hòa/thua và thời gian thực tế; `results.json` giữ output và trạng thái từng ngày. `manifest.json` giữ input cùng dấu kiểm tra mã, còn `audit.json` ghi kết quả phát lại. Kiểm tra thời gian làm giảm bước xử lý không bị ngắt, nhưng không phải bảo đảm deadline cứng cho mọi máy hoặc mạng.
+
+Ở cả hai bộ đo, `--audit-only` kiểm tra dấu của model và simulator rồi phát lại output; nó không cần planner hiện tại giống phiên bản đã tạo output. Việc tính lại từ đầu kiểm tra toàn bộ mã lõi. Bộ `tour_study` ban đầu vì vậy vẫn chấm lại được sau khi cải tiến kiểm soát thời gian, nhưng không trộn số liệu mới vào kết quả cũ.

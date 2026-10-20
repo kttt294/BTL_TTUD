@@ -1,7 +1,6 @@
 """Chạy tự động một trận trên API website Việt Nam, không đặt lại trận."""
 
 import argparse
-from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
@@ -74,40 +73,14 @@ def authoritative_state(board, raw, own, journal):
 
 
 def predict(board, state, algorithm, seconds):
-    if algorithm != 'rollout':
-        plan = plan_day(board, state, board.day_steps[state.day], algorithm, seconds)
-        return plan.actions, {'algorithm': algorithm, 'fallback': plan.fallback,
-                              'searches': plan.searches}
-    deadline = time.monotonic() + seconds
-    # Luôn tạo một kế hoạch khả thi trước; không dùng giả định tương lai để kiểm tra ngày hiện tại.
-    candidates = []
-    for strategy in ('greedy', 'lookahead'):
-        remaining = deadline - time.monotonic()
-        if remaining <= .02:
-            break
-        plan = plan_day(board, state, board.day_steps[state.day], strategy, min(2., remaining * .25))
-        candidates.append((strategy, plan.actions))
-    best_actions = candidates[0][1] if candidates else [[-board.day_steps[state.day]] for a in state.agents]
-    best_score, source = None, 'greedy'
-    for name, actions in candidates:
-        current = deepcopy(state)
-        first = True
-        while current.day < len(board.day_steps) and time.monotonic() < deadline:
-            steps = board.day_steps[current.day]
-            commands = actions if first else plan_day(board, current, steps, 'greedy',
-                                                       min(.1, max(0, deadline-time.monotonic()))).actions
-            checked = simulate_day(board, current, commands, steps)
-            if not checked.valid:
-                break
-            current, first = checked.state, False
-        if current.day == len(board.day_steps) and (best_score is None or current.score() > best_score):
-            best_score, best_actions, source = current.score(), actions, name
-    return best_actions, {'algorithm': 'rollout', 'selected': source,
-                          'predicted_score': best_score, 'future_assumption': 'one_team'}
+    if algorithm != 'tour':
+        raise ValueError('Luồng nộp bài chỉ dùng tour; Greedy và các đối chứng được giữ cho thí nghiệm offline.')
+    plan = plan_day(board, state, board.day_steps[state.day], 'tour', seconds)
+    return plan.actions, {'algorithm': 'tour', 'fallback': False, 'searches': plan.searches}
 
 
 class MatchRunner:
-    def __init__(self, api, game_id, folder, algorithm='greedy', mode='auto',
+    def __init__(self, api, game_id, folder, algorithm='tour', mode='auto',
                  seconds=20., reserve=4., selection_seconds=8., roles='auto', kinds=None,
                  poll=1., dry_run=False, inspect=False, max_days=None, clock=time,
                  predictor=predict, team_id=None):
@@ -342,7 +315,7 @@ def main():
     parser = argparse.ArgumentParser(description='Tự lấy trạng thái và nộp kế hoạch HEXUDON trên website BTC Việt Nam.')
     parser.add_argument('game_id',nargs='?',help='ID trận hoặc ID Practice, có thể nhập khi được hỏi')
     parser.add_argument('--game-id',dest='id_option')
-    parser.add_argument('--algorithm','--predict',choices=['greedy','lookahead','rollout','tour'],default='greedy')
+    parser.add_argument('--algorithm','--predict',choices=['tour'],default='tour',help='Luồng nộp bài dùng tour; các thuật toán đối chứng chạy offline')
     parser.add_argument('--mode',choices=['auto','timed','practice'],default='auto')
     parser.add_argument('--seconds',type=float,default=20.,help='Tối đa giây lập kế hoạch mỗi ngày')
     parser.add_argument('--reserve',type=float,default=4.,help='Giây chừa cho kiểm tra và nộp bài')

@@ -28,10 +28,8 @@ def plan_day(board, state, steps, strategy="greedy", seconds=2.0, alpha=1.0, bet
             checked = simulate_day(board, state, actions, steps)
             if checked.valid:
                 return Plan(actions, time.perf_counter() - started, False, [], 0)
-        # Tuyến cả đội lỗi thì dùng Greedy với phần thời gian còn lại, không đứng chờ cả ngày.
-        plan = plan_day(board, state, steps, "greedy", max(0.05, seconds - (time.perf_counter() - started)))
-        plan.fallback = True
-        return plan
+        # Không thay thuật toán âm thầm: dừng để runner không gửi lời giải sai nguồn.
+        raise RuntimeError("Tour không tạo được kế hoạch hợp lệ; chưa gửi bài, không chuyển sang Greedy.")
     deadline = started + max(0, seconds)
     search_deadline = deadline
     actions = [[] for _ in state.agents]

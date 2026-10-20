@@ -202,11 +202,11 @@ class DayProblem:
         future = self.beta * sum(self.value(r.end) for r in runs.values()) if self.beta else 0
         return new, len(brands), portions + future, -spent, -steps
 
-    def coverage(self, runs):
+    def coverage(self, runs, deadline=None):
         """Số loại tối đa ngày mai theo bản dựng chỉ nhắm loại, giao thông hôm nay làm dự báo."""
-        return self.coverage_from(tuple((runs[c].end, runs[c].fuel) for c in self.patrols))
+        return self.coverage_from(tuple((runs[c].end, runs[c].fuel) for c in self.patrols), deadline)
 
-    def coverage_from(self, key):
+    def coverage_from(self, key, deadline=None):
         if not self.next_steps:
             return 0
         ends = dict(zip(self.patrols, key))
@@ -224,11 +224,16 @@ class DayProblem:
             problem.legs = self.legs
             best = 0
             for variant in ((0,) if self.hubs else (0, 2)):
-                result = construct(problem, variant, types_only=True)
+                if deadline is not None and time.perf_counter() >= deadline:
+                    return None
+                result = construct(problem, variant, deadline, types_only=True)
                 if result is not None:
                     best = max(best, result[0][1])
                 if best == self.brand_count:
                     break
+            # Không lưu một ước lượng bị cắt giờ như kết quả đã khảo sát xong.
+            if deadline is not None and time.perf_counter() >= deadline:
+                return None
             self.coverages[key] = best
         return self.coverages[key]
 
@@ -237,17 +242,21 @@ class DayProblem:
         return len({s["brand"] for s in self.board.spots})
 
 
-def car_insertions(problem, car, route, variant, current, positions=3):
+def car_insertions(problem, car, route, variant, current, positions=3, deadline=None):
     """Phương án chèn rẻ nhất cho từng điểm vào tuyến của một xe."""
     legs, T = problem.legs, problem.steps
     seq = [problem.state.agents[car].pos] + route
     options = {}
     for spot in problem.spot_at:
+        if deadline is not None and time.perf_counter() >= deadline:
+            break
         if spot in current.visited:
             continue
         # Ước lượng step tăng thêm khi chưa tính đường rẽ tiếp nhiên liệu để lọc vị trí chèn.
         quick = []
         for k in range(len(seq)):
+            if deadline is not None and time.perf_counter() >= deadline:
+                break
             a = seq[k]
             extra = legs.leg(a, spot, variant)[0]
             if k + 1 < len(seq):
@@ -258,6 +267,8 @@ def car_insertions(problem, car, route, variant, current, positions=3):
         quick.sort()
         best = None
         for _, k in quick[:positions]:
+            if deadline is not None and time.perf_counter() >= deadline:
+                break
             trial = route[:k] + [spot] + route[k:]
             run = problem.run(car, trial, variant)
             if run.feasible and (best is None or run.cost < best[0]):
@@ -276,8 +287,10 @@ def insert_greedy(problem, routes, variants, runs, rng=None, noise=0.0, deadline
         today = {spot_at[p]["brand"] for p in counts}
         best = None
         for car in problem.patrols:
+            if deadline is not None and time.perf_counter() >= deadline:
+                break
             if car not in cache:
-                cache[car] = car_insertions(problem, car, routes[car], variants[car], runs[car])
+                cache[car] = car_insertions(problem, car, routes[car], variants[car], runs[car], deadline=deadline)
             for spot, (delta, trial, run) in cache[car].items():
                 info = spot_at[spot]
                 brand = info["brand"]
@@ -388,7 +401,7 @@ def commands(problem, runs, supply_routes):
     return actions
 
 
-def hub_candidates(board, state, car, legs, steps, count=4):
+def hub_candidates(board, state, car, legs, steps, count=4, deadline=None):
     spots = [s["pos"] for s in board.spots]
     patrols = [a.pos for a in state.agents if a.kind == 0]
     pos = state.agents[car].pos
@@ -402,6 +415,8 @@ def hub_candidates(board, state, car, legs, steps, count=4):
             options.append(p)
     result = []
     for hub in options:
+        if result and deadline is not None and time.perf_counter() >= deadline:
+            break
         arrival = legs.leg(pos, hub, 0)[0] if hub != pos else 0
         if arrival <= steps:
             result.append((hub, arrival))
@@ -420,6 +435,8 @@ def find_anchors(problem, runs, deadline, rng):
     for car in problem.patrols:
         options = {}
         for spot in problem.spot_at:
+            if time.perf_counter() >= deadline:
+                return None
             run = problem.run(car, [spot], 0)
             if run.feasible:
                 options[spot] = run
@@ -430,14 +447,19 @@ def find_anchors(problem, runs, deadline, rng):
 
     def key(anchors):
         ends = tuple((a, reach[c][a].fuel) for c, a in anchors.items())
-        return problem.coverage_from(ends), -sum(reach[c][a].steps for c, a in anchors.items())
+        covered = problem.coverage_from(ends, deadline)
+        return None if covered is None else (covered, -sum(reach[c][a].steps for c, a in anchors.items()))
 
     best = key(current)
+    if best is None:
+        return None
     while time.perf_counter() < deadline:
         trial = dict(current)
         for car in rng.sample(problem.patrols, rng.randint(1, min(2, len(problem.patrols)))):
             trial[car] = rng.choice(list(reach[car]))
         score = key(trial)
+        if score is None:
+            break
         if score >= best:
             current, best = trial, score
     return current, best[0]
@@ -453,19 +475,21 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0, beta=0.0):
     base = DayProblem(board, state, steps, [], allowance, following, beta)
     options = [[]]
     for car in supplies:
-        cands = hub_candidates(board, state, car, base.legs, steps)
+        cands = hub_candidates(board, state, car, base.legs, steps, deadline=deadline)
         options = [o + [(car, c)] for o in options for c in cands][:12]
     # Đội không có tiếp tế phải tiết kiệm nhiên liệu nên thử cả ba kiểu đường khi dựng.
     variants = (0,) if supplies else (0, 1, 2)
     best, candidates = None, []
     for index, option in enumerate(options):
+        if best is not None and time.perf_counter() >= deadline:
+            break
         problem = DayProblem(board, state, steps, [hub for _, hub in option], allowance, following, beta)
         problem.legs, problem.values = base.legs, base.values
         for variant in variants:
-            # Luôn dựng xong phương án đầu tiên; các phương án sau chỉ dựng khi còn giờ.
+            # Phương án đầu cũng có hạn giờ; tuyến dựng dở vẫn giữ phần chèn khả thi.
             if best is not None and time.perf_counter() >= started + seconds * 0.4:
                 break
-            result = construct(problem, variant, None if best is None else deadline)
+            result = construct(problem, variant, deadline)
             if result is None:
                 continue
             if (option, problem) not in [(o, p) for _, o, p in candidates]:
@@ -486,8 +510,8 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0, beta=0.0):
         # không kém, vì D xếp trên Q.
         remaining = lambda: max(0.0, deadline - time.perf_counter())
         solution = improve(problem, solution, time.perf_counter() + remaining() * 0.3, rng)
-        covered = problem.coverage(solution[3])
-        if covered < problem.brand_count:
+        covered = problem.coverage(solution[3], deadline)
+        if covered is not None and covered < problem.brand_count:
             found = find_anchors(problem, solution[3], time.perf_counter() + remaining() * 0.25, rng)
             if found is not None and found[1] > covered:
                 anchored = DayProblem(board, state, steps, problem.hubs, allowance, following, beta)
@@ -501,8 +525,9 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0, beta=0.0):
                 if trial is not None:
                     trial = improve(anchored, trial, time.perf_counter() + remaining() * 0.5, rng)
                     old_key = solution[0][:2] + (covered,)
-                    new_key = trial[0][:2] + (anchored.coverage(trial[3]),)
-                    if new_key > old_key:
+                    trial_covered = anchored.coverage(trial[3], deadline)
+                    new_key = trial[0][:2] + (trial_covered,) if trial_covered is not None else None
+                    if new_key is not None and new_key > old_key:
                         problem, solution = anchored, trial
     _, _, _, runs = improve(problem, solution, deadline, rng)
     return commands(problem, runs, {car: hub for car, hub in option})

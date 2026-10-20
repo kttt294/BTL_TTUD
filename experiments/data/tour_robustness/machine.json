@@ -1,0 +1,10 @@
+{
+  "python": "3.12.6",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "logical_cpus": 16,
+  "workers": 4,
+  "cpu_isolated": false,
+  "timing_scope": "Từ gọi planner đến xác nhận output trong bộ đo; không gồm API/mạng.",
+  "tour_search_share": 0.9,
+  "note": "Bốn tiến trình thực nghiệm; tải ngoài bộ đo không được cô lập."
+}

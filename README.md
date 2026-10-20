@@ -50,3 +50,5 @@ Script tự chọn vai trò khi cần, lấy trạng thái thực tế và nộp
 | `bao_cao_hexudon.docx` | Báo cáo bài tập lớn |
 
 Bộ đối chứng bổ sung cho `tour` có thể được kiểm tra bằng `python -X utf8 experiments/run.py tour_study --audit-only`. Xem [hướng dẫn thực nghiệm](docs/huong_dan.md#thuc-nghiem-tour).
+
+Đánh giá trên 30 bản đồ tự sinh và tách thành phần ở hai ngân sách: [dữ liệu và cách tái hiện](docs/huong_dan.md#do-ben-vung). Greedy được giữ làm đối chứng offline; luồng nộp bài chỉ sử dụng `tour`.

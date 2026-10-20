@@ -1,4 +1,4 @@
-"""Chạy trận từ ID: python play_match.py ID --algorithm greedy."""
+"""Chạy trận từ ID bằng tour: python play_match.py ID."""
 
 from pathlib import Path
 import sys

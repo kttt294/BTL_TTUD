@@ -59,15 +59,29 @@ class TourTests(unittest.TestCase):
         plan_tour(board, state, 30, 0.2)
         self.assertLess(time.perf_counter() - started, 0.5)
 
-    def test_plan_day_falls_back_to_greedy_instead_of_waiting(self):
+    def test_plan_day_rejects_invalid_tour_without_greedy(self):
         board = line_board()
         state = State.initial(board, [0, 0])
         with mock.patch("hexudon.tour.plan_tour", return_value=None):
-            plan = plan_day(board, state, 30, "tour", 0.3)
-        self.assertTrue(plan.fallback)
-        checked = simulate_day(board, state, plan.actions, 30)
-        self.assertTrue(checked.valid)
-        self.assertGreater(checked.state.portions, 0)
+            with self.assertRaisesRegex(RuntimeError, "không chuyển sang Greedy"):
+                plan_day(board, state, 30, "tour", 0.3)
+
+    def test_expired_coverage_is_not_cached_as_zero(self):
+        board = line_board()
+        state = State.initial(board, [0, 0])
+        problem = DayProblem(board, state, 30, [], allowances(board, state, 30, 1.0), next_steps=4)
+        key = ((0, 40), (8, 40))
+        self.assertIsNone(problem.coverage_from(key, time.perf_counter() - 1))
+        self.assertNotIn(key, problem.coverages)
+
+    def test_short_budget_remains_valid_on_large_board(self):
+        from hexudon.generator import generate_board
+        board = generate_board(32, 71)
+        state = State.initial(board, [1, 0, 0, 0])
+        started = time.perf_counter()
+        actions = plan_tour(board, state, board.day_steps[0], 0.05)
+        self.assertLess(time.perf_counter() - started, 0.3)
+        self.assertTrue(simulate_day(board, state, actions, board.day_steps[0]).valid)
 
     def test_anchor_forces_end_position_and_improves_next_day(self):
         # Ngày mai chỉ 4 step: xe phải dừng sẵn cạnh điểm thì mới thu được loại đó.

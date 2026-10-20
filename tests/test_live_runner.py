@@ -251,14 +251,15 @@ class LiveRunnerTests(unittest.TestCase):
             second.run()
         self.assertEqual([c[2]['day'] for c in api.calls if c[1]=='/api/game/actions'],[0,1])
 
-    def test_algorithm_switch_generates_valid_plans(self):
+    def test_live_only_accepts_tour(self):
         clock=Clock()
         api=FakeAPI(clock)
         for algorithm in ('greedy','lookahead','rollout'):
-            actions,metrics=predict(api.board,api.state,algorithm,.1)
-            checked=simulate_day(api.board,api.state,actions,6)
-            self.assertTrue(checked.valid,checked.errors)
-            self.assertEqual(metrics['algorithm'],algorithm)
+            with self.assertRaisesRegex(ValueError, 'chỉ dùng tour'):
+                predict(api.board,api.state,algorithm,.1)
+        actions,metrics=predict(api.board,api.state,'tour',.1)
+        self.assertTrue(simulate_day(api.board,api.state,actions,6).valid)
+        self.assertEqual(metrics['algorithm'],'tour')
 
     def test_ambiguous_mode_requires_override(self):
         with self.assertRaises(ValueError):detect_mode('auto','test',{'status':'unknown'})

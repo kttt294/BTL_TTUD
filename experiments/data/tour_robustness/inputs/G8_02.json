@@ -1,0 +1,186 @@
+{
+  "map": {
+    "height": 8,
+    "width": 8,
+    "cells": [
+      [
+        0,
+        0,
+        3,
+        0,
+        0,
+        3,
+        1,
+        0
+      ],
+      [
+        0,
+        3,
+        0,
+        2,
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        0,
+        3,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        1,
+        0,
+        2,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        3,
+        0,
+        0,
+        3,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        2,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        3,
+        3,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0
+      ]
+    ]
+  },
+  "spots": [
+    {
+      "pos": 33,
+      "brand": 0,
+      "stocks": 1
+    },
+    {
+      "pos": 25,
+      "brand": 1,
+      "stocks": 4
+    },
+    {
+      "pos": 4,
+      "brand": 2,
+      "stocks": 2
+    },
+    {
+      "pos": 18,
+      "brand": 3,
+      "stocks": 2
+    },
+    {
+      "pos": 54,
+      "brand": 4,
+      "stocks": 4
+    },
+    {
+      "pos": 48,
+      "brand": 5,
+      "stocks": 3
+    },
+    {
+      "pos": 20,
+      "brand": 6,
+      "stocks": 3
+    },
+    {
+      "pos": 14,
+      "brand": 7,
+      "stocks": 4
+    },
+    {
+      "pos": 1,
+      "brand": 0,
+      "stocks": 4
+    },
+    {
+      "pos": 53,
+      "brand": 1,
+      "stocks": 1
+    },
+    {
+      "pos": 41,
+      "brand": 2,
+      "stocks": 2
+    },
+    {
+      "pos": 50,
+      "brand": 3,
+      "stocks": 4
+    },
+    {
+      "pos": 30,
+      "brand": 4,
+      "stocks": 1
+    },
+    {
+      "pos": 46,
+      "brand": 5,
+      "stocks": 2
+    },
+    {
+      "pos": 47,
+      "brand": 6,
+      "stocks": 3
+    },
+    {
+      "pos": 49,
+      "brand": 7,
+      "stocks": 1
+    }
+  ],
+  "agents": [
+    24,
+    22,
+    55,
+    16
+  ],
+  "daySteps": [
+    57,
+    26,
+    55,
+    31
+  ],
+  "fuelLimits": 70,
+  "busyThreshold": 3,
+  "jammedThreshold": 4,
+  "players": 1
+}
