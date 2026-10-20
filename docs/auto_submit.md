@@ -78,7 +78,7 @@ python -X utf8 play_match.py ID_TRAN --algorithm greedy --dry-run
 
 ## Phạm vi đã kiểm tra
 
-Đặc tả API hiện tại đã được đọc ngày 19/10/2026. Script đã đọc cấu hình và trạng thái Practice Q04 của nhóm 62 trên website thật ở chế độ `--inspect`, không reset và không nộp lại trận đã kết thúc. Các luồng nộp toàn trận Practice, trận tính giờ, cập nhật road/fuel, checkpoint, mất phản hồi và chuyển ngày được kiểm thử bằng máy chủ giả lập trong bộ kiểm thử. Chưa chạy một trận tính giờ đang hoạt động trên website thật; cần chạy thử trên trận được giao trước khi dùng chính thức. Không gọi kiểm thử giả lập là bằng chứng đã nộp thành công lên BTC.
+Đặc tả API được lưu tại docs/api/openapi.json. Tới ngày 20/10/2026, runner đã nộp thật các lượt Practice Greedy và 8 bài tour, tổng 80 kế hoạch ngày của đợt tour; đối chiếu 12155 frame không phát hiện sai khác ở các trường kiểm tra. Kết quả nằm trong experiments/tour_api_evidence/summary.json. Luồng trận tính giờ và các tình huống mất phản hồi vẫn được kiểm thử bằng máy chủ giả lập; chưa chạy một trận tính giờ thật trọn vẹn. Practice thành công không thay thế kiểm chứng hạn nộp 30 giây.
 
 Nguồn giao thức: https://hexudon.hairbui76.id.vn/openapi.json ; bản đặc tả đã lưu ở `docs/api/openapi.json`.
 

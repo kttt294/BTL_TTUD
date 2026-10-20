@@ -88,3 +88,7 @@ Runner tự lấy config, chọn xe nếu cần, lấy trạng thái ngày và n
 API runner dùng: `GET /api/game/config`, `/state`, `/day`, `/result`; `POST /api/game/agent-types`, `/practice/actions` hoặc `/actions`. GET truyền `game_id` qua query; POST truyền trong JSON. `/day` cung cấp `agents` và `traffics` thật, dùng lại mỗi ngày thay dự báo. API replay là công cụ luyện tập/đối chiếu, không mặc định là input được phép dùng khi thi.
 
 Token nằm trong `.env`, không đưa vào tài liệu/code/Git. Checkpoint mô hình và dữ liệu chạy lớn có thể bị Git ignore; cần kiểm tra sự tồn tại trước khi tái lập. Không ghi đè DOCX bằng builder nếu chưa kiểm tra vì có chỉnh sửa thủ công; hiện chỉ cập nhật DOCX khi được yêu cầu, không cần PDF.
+
+## Cập nhật máy chủ ngày 20/10/2026
+
+Tour đã được nộp đủ 8 Practice khác nhau với đội hình từ pipeline, 5 giây/ngày; U và D đạt cận trên ở cả 8 bài. Điểm BTC, số frame và phạm vi kiểm chứng nằm trong docs/tour_server_results.md và experiments/tour_api_evidence/summary.json. Các điểm offline trước đây không thay thế điểm máy chủ. Báo cáo chính đã thêm phương pháp và kết quả tour; RL tiếp tục ở phụ lục C.

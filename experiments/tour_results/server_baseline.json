@@ -1,0 +1,161 @@
+{
+  "Q01": {
+    "ours_score": [
+      20,
+      101,
+      253
+    ],
+    "peer_score": [
+      20,
+      200,
+      532
+    ],
+    "ours_source": "BTC, Greedy, chọn đội hình 8 giây; tối đa 20 giây/ngày",
+    "peer_source": "BTC, đội 57, kết quả đọc bằng tài khoản được cung cấp trong phiên 20/10/2026",
+    "ours_time_utc": "2026-10-20T10:37:02.911198+00:00",
+    "daily_types": [
+      20,
+      20,
+      20,
+      13,
+      8,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "daily_servings": [
+      108,
+      48,
+      55,
+      14,
+      8,
+      4,
+      4,
+      4,
+      4,
+      4
+    ]
+  },
+  "Q02": {
+    "ours_score": [
+      20,
+      101,
+      253
+    ],
+    "peer_score": [
+      20,
+      200,
+      508
+    ],
+    "ours_source": "BTC, Greedy, chọn đội hình 8 giây; tối đa 20 giây/ngày",
+    "peer_source": "BTC, đội 57, kết quả đọc bằng tài khoản được cung cấp trong phiên 20/10/2026",
+    "ours_time_utc": "2026-10-20T10:37:39.509213+00:00"
+  },
+  "Q03": {
+    "ours_score": [
+      20,
+      84,
+      137
+    ],
+    "peer_score": [
+      20,
+      200,
+      530
+    ],
+    "ours_source": "BTC, Greedy, chọn đội hình 8 giây; tối đa 20 giây/ngày",
+    "peer_source": "BTC, đội 57, kết quả đọc bằng tài khoản được cung cấp trong phiên 20/10/2026",
+    "ours_time_utc": "2026-10-20T10:38:12.917328+00:00"
+  },
+  "Q04": {
+    "ours_score": [
+      20,
+      72,
+      131
+    ],
+    "peer_score": [
+      20,
+      200,
+      481
+    ],
+    "ours_source": "BTC, Greedy, chọn đội hình 8 giây; tối đa 20 giây/ngày",
+    "peer_source": "BTC, đội 57, kết quả đọc bằng tài khoản được cung cấp trong phiên 20/10/2026",
+    "ours_time_utc": "2026-10-20T10:38:45.799391+00:00"
+  },
+  "Q06": {
+    "ours_score": [
+      15,
+      72,
+      193
+    ],
+    "peer_score": [
+      15,
+      150,
+      454
+    ],
+    "ours_source": "BTC, Greedy, chọn đội hình 8 giây; tối đa 20 giây/ngày",
+    "peer_source": "BTC, đội 57, kết quả đọc bằng tài khoản được cung cấp trong phiên 20/10/2026",
+    "ours_time_utc": "2026-10-20T10:39:20.063503+00:00"
+  },
+  "Q07": {
+    "ours_score": [
+      15,
+      75,
+      293
+    ],
+    "peer_score": [
+      15,
+      150,
+      760
+    ],
+    "ours_source": "BTC, Greedy, chọn đội hình 8 giây; tối đa 20 giây/ngày",
+    "peer_source": "BTC, đội 57, kết quả đọc bằng tài khoản được cung cấp trong phiên 20/10/2026",
+    "ours_time_utc": "2026-10-20T10:39:54.675370+00:00"
+  },
+  "Q08": {
+    "ours_score": [
+      15,
+      104,
+      316
+    ],
+    "peer_score": [
+      15,
+      150,
+      620
+    ],
+    "ours_source": "BTC, Greedy, chọn đội hình 8 giây; tối đa 20 giây/ngày",
+    "peer_source": "BTC, đội 57, kết quả đọc bằng tài khoản được cung cấp trong phiên 20/10/2026",
+    "ours_time_utc": "2026-10-20T10:40:32.492054+00:00"
+  },
+  "Q09": {
+    "ours_score": [
+      15,
+      72,
+      146
+    ],
+    "peer_score": [
+      15,
+      150,
+      523
+    ],
+    "ours_source": "BTC, Greedy, chọn đội hình 8 giây; tối đa 20 giây/ngày",
+    "peer_source": "BTC, đội 57, kết quả đọc bằng tài khoản được cung cấp trong phiên 20/10/2026",
+    "ours_time_utc": "2026-10-20T10:41:06.744408+00:00"
+  },
+  "Q10": {
+    "ours_score": [
+      15,
+      82,
+      244
+    ],
+    "peer_score": [
+      15,
+      150,
+      551
+    ],
+    "ours_source": "BTC, Greedy, chọn đội hình 8 giây; tối đa 20 giây/ngày",
+    "peer_source": "BTC, đội 57, kết quả đọc bằng tài khoản được cung cấp trong phiên 20/10/2026",
+    "ours_time_utc": "2026-10-20T10:41:41.117018+00:00"
+  }
+}

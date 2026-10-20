@@ -57,3 +57,7 @@ __pycache__/
 !/experiments/rl_policy_results/training_metadata.json
 !/experiments/rl_policy_results/evaluation_summary.json
 !/experiments/rl_policy_results/evaluation_audit.json
+
+# Tour: giữ tổng hợp điểm BTC, không đưa replay và lịch sử chi tiết lên Git.
+/experiments/tour_api_evidence/*
+!/experiments/tour_api_evidence/summary.json

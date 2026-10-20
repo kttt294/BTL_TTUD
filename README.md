@@ -23,7 +23,11 @@ chưa có replay BTC tương ứng. Chi tiết nằm trong [đặc tả](docs/si
 
 ## Bằng chứng đối chiếu với BTC
 
-- 80 phương thức kiểm thử đã chạy đạt.
+Phiên bản tour đã nộp thật 8 Practice khác nhau, đạt cận U và D trên cả 8 bài.
+Bảng điểm máy chủ và giới hạn phép đo: [docs/tour_server_results.md](docs/tour_server_results.md).
+Điểm cao không chứng minh Q tối ưu; luồng trận tính giờ vẫn cần kiểm chứng riêng.
+
+- 81 phương thức kiểm thử đã chạy đạt.
 - Sáu tập replay có 6.331 frame, 97.345 giá trị được so sánh và 0 sai khác.
 - Hai biến thể Q10 có phần đầu chung; số frame không phải số mẫu độc lập.
 - Request/response gốc nằm trong `experiments/api_evidence`, không chứa header token.

@@ -1,0 +1,465 @@
+[
+  {
+    "case": "Q01",
+    "server_score": [
+      20,
+      200,
+      614
+    ],
+    "types": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "seconds_per_day": 5.0,
+    "accepted_days": 10,
+    "daily_types": [
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20
+    ],
+    "checked_frames": 1726,
+    "checked_values": 23874,
+    "mismatch_count": 0,
+    "replayed_score": [
+      20,
+      200,
+      614
+    ],
+    "fallback_days": 0,
+    "max_planning_seconds": 4.537377300001026,
+    "ud_bound": [
+      20,
+      200
+    ],
+    "time_utc": "2026-10-20T11:17:09.224952+00:00",
+    "roles_source": "đội hình từ pipeline offline; không chọn lại trong lần nộp này",
+    "daily_servings": [
+      86,
+      48,
+      56,
+      42,
+      45,
+      27,
+      77,
+      82,
+      74,
+      77
+    ],
+    "source_commit": "2b6a712"
+  },
+  {
+    "case": "Q03",
+    "server_score": [
+      20,
+      200,
+      659
+    ],
+    "types": [
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "seconds_per_day": 5.0,
+    "accepted_days": 10,
+    "daily_types": [
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20
+    ],
+    "checked_frames": 1544,
+    "checked_values": 24580,
+    "mismatch_count": 0,
+    "replayed_score": [
+      20,
+      200,
+      659
+    ],
+    "fallback_days": 0,
+    "max_planning_seconds": 4.51025429999936,
+    "ud_bound": [
+      20,
+      200
+    ],
+    "time_utc": "2026-10-20T11:18:22.178273+00:00",
+    "roles_source": "đội hình từ pipeline offline; không chọn lại trong lần nộp này",
+    "daily_servings": [
+      61,
+      66,
+      77,
+      94,
+      31,
+      71,
+      92,
+      53,
+      75,
+      39
+    ],
+    "source_commit": "2b6a712"
+  },
+  {
+    "case": "Q04",
+    "server_score": [
+      20,
+      200,
+      636
+    ],
+    "types": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "seconds_per_day": 5.0,
+    "accepted_days": 10,
+    "daily_types": [
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20
+    ],
+    "checked_frames": 1565,
+    "checked_values": 21564,
+    "mismatch_count": 0,
+    "replayed_score": [
+      20,
+      200,
+      636
+    ],
+    "fallback_days": 0,
+    "max_planning_seconds": 4.5100234000001365,
+    "ud_bound": [
+      20,
+      200
+    ],
+    "time_utc": "2026-10-20T11:19:35.432887+00:00",
+    "roles_source": "đội hình từ pipeline offline; không chọn lại trong lần nộp này",
+    "daily_servings": [
+      55,
+      62,
+      84,
+      56,
+      49,
+      85,
+      61,
+      48,
+      78,
+      58
+    ],
+    "source_commit": "2b6a712"
+  },
+  {
+    "case": "Q06",
+    "server_score": [
+      15,
+      150,
+      735
+    ],
+    "types": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "seconds_per_day": 5.0,
+    "accepted_days": 10,
+    "daily_types": [
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15
+    ],
+    "checked_frames": 1242,
+    "checked_values": 22656,
+    "mismatch_count": 0,
+    "replayed_score": [
+      15,
+      150,
+      735
+    ],
+    "fallback_days": 0,
+    "max_planning_seconds": 4.546663799999806,
+    "ud_bound": [
+      15,
+      150
+    ],
+    "time_utc": "2026-10-20T11:20:49.780674+00:00",
+    "roles_source": "đội hình từ pipeline offline; không chọn lại trong lần nộp này",
+    "daily_servings": [
+      54,
+      101,
+      48,
+      107,
+      57,
+      41,
+      106,
+      66,
+      101,
+      54
+    ],
+    "source_commit": "2b6a712"
+  },
+  {
+    "case": "Q07",
+    "server_score": [
+      15,
+      150,
+      820
+    ],
+    "types": [
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "seconds_per_day": 5.0,
+    "accepted_days": 10,
+    "daily_types": [
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15
+    ],
+    "checked_frames": 1517,
+    "checked_values": 24022,
+    "mismatch_count": 0,
+    "replayed_score": [
+      15,
+      150,
+      820
+    ],
+    "fallback_days": 0,
+    "max_planning_seconds": 4.515219500000967,
+    "ud_bound": [
+      15,
+      150
+    ],
+    "time_utc": "2026-10-20T11:22:03.838267+00:00",
+    "roles_source": "đội hình từ pipeline offline; không chọn lại trong lần nộp này",
+    "daily_servings": [
+      118,
+      101,
+      51,
+      101,
+      48,
+      109,
+      40,
+      92,
+      77,
+      83
+    ],
+    "source_commit": "2b6a712"
+  },
+  {
+    "case": "Q08",
+    "server_score": [
+      15,
+      150,
+      685
+    ],
+    "types": [
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "seconds_per_day": 5.0,
+    "accepted_days": 10,
+    "daily_types": [
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15
+    ],
+    "checked_frames": 1480,
+    "checked_values": 23504,
+    "mismatch_count": 0,
+    "replayed_score": [
+      15,
+      150,
+      685
+    ],
+    "fallback_days": 0,
+    "max_planning_seconds": 4.512360099999569,
+    "ud_bound": [
+      15,
+      150
+    ],
+    "time_utc": "2026-10-20T11:23:17.395240+00:00",
+    "roles_source": "đội hình từ pipeline offline; không chọn lại trong lần nộp này",
+    "daily_servings": [
+      98,
+      38,
+      85,
+      56,
+      74,
+      45,
+      33,
+      62,
+      103,
+      91
+    ],
+    "source_commit": "2b6a712"
+  },
+  {
+    "case": "Q09",
+    "server_score": [
+      15,
+      150,
+      701
+    ],
+    "types": [
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "seconds_per_day": 5.0,
+    "accepted_days": 10,
+    "daily_types": [
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15
+    ],
+    "checked_frames": 1577,
+    "checked_values": 24862,
+    "mismatch_count": 0,
+    "replayed_score": [
+      15,
+      150,
+      701
+    ],
+    "fallback_days": 0,
+    "max_planning_seconds": 4.512898900000437,
+    "ud_bound": [
+      15,
+      150
+    ],
+    "time_utc": "2026-10-20T11:24:34.805173+00:00",
+    "roles_source": "đội hình từ pipeline offline; không chọn lại trong lần nộp này",
+    "daily_servings": [
+      50,
+      95,
+      80,
+      92,
+      59,
+      53,
+      94,
+      82,
+      42,
+      54
+    ],
+    "source_commit": "2b6a712"
+  },
+  {
+    "case": "Q10",
+    "server_score": [
+      15,
+      150,
+      698
+    ],
+    "types": [
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "seconds_per_day": 5.0,
+    "accepted_days": 10,
+    "daily_types": [
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15
+    ],
+    "checked_frames": 1504,
+    "checked_values": 23840,
+    "mismatch_count": 0,
+    "replayed_score": [
+      15,
+      150,
+      698
+    ],
+    "fallback_days": 0,
+    "max_planning_seconds": 4.515439400000105,
+    "ud_bound": [
+      15,
+      150
+    ],
+    "time_utc": "2026-10-20T11:25:48.227396+00:00",
+    "roles_source": "đội hình từ pipeline offline; không chọn lại trong lần nộp này",
+    "daily_servings": [
+      113,
+      41,
+      29,
+      107,
+      71,
+      30,
+      77,
+      59,
+      86,
+      85
+    ],
+    "source_commit": "2b6a712"
+  }
+]
