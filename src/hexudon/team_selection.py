@@ -1,6 +1,8 @@
 """Chọn vai trò xe tại các vị trí xuất phát bằng mô phỏng toàn trận một đội."""
 
+from concurrent.futures import ProcessPoolExecutor, wait
 from itertools import product
+import os
 import time
 
 from .model import State
@@ -67,7 +69,73 @@ def evaluate_types(board, kinds, day_seconds, strategy="greedy", deadline=None):
             "day_seconds": day_seconds, "strategy": strategy}
 
 
+def evaluate_with_budget(board, kinds, day_seconds, strategy, budget):
+    """Chạy trong tiến trình con; hạn giờ được tính lại theo đồng hồ của tiến trình đó."""
+    return evaluate_types(board, kinds, day_seconds, strategy, time.perf_counter() + budget)
+
+
+def select_types_parallel(board, seconds=20.0, strategy="tour", limit=16, workers=None):
+    """Mô phỏng các đội hình song song; dùng cho planner tuyến vốn chậm hơn Greedy."""
+    started = time.perf_counter()
+    deadline = started + max(0, seconds)
+    candidates = candidate_types(board, limit)
+    workers = workers or max(1, min(len(candidates), (os.cpu_count() or 2) - 1))
+    rounds = -(-len(candidates) // workers)
+    days = len(board.day_steps)
+    # Chừa khoảng hai giây cho việc khởi động tiến trình trên Windows và ghi kết quả.
+    usable = max(0, seconds - 2.0)
+    screen_seconds = max(0.05, usable * 0.35 / (rounds * days * 1.5))
+    best_types, best_score, records = [0] * len(board.starts), None, []
+    if usable <= 0:
+        return best_types, records, time.perf_counter() - started
+
+    def run(pool, kinds_list, day_seconds, phase):
+        nonlocal best_types, best_score
+        budget = max(0, deadline - time.perf_counter() - 0.5)
+        futures = {pool.submit(evaluate_with_budget, board, k, day_seconds, strategy, budget): k
+                   for k in kinds_list}
+        done, pending = wait(futures, timeout=max(0, deadline - time.perf_counter()))
+        for future in pending:
+            future.cancel()
+        trials = []
+        for future in done:
+            if future.exception() is not None:
+                continue
+            trial = future.result()
+            trial["phase"] = phase
+            records.append(trial)
+            trials.append(trial)
+        return [t for t in trials if t["complete"]]
+
+    pool = ProcessPoolExecutor(workers)
+    try:
+        screened = run(pool, candidates, screen_seconds, "screen")
+        if not screened:
+            # Bản đồ quá lớn so với hạn giờ: các đội hình chạy song song cùng tốc độ nên so
+            # được theo số ngày đã mô phỏng rồi đến điểm tại ngày đó.
+            partial = [r for r in records if r["days"] and 0 in r["types"]]
+            if partial:
+                best = max(partial, key=lambda r: (len(r["days"]), tuple(r["score"])))
+                best_types = best["types"][:]
+            return best_types, records, time.perf_counter() - started
+        ranked = sorted(screened, key=lambda r: tuple(r["score"]), reverse=True)
+        best_types, best_score = ranked[0]["types"][:], tuple(ranked[0]["score"])
+        finalists = [r["types"] for r in ranked[:min(workers, 4)]]
+        remaining = deadline - time.perf_counter() - 1.0
+        refine_seconds = remaining * 0.7 / (days * 1.5)
+        if len(finalists) > 1 and refine_seconds > screen_seconds:
+            refined = run(pool, finalists, refine_seconds, "refine")
+            if refined:
+                winner = max(refined, key=lambda r: tuple(r["score"]))
+                best_types, best_score = winner["types"][:], tuple(winner["score"])
+    finally:
+        pool.shutdown(wait=False, cancel_futures=True)
+    return best_types, records, time.perf_counter() - started
+
+
 def select_types(board, seconds=20.0, strategy="greedy", limit=16):
+    if strategy == "tour":
+        return select_types_parallel(board, seconds, strategy, limit)
     started = time.perf_counter()
     deadline = started + max(0, seconds)
     candidates = candidate_types(board, limit)

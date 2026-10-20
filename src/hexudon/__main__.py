@@ -31,7 +31,7 @@ def main():
     type_options.add_argument("--types", nargs="+", type=int)
     type_options.add_argument("--types-file", help="Đọc danh sách vai trò từ output của lệnh select")
     parser.add_argument("--day", type=int, default=1, help="Ngày theo cách đếm của người dùng, bắt đầu từ 1")
-    parser.add_argument("--strategy", choices=["greedy", "lookahead"], default="greedy")
+    parser.add_argument("--strategy", choices=["greedy", "lookahead", "tour"], default="greedy")
     parser.add_argument("--seconds", type=float, help="Mặc định select dùng 20 giây, lệnh khác dùng 2 giây")
     parser.add_argument("--candidates", type=int, default=16, help="Số đội hình sàng lọc cho lệnh select")
     parser.add_argument("--selection-log", help="Lưu chi tiết mô phỏng đội hình vào JSON")

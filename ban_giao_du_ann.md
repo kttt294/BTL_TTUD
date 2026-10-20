@@ -14,6 +14,7 @@ Output là một mảng lệnh cho mỗi xe: `0..5` chỉ hướng sang ô kề,
 
 | Thành phần | Cách làm hiện tại |
 |---|---|
+| **Planner tuyến (`tour`, mặc định khuyến nghị)** | `src/hexudon/tour.py`: chèn tham lam + phá/dựng lại cho cả đội, ba kiểu đường step/nhiên liệu, chia nhiên liệu theo tỷ lệ step còn lại khi không có tiếp tế, điểm hẹn tiếp tế chọn lại mỗi ngày. Chọn vai trò song song nhiều tiến trình. Xem `docs/tour_planner.md`. |
 | Tìm đường | So sánh DFS, BFS, Dijkstra, Greedy Best-First và A*. Planner mặc định dùng A* trên trạng thái có step/nhiên liệu, giữ các nhãn tài nguyên không bị trội. |
 | Greedy lập kế hoạch | Ưu tiên loại mới toàn trận, loại mới trong ngày, suất thu được, rồi đường ít step. Mỗi lượt sàng lọc tối đa 6 điểm theo độ mới và khoảng cách lục giác; chưa bù ứng viên thứ 7 nếu điểm trong top 6 không tới được. |
 | Lookahead hai điểm | Xét điểm đầu và tối đa 3 điểm tiếp theo, đánh giá lợi ích cặp rồi thực hiện chặng đầu và tính lại. Tốn nhiều tìm đường hơn và chưa ổn định tốt hơn Greedy khi giới hạn thời gian. |
@@ -27,12 +28,15 @@ Greedy chọn **đích**, A* chọn **đường**; Greedy lập kế hoạch kh�
 
 ## 3. Kết quả và giới hạn bằng chứng
 
+- **Planner `tour` (20/10/2026, offline một đội):** thắng Greedy ở 14/14 case. Trên 8 config BTC, U và D đạt cận trên (trừ Q10 thiếu 1 D); Q tăng 1,2–4,9 lần, ví dụ Q01 `(20, 101, 253)` → `(20, 200, 614)`. Bảng đầy đủ trong `docs/tour_planner.md`, dữ liệu trong `experiments/tour_results/pipeline.json`. Chưa nộp thử trên máy chủ.
+- Nguyên nhân chính của bản cũ: Greedy tiêu hết nhiên liệu trong 3 ngày đầu; khi U, D đã tối đa thì Q quyết định thắng thua.
+
 - Thí nghiệm offline ban đầu: 30 cặp toàn trận ở ngân sách 0,25 giây/ngày, Lookahead thắng 3 và thua 27 so với Greedy. Đây không phải kết luận cho mọi ngân sách hay mọi input.
 - Bộ chọn đội hình tốt hơn toàn tuần tra ở 3/9 nhãn bài BTC chạy offline, bằng ở 6/9. Q01 và Q02 trùng cấu hình, không phải hai bản đồ độc lập.
 - Hai cấu hình Q04/Q06 được đối chiếu máy chủ qua 2.807 frame; không phát hiện sai khác ở các giá trị kiểm tra. Đây là kiểm chứng hữu hạn, không phải chứng minh simulator đúng mọi trường hợp.
 - Runner đã nộp thật đủ 10 ngày Practice `c57bfe4b-55ef-416f-893f-1ccaf86a8b87`, đội 62, toàn tuần tra, Greedy: máy chủ trả `(20, 101, 253)`. Đây là một lượt chạy, không phải kỷ lục tốt nhất của mọi thuật toán.
 - Bộ dữ liệu Practice đã khảo sát có bản đồ 30×30/32×32; cần input tự sinh để thử thêm kích thước. Practice quan sát phù hợp mô hình một đội; chưa chứng minh đóng góp của đối thủ vào giao thông. Replay thấy đối thủ không đồng nghĩa họ ảnh hưởng lượt tự luyện của ta.
-- Bộ kiểm thử tại lần chỉnh gần nhất có 73 test đạt. Luồng nộp trận tính giờ mới kiểm thử giả lập, chưa chạy trọn trận tính giờ thật.
+- Bộ kiểm thử tại lần chỉnh gần nhất có 80 test đạt. Luồng nộp trận tính giờ mới kiểm thử giả lập, chưa chạy trọn trận tính giờ thật.
 
 ## 4. RL đã làm và hướng RL/DL tiếp theo
 
@@ -55,7 +59,7 @@ Yêu cầu quan trọng: kết quả mang tên RL phải thật sự do policy �
 
 ```powershell
 # Practice tự luyện; dùng rõ chế độ để tránh nhận diện nhầm đồng hồ 0.
-python -X utf8 play_match.py --algorithm greedy --mode practice ID_TRAN
+python -X utf8 play_match.py --algorithm tour --mode practice ID_TRAN
 
 # Chỉ đọc dữ liệu, không chọn xe/nộp bài.
 python -X utf8 play_match.py --inspect --game-id ID_TRAN

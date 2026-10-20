@@ -17,10 +17,21 @@ class Plan:
     searches: int
 
 
-def plan_day(board, state, steps, strategy="greedy", seconds=2.0):
-    if strategy not in ("greedy", "lookahead"):
-        raise ValueError("Chiến lược phải là greedy hoặc lookahead.")
+def plan_day(board, state, steps, strategy="greedy", seconds=2.0, alpha=1.0, beta=0.0):
+    if strategy not in ("greedy", "lookahead", "tour"):
+        raise ValueError("Chiến lược phải là greedy, lookahead hoặc tour.")
     started = time.perf_counter()
+    if strategy == "tour":
+        from .tour import plan_tour
+        actions = plan_tour(board, state, steps, seconds * 0.9, alpha, beta=beta)
+        if actions is not None:
+            checked = simulate_day(board, state, actions, steps)
+            if checked.valid:
+                return Plan(actions, time.perf_counter() - started, False, [], 0)
+        # Tuyến cả đội lỗi thì dùng Greedy với phần thời gian còn lại, không đứng chờ cả ngày.
+        plan = plan_day(board, state, steps, "greedy", max(0.05, seconds - (time.perf_counter() - started)))
+        plan.fallback = True
+        return plan
     deadline = started + max(0, seconds)
     search_deadline = deadline
     actions = [[] for _ in state.agents]

@@ -106,6 +106,17 @@ class LiveRunnerTests(unittest.TestCase):
         self.assertEqual(api.state.day, 2)
         self.assertEqual(len(api.pending), 2)
 
+    def test_tour_algorithm_selects_roles_and_finishes_match(self):
+        clock = Clock()
+        api = FakeAPI(clock)
+        with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as directory, contextlib.redirect_stdout(io.StringIO()):
+            runner = MatchRunner(api, 'test', directory, clock=clock, algorithm='tour',
+                                 seconds=.2, selection_seconds=4)
+            self.assertTrue(runner.run())
+        self.assertEqual(api.state.day, 2)
+        self.assertEqual(len(api.pending), 2)
+        self.assertIn(0, runner.journal['types'])
+
     def test_fresh_selection_day_minus_one_completes_match(self):
         clock = Clock()
         api = FakeAPI(clock)

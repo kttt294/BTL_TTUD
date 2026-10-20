@@ -2,7 +2,11 @@
 
 Bài tập lớn **Thuật toán ứng dụng**, dựa trên đề HEXUDON của Procon Việt Nam 2026.
 Chương trình dùng Python 3.10 trở lên và thư viện chuẩn, không cần cài gói ngoài để chạy thuật toán.
-Code và chú thích được viết theo hướng đơn giản, không có thành phần ML/RL.
+Luồng nộp bài dùng thuật toán truyền thống, không dùng RL. Planner khuyến nghị là `tour`
+(tuyến cả đội, chia nhiên liệu theo ngày, hẹn tiếp tế; xem [docs/tour_planner.md](docs/tour_planner.md)).
+Greedy chọn đích + A* tìm đường được giữ làm baseline.
+Phần RL là thí nghiệm riêng, cần PyTorch và chưa được nộp lên máy chủ (xem cuối tài liệu).
+Tình trạng hiện tại và hướng làm tiếp nằm trong [tài liệu bàn giao](ban_giao_du_ann.md).
 
 ## Những phần đã triển khai
 
@@ -16,11 +20,10 @@ Code và chú thích được viết theo hướng đơn giản, không có thà
 Simulator đã hỗ trợ **một hoặc nhiều đội** và được đối chiếu bằng API luyện tập BTC.
 Các phép đo chiến lược hiện vẫn chạy một đội. Phần nhiều đội có kiểm thử nội bộ,
 chưa có replay BTC tương ứng. Chi tiết nằm trong [đặc tả](docs/simulation_conventions.md).
-Giai đoạn hiện tại hoàn tất nền simulator và dừng trước khi triển khai RL.
 
 ## Bằng chứng đối chiếu với BTC
 
-- 35 phương thức kiểm thử đã chạy đạt.
+- 80 phương thức kiểm thử đã chạy đạt.
 - Sáu tập replay có 6.331 frame, 97.345 giá trị được so sánh và 0 sai khác.
 - Hai biến thể Q10 có phần đầu chung; số frame không phải số mẫu độc lập.
 - Request/response gốc nằm trong `experiments/api_evidence`, không chứa header token.
@@ -42,13 +45,19 @@ công cụ chỉ đọc và đối chiếu. Công cụ không gọi endpoint n�
 ### Tự động lấy đề và nộp từng ngày từ ID trận
 
 ```powershell
-python -X utf8 play_match.py ID_TRAN --algorithm greedy
+python -X utf8 play_match.py --algorithm tour --mode practice ID_TRAN
+python -X utf8 play_match.py --inspect --game-id ID_TRAN
 ```
 
+Lệnh đầu chạy Practice tự luyện; lệnh sau chỉ đọc dữ liệu, không chọn xe hay nộp bài.
+Nên ghi rõ `--mode practice` hoặc `--mode timed`: Practice có thể trả đồng hồ bằng 0 nên
+chế độ `auto` dễ nhận nhầm. Trận tính giờ mới kiểm thử giả lập, cần chạy thử thật trước khi thi.
+
 Script tự chọn vai trò khi cần, lấy vị trí/nhiên liệu/road thật mỗi ngày, kiểm tra
-output và nộp tới khi hết trận. Có `--algorithm lookahead` hoặc `--algorithm rollout`,
-`--mode timed|practice`, `--inspect` và `--dry-run`. Token đọc từ `.env`; mặc định tối
-đa 20 giây lập kế hoạch/ngày, chừa bốn giây gửi bài. Script không reset trận.
+output và nộp tới khi hết trận. Có `--algorithm greedy`, `lookahead` hoặc `rollout`,
+`--inspect` và `--dry-run`. Token đọc từ `.env`; mặc định tối đa 20 giây lập kế
+hoạch/ngày, chừa bốn giây gửi bài. Script không reset trận; không chạy đồng thời hai
+client cho cùng đội/trận.
 Xem [hướng dẫn đầy đủ](docs/auto_submit.md), gồm phạm vi kiểm thử và cách tiếp tục
 sau khi ngắt. Competitive Practice dùng timeline chung chưa được tích hợp.
 
@@ -110,6 +119,18 @@ vai trò đã chọn. Vị trí xuất phát do BTC cung cấp, không được 
 Chạy đối chứng chọn đội hình bằng `python -X utf8 experiments/benchmark_team_selection.py`.
 Các kết quả nằm trong `experiments/team_selection_results`; điểm BTC kiểm chứng riêng nằm
 trong `experiments/team_selection_api_evidence`. Hai loại điểm được báo cáo tách biệt.
+
+## So sánh planner tuyến với Greedy
+
+```powershell
+python -X utf8 experiments/compare_pipeline.py
+python -X utf8 experiments/benchmark_tour.py --seconds 1
+```
+
+Lệnh đầu chạy toàn quy trình thi offline (chọn vai trò rồi lập kế hoạch từng ngày) cho bản cũ
+(Greedy, chọn vai trò 8 giây) và bản mới (`tour`, chọn vai trò song song 20 giây, 5 giây/ngày).
+Kết quả lưu trong `experiments/tour_results/pipeline.json`. Lệnh sau so hai planner trên cùng
+danh sách đội hình. Đây là điểm simulator một đội, chưa phải điểm máy chủ.
 
 ## Tính cận tiếp cận theo nhiên liệu
 
@@ -211,6 +232,8 @@ dùng cùng bộ thực thi. Không chọn checkpoint/seed theo điểm BTC, kh�
 hoặc Lookahead từ bản RL này. Xem `docs/rl_policy_training.md` để biết reward,
 mặt nạ khả thi, tập dữ liệu và giới hạn. PyTorch là phụ thuộc tùy chọn cho RL.
 Kết quả mới nằm trong `experiments/rl_policy_results`, tách khỏi các lượt lai cũ.
+Policy lấy mẫu đã train thắng/hòa/thua đối chứng gần nhất 6/0/21 trên 27 lượt official-label
+(3 seed); policy argmax suy biến thành chờ. Chưa có căn cứ cho rằng RL tốt hơn baseline.
 
 Các thí nghiệm hệ thống lai trước đó được giữ lại để đối chiếu lịch sử:
 

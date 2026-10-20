@@ -161,7 +161,7 @@ class MatchRunner:
         elif self.roles == 'last-supply':
             kinds = [0]*(len(board.starts)-1)+[1]
         else:
-            strategy = 'lookahead' if self.algorithm=='lookahead' else 'greedy'
+            strategy = self.algorithm if self.algorithm in ('lookahead', 'tour') else 'greedy'
             kinds, _, _ = select_types(board, budget, strategy)
         State.initial(board, kinds)
         if 0 not in kinds:
@@ -342,11 +342,12 @@ def main():
     parser = argparse.ArgumentParser(description='Tự lấy trạng thái và nộp kế hoạch HEXUDON trên website BTC Việt Nam.')
     parser.add_argument('game_id',nargs='?',help='ID trận hoặc ID Practice, có thể nhập khi được hỏi')
     parser.add_argument('--game-id',dest='id_option')
-    parser.add_argument('--algorithm','--predict',choices=['greedy','lookahead','rollout'],default='greedy')
+    parser.add_argument('--algorithm','--predict',choices=['greedy','lookahead','rollout','tour'],default='greedy')
     parser.add_argument('--mode',choices=['auto','timed','practice'],default='auto')
     parser.add_argument('--seconds',type=float,default=20.,help='Tối đa giây lập kế hoạch mỗi ngày')
     parser.add_argument('--reserve',type=float,default=4.,help='Giây chừa cho kiểm tra và nộp bài')
-    parser.add_argument('--selection-seconds',type=float,default=8.)
+    parser.add_argument('--selection-seconds',type=float,
+                        help='Giây mô phỏng chọn vai trò; mặc định 20 với tour, 8 với thuật toán khác')
     parser.add_argument('--roles',choices=['auto','all-patrol','last-supply'],default='auto')
     parser.add_argument('--types',nargs='+',type=int,help='Vai trò cụ thể, ưu tiên hơn --roles')
     parser.add_argument('--team',help='Mặc định lấy ID đội từ token')
@@ -361,6 +362,8 @@ def main():
     game_id=args.game_id or args.id_option or input('ID trận đấu: ').strip()
     if not re.fullmatch(r'[A-Za-z0-9_-]+(?::[0-9]+)?',game_id):
         parser.error('ID trận không hợp lệ; chỉ nhập ID, không nhập toàn bộ URL.')
+    if args.selection_seconds is None:
+        args.selection_seconds = 20. if args.algorithm == 'tour' else 8.
     if args.seconds<=0 or args.reserve<1 or args.poll<=0 or args.selection_seconds<0:
         parser.error('Ngân sách và poll phải dương; reserve ít nhất một giây.')
     if args.max_days is not None and args.max_days<1:

@@ -1,0 +1,1590 @@
+{
+ "Q01": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    20,
+    101,
+    253
+   ],
+   "bound_for_types": [
+    20,
+    200,
+    1280
+   ],
+   "days": [
+    [
+     20,
+     108
+    ],
+    [
+     20,
+     48
+    ],
+    [
+     20,
+     55
+    ],
+    [
+     13,
+     14
+    ],
+    [
+     8,
+     8
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     4
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 7.33,
+   "longest_day_seconds": 0.69,
+   "elapsed": 9.4
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    1,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    20,
+    200,
+    614
+   ],
+   "bound_for_types": [
+    20,
+    200,
+    960
+   ],
+   "days": [
+    [
+     20,
+     91
+    ],
+    [
+     20,
+     46
+    ],
+    [
+     20,
+     53
+    ],
+    [
+     20,
+     44
+    ],
+    [
+     20,
+     44
+    ],
+    [
+     20,
+     24
+    ],
+    [
+     20,
+     77
+    ],
+    [
+     20,
+     89
+    ],
+    [
+     20,
+     74
+    ],
+    [
+     20,
+     72
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.58,
+   "longest_day_seconds": 4.51,
+   "elapsed": 55.6
+  },
+  "winner": "new"
+ },
+ "Q03": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    20,
+    84,
+    137
+   ],
+   "bound_for_types": [
+    20,
+    200,
+    1600
+   ],
+   "days": [
+    [
+     20,
+     68
+    ],
+    [
+     19,
+     24
+    ],
+    [
+     8,
+     8
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 7.12,
+   "longest_day_seconds": 0.44,
+   "elapsed": 7.8
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    0,
+    0,
+    0,
+    0,
+    1
+   ],
+   "score": [
+    20,
+    200,
+    675
+   ],
+   "bound_for_types": [
+    20,
+    200,
+    1280
+   ],
+   "days": [
+    [
+     20,
+     62
+    ],
+    [
+     20,
+     65
+    ],
+    [
+     20,
+     81
+    ],
+    [
+     20,
+     92
+    ],
+    [
+     20,
+     30
+    ],
+    [
+     20,
+     77
+    ],
+    [
+     20,
+     95
+    ],
+    [
+     20,
+     49
+    ],
+    [
+     20,
+     83
+    ],
+    [
+     20,
+     41
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.78,
+   "longest_day_seconds": 4.51,
+   "elapsed": 55.8
+  },
+  "winner": "new"
+ },
+ "Q04": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "score": [
+    20,
+    200,
+    518
+   ],
+   "bound_for_types": [
+    20,
+    200,
+    900
+   ],
+   "days": [
+    [
+     20,
+     42
+    ],
+    [
+     20,
+     45
+    ],
+    [
+     20,
+     72
+    ],
+    [
+     20,
+     55
+    ],
+    [
+     20,
+     37
+    ],
+    [
+     20,
+     78
+    ],
+    [
+     20,
+     43
+    ],
+    [
+     20,
+     37
+    ],
+    [
+     20,
+     69
+    ],
+    [
+     20,
+     40
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 7.04,
+   "longest_day_seconds": 1.08,
+   "elapsed": 13.8
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    1,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    20,
+    200,
+    641
+   ],
+   "bound_for_types": [
+    20,
+    200,
+    900
+   ],
+   "days": [
+    [
+     20,
+     56
+    ],
+    [
+     20,
+     61
+    ],
+    [
+     20,
+     83
+    ],
+    [
+     20,
+     65
+    ],
+    [
+     20,
+     49
+    ],
+    [
+     20,
+     86
+    ],
+    [
+     20,
+     61
+    ],
+    [
+     20,
+     44
+    ],
+    [
+     20,
+     77
+    ],
+    [
+     20,
+     59
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.59,
+   "longest_day_seconds": 4.5,
+   "elapsed": 55.6
+  },
+  "winner": "new"
+ },
+ "Q06": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    15,
+    72,
+    193
+   ],
+   "bound_for_types": [
+    15,
+    150,
+    1630
+   ],
+   "days": [
+    [
+     15,
+     54
+    ],
+    [
+     15,
+     89
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     5,
+     6
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 7.19,
+   "longest_day_seconds": 0.8,
+   "elapsed": 8.5
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    0,
+    0,
+    0,
+    1,
+    0,
+    0
+   ],
+   "score": [
+    15,
+    150,
+    743
+   ],
+   "bound_for_types": [
+    15,
+    150,
+    1500
+   ],
+   "days": [
+    [
+     15,
+     54
+    ],
+    [
+     15,
+     102
+    ],
+    [
+     15,
+     48
+    ],
+    [
+     15,
+     110
+    ],
+    [
+     15,
+     56
+    ],
+    [
+     15,
+     41
+    ],
+    [
+     15,
+     114
+    ],
+    [
+     15,
+     66
+    ],
+    [
+     15,
+     100
+    ],
+    [
+     15,
+     52
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.63,
+   "longest_day_seconds": 4.51,
+   "elapsed": 55.7
+  },
+  "winner": "new"
+ },
+ "Q07": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    15,
+    75,
+    293
+   ],
+   "bound_for_types": [
+    15,
+    150,
+    1500
+   ],
+   "days": [
+    [
+     15,
+     139
+    ],
+    [
+     15,
+     107
+    ],
+    [
+     8,
+     10
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 7.33,
+   "longest_day_seconds": 0.95,
+   "elapsed": 9.1
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    0,
+    1,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    15,
+    150,
+    846
+   ],
+   "bound_for_types": [
+    15,
+    150,
+    1200
+   ],
+   "days": [
+    [
+     15,
+     118
+    ],
+    [
+     15,
+     103
+    ],
+    [
+     15,
+     60
+    ],
+    [
+     15,
+     103
+    ],
+    [
+     15,
+     56
+    ],
+    [
+     15,
+     111
+    ],
+    [
+     15,
+     45
+    ],
+    [
+     15,
+     93
+    ],
+    [
+     15,
+     80
+    ],
+    [
+     15,
+     77
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.68,
+   "longest_day_seconds": 4.51,
+   "elapsed": 55.7
+  },
+  "winner": "new"
+ },
+ "Q08": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    15,
+    104,
+    316
+   ],
+   "bound_for_types": [
+    15,
+    150,
+    1500
+   ],
+   "days": [
+    [
+     15,
+     107
+    ],
+    [
+     15,
+     35
+    ],
+    [
+     15,
+     92
+    ],
+    [
+     15,
+     37
+    ],
+    [
+     9,
+     10
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     7,
+     7
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 7.33,
+   "longest_day_seconds": 0.84,
+   "elapsed": 9.6
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "score": [
+    15,
+    150,
+    684
+   ],
+   "bound_for_types": [
+    15,
+    150,
+    1200
+   ],
+   "days": [
+    [
+     15,
+     101
+    ],
+    [
+     15,
+     36
+    ],
+    [
+     15,
+     85
+    ],
+    [
+     15,
+     54
+    ],
+    [
+     15,
+     75
+    ],
+    [
+     15,
+     47
+    ],
+    [
+     15,
+     32
+    ],
+    [
+     15,
+     60
+    ],
+    [
+     15,
+     105
+    ],
+    [
+     15,
+     89
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.68,
+   "longest_day_seconds": 4.5,
+   "elapsed": 55.7
+  },
+  "winner": "new"
+ },
+ "Q09": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    15,
+    72,
+    146
+   ],
+   "bound_for_types": [
+    15,
+    150,
+    1500
+   ],
+   "days": [
+    [
+     15,
+     49
+    ],
+    [
+     15,
+     54
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 7.0,
+   "longest_day_seconds": 0.43,
+   "elapsed": 7.9
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    15,
+    150,
+    695
+   ],
+   "bound_for_types": [
+    15,
+    150,
+    1200
+   ],
+   "days": [
+    [
+     15,
+     54
+    ],
+    [
+     15,
+     92
+    ],
+    [
+     15,
+     79
+    ],
+    [
+     15,
+     90
+    ],
+    [
+     15,
+     55
+    ],
+    [
+     15,
+     55
+    ],
+    [
+     15,
+     95
+    ],
+    [
+     15,
+     80
+    ],
+    [
+     15,
+     46
+    ],
+    [
+     15,
+     49
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.64,
+   "longest_day_seconds": 4.5,
+   "elapsed": 55.7
+  },
+  "winner": "new"
+ },
+ "Q10": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    15,
+    82,
+    244
+   ],
+   "bound_for_types": [
+    15,
+    150,
+    1500
+   ],
+   "days": [
+    [
+     15,
+     135
+    ],
+    [
+     15,
+     52
+    ],
+    [
+     14,
+     18
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     5,
+     5
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 7.25,
+   "longest_day_seconds": 1.04,
+   "elapsed": 8.9
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    0,
+    0,
+    1,
+    0,
+    0
+   ],
+   "score": [
+    15,
+    149,
+    704
+   ],
+   "bound_for_types": [
+    15,
+    150,
+    1200
+   ],
+   "days": [
+    [
+     15,
+     116
+    ],
+    [
+     15,
+     44
+    ],
+    [
+     15,
+     31
+    ],
+    [
+     15,
+     106
+    ],
+    [
+     15,
+     78
+    ],
+    [
+     14,
+     32
+    ],
+    [
+     15,
+     75
+    ],
+    [
+     15,
+     56
+    ],
+    [
+     15,
+     82
+    ],
+    [
+     15,
+     84
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.68,
+   "longest_day_seconds": 4.51,
+   "elapsed": 55.7
+  },
+  "winner": "new"
+ },
+ "generated_8_2026": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "score": [
+    8,
+    32,
+    163
+   ],
+   "bound_for_types": [
+    8,
+    32,
+    164
+   ],
+   "days": [
+    [
+     8,
+     41
+    ],
+    [
+     8,
+     41
+    ],
+    [
+     8,
+     40
+    ],
+    [
+     8,
+     41
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 3.1,
+   "longest_day_seconds": 0.07,
+   "elapsed": 3.3
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "score": [
+    8,
+    32,
+    164
+   ],
+   "bound_for_types": [
+    8,
+    32,
+    164
+   ],
+   "days": [
+    [
+     8,
+     41
+    ],
+    [
+     8,
+     41
+    ],
+    [
+     8,
+     41
+    ],
+    [
+     8,
+     41
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.39,
+   "longest_day_seconds": 4.5,
+   "elapsed": 28.4
+  },
+  "winner": "new"
+ },
+ "generated_16_2026": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "score": [
+    12,
+    48,
+    145
+   ],
+   "bound_for_types": [
+    12,
+    48,
+    228
+   ],
+   "days": [
+    [
+     12,
+     40
+    ],
+    [
+     12,
+     38
+    ],
+    [
+     12,
+     34
+    ],
+    [
+     12,
+     33
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 4.67,
+   "longest_day_seconds": 0.23,
+   "elapsed": 5.5
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    1,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    12,
+    48,
+    173
+   ],
+   "bound_for_types": [
+    12,
+    48,
+    228
+   ],
+   "days": [
+    [
+     12,
+     48
+    ],
+    [
+     12,
+     41
+    ],
+    [
+     12,
+     42
+    ],
+    [
+     12,
+     42
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.41,
+   "longest_day_seconds": 4.5,
+   "elapsed": 28.4
+  },
+  "winner": "new"
+ },
+ "generated_32_2026": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    1,
+    0,
+    0
+   ],
+   "score": [
+    12,
+    45,
+    64
+   ],
+   "bound_for_types": [
+    12,
+    48,
+    204
+   ],
+   "days": [
+    [
+     12,
+     19
+    ],
+    [
+     11,
+     18
+    ],
+    [
+     10,
+     13
+    ],
+    [
+     12,
+     14
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 5.24,
+   "longest_day_seconds": 0.6,
+   "elapsed": 7.2
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    1,
+    0,
+    1,
+    0
+   ],
+   "score": [
+    12,
+    48,
+    78
+   ],
+   "bound_for_types": [
+    12,
+    48,
+    164
+   ],
+   "days": [
+    [
+     12,
+     20
+    ],
+    [
+     12,
+     17
+    ],
+    [
+     12,
+     21
+    ],
+    [
+     12,
+     20
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.42,
+   "longest_day_seconds": 4.5,
+   "elapsed": 28.4
+  },
+  "winner": "new"
+ },
+ "generated_8_2027": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    1,
+    0,
+    0
+   ],
+   "score": [
+    8,
+    32,
+    155
+   ],
+   "bound_for_types": [
+    8,
+    32,
+    156
+   ],
+   "days": [
+    [
+     8,
+     39
+    ],
+    [
+     8,
+     39
+    ],
+    [
+     8,
+     38
+    ],
+    [
+     8,
+     39
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 3.29,
+   "longest_day_seconds": 0.08,
+   "elapsed": 3.6
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    1,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    8,
+    32,
+    156
+   ],
+   "bound_for_types": [
+    8,
+    32,
+    156
+   ],
+   "days": [
+    [
+     8,
+     39
+    ],
+    [
+     8,
+     39
+    ],
+    [
+     8,
+     39
+    ],
+    [
+     8,
+     39
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.41,
+   "longest_day_seconds": 4.5,
+   "elapsed": 28.4
+  },
+  "winner": "new"
+ },
+ "generated_16_2027": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    1,
+    0,
+    0
+   ],
+   "score": [
+    12,
+    48,
+    129
+   ],
+   "bound_for_types": [
+    12,
+    48,
+    200
+   ],
+   "days": [
+    [
+     12,
+     37
+    ],
+    [
+     12,
+     31
+    ],
+    [
+     12,
+     29
+    ],
+    [
+     12,
+     32
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 4.99,
+   "longest_day_seconds": 0.3,
+   "elapsed": 6.0
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    1,
+    0,
+    0,
+    0
+   ],
+   "score": [
+    12,
+    48,
+    175
+   ],
+   "bound_for_types": [
+    12,
+    48,
+    200
+   ],
+   "days": [
+    [
+     12,
+     46
+    ],
+    [
+     12,
+     44
+    ],
+    [
+     12,
+     44
+    ],
+    [
+     12,
+     41
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.42,
+   "longest_day_seconds": 4.5,
+   "elapsed": 28.4
+  },
+  "winner": "new"
+ },
+ "generated_32_2027": {
+  "old": {
+   "pipeline": "old",
+   "types": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "score": [
+    12,
+    45,
+    65
+   ],
+   "bound_for_types": [
+    12,
+    48,
+    188
+   ],
+   "days": [
+    [
+     12,
+     21
+    ],
+    [
+     11,
+     15
+    ],
+    [
+     11,
+     13
+    ],
+    [
+     11,
+     16
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 5.23,
+   "longest_day_seconds": 0.63,
+   "elapsed": 7.4
+  },
+  "new": {
+   "pipeline": "new",
+   "types": [
+    1,
+    0,
+    0,
+    1
+   ],
+   "score": [
+    12,
+    48,
+    65
+   ],
+   "bound_for_types": [
+    12,
+    48,
+    152
+   ],
+   "days": [
+    [
+     12,
+     17
+    ],
+    [
+     12,
+     15
+    ],
+    [
+     12,
+     17
+    ],
+    [
+     12,
+     16
+    ]
+   ],
+   "fallbacks": 0,
+   "selection_seconds": 10.43,
+   "longest_day_seconds": 4.5,
+   "elapsed": 28.4
+  },
+  "winner": "new"
+ }
+}
