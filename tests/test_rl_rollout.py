@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src'))
-sys.path.insert(0, str(ROOT / 'experiments'))
+sys.path.insert(0, str(ROOT / 'experiments' / 'rl'))
 from hexudon.model import Board, State
 from rl_extension import complete_match, run_variant
 

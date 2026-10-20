@@ -8,7 +8,7 @@ import time
 import torch
 from torch import nn
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'src'))
 from hexudon.model import State
 from hexudon.simulator import simulate_day

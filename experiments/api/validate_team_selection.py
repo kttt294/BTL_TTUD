@@ -5,7 +5,8 @@ import json
 from pathlib import Path
 import sys
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 from hexudon.api import CompetitionAPI
 from hexudon.model import Board, State
@@ -17,11 +18,11 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("questions", nargs="+", default=["Q03", "Q04"])
     args = parser.parse_args()
-    api = CompetitionAPI(evidence_dir="experiments/team_selection_api_evidence")
+    api = CompetitionAPI(evidence_dir="experiments/data/team_selection_api_evidence")
     registry = json.loads((ROOT / "docs/api/sample_games.json").read_text(encoding="utf-8"))
     results = []
     for question in args.questions:
-        case = json.loads((ROOT / f"experiments/team_selection_results/{question}.json").read_text(encoding="utf-8"))
+        case = json.loads((ROOT / f"experiments/data/team_selection_results/{question}.json").read_text(encoding="utf-8"))
         game = registry[question] + ":62"
         config = api.get("/api/game/config", game, question + "_config")
         for endpoint in ("actions", "replay", "state"):

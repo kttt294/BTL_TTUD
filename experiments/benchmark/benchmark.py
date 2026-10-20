@@ -10,7 +10,7 @@ import statistics
 import sys
 import time
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from hexudon.generator import generate_board
 from hexudon.model import State
 from hexudon.planner import plan_day
@@ -31,7 +31,7 @@ def main():
     parser.add_argument("--sizes", nargs="+", type=int, default=[8, 16, 32])
     parser.add_argument("--seconds", type=float, default=0.25)
     parser.add_argument("--seed", type=int, default=2026)
-    parser.add_argument("--output", default="experiments/results")
+    parser.add_argument("--output", default="experiments/data/results")
     args = parser.parse_args()
     output = Path(args.output)
     output.mkdir(parents=True, exist_ok=True)

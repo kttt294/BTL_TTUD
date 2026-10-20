@@ -12,7 +12,7 @@ BASE_URL = "https://hexudon.hairbui76.id.vn"
 
 
 class CompetitionAPI:
-    def __init__(self, env_file=".env", evidence_dir="experiments/api_evidence"):
+    def __init__(self, env_file=".env", evidence_dir="experiments/data/api_evidence"):
         values = {}
         for line in Path(env_file).read_text(encoding="utf-8-sig").splitlines():
             if "=" in line and not line.lstrip().startswith("#"):

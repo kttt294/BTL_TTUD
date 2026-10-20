@@ -6,7 +6,8 @@ from pathlib import Path
 import sys
 import time
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 from hexudon.api import CompetitionAPI
 RL_MODE = "--rl" in sys.argv
@@ -136,7 +137,7 @@ def run(question, uuid, api, trainer=None):
 
 def main():
     trainer = None
-    evidence = "experiments/rl_branch_evidence" if RL_MODE else "experiments/legacy_branch_evidence"
+    evidence = "experiments/data/rl_branch_evidence" if RL_MODE else "experiments/data/legacy_branch_evidence"
     api = CompetitionAPI(evidence_dir=evidence)
     if RL_MODE:
         import hashlib

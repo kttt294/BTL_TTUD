@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 import time
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT/'src'))
 from hexudon.live import MatchRunner, predict
 from hexudon.live_api import LiveAPI, APIError
@@ -24,8 +24,8 @@ def main():
     if api.team_id != '62':
         raise ValueError('Phép đo này chỉ được phép reset Practice của đội 62.')
     registry = json.loads((ROOT/'docs/api/sample_games.json').read_text(encoding='utf8'))
-    pipeline = json.loads((ROOT/'experiments/tour_results/pipeline.json').read_text(encoding='utf8'))
-    folder = ROOT/'experiments/tour_api_evidence'
+    pipeline = json.loads((ROOT/'experiments/data/tour_results/pipeline.json').read_text(encoding='utf8'))
+    folder = ROOT/'experiments/data/tour_api_evidence'
     folder.mkdir(exist_ok=True)
     summaries = json.loads((folder/'summary.json').read_text(encoding='utf8')) if (folder/'summary.json').exists() else []
 

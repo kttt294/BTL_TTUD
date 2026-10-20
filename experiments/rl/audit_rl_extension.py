@@ -5,21 +5,21 @@ import json
 from pathlib import Path
 import sys
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'src'))
 from hexudon.model import Board, State
 from hexudon.simulator import simulate_day
 
 
 def main():
-    folder = ROOT / 'experiments/rl_extension_results'
+    folder = ROOT / 'experiments/data/rl_extension_results'
     summary = json.loads((folder / 'summary.json').read_text(encoding='utf-8'))
     assert len(summary) == 36
     checked_days = 0
     for item in summary:
         question, variant = item['question'], item['variant']
         row = json.loads((folder / f'{question}_{variant}.json').read_text(encoding='utf-8'))
-        source = ROOT / f'experiments/rl_branch_evidence/{question}_config.json'
+        source = ROOT / f'experiments/data/rl_branch_evidence/{question}_config.json'
         assert hashlib.sha256(source.read_bytes()).hexdigest() == row['config_sha256']
         board = Board.from_dict(json.loads(source.read_text(encoding='utf-8'))['response'])
         state = State.initial(board, [0] * len(board.starts))

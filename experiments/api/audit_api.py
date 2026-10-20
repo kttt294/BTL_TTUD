@@ -4,11 +4,11 @@ import hashlib
 import json
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def main():
-    directory = ROOT / "experiments/api_evidence"
+    directory = ROOT / "experiments/data/api_evidence"
     files = ["q02_comparison", "q03_comparison", "q04_comparison", "q06_comparison",
              "q10_immediate_comparison", "q10_wait_comparison"]
     names = ["Q02 các ca luật", "Q03 toàn trận", "Q04 toàn trận", "Q06 toàn trận",
@@ -51,14 +51,14 @@ def main():
     lines += ["", "## Điểm truy cập và bằng chứng", "",
               "Tài liệu công khai: https://hexudon.hairbui76.id.vn/docs . "
               "Schema gốc: https://hexudon.hairbui76.id.vn/openapi.json .", "",
-              "Các JSON gốc nằm tại `experiments/api_evidence`; request không chứa header Authorization. "
+              "Các JSON gốc nằm tại `experiments/data/api_evidence`; request không chứa header Authorization. "
               "Mỗi bản ghi có thời điểm UTC, endpoint, tham số, body, HTTP status và phản hồi. "
               "Danh mục SHA-256 nằm tại `manifest.json`. Hàm băm giúp nhận biết tệp thay đổi, "
               "không phải chữ ký xác nhận của BTC.", "",
               "Các so sánh trên xác minh một đội trong những bản luyện tập đã thử. "
               "Phần nhiều đội mới có kiểm thử nội bộ, chưa có replay đối chiếu từ BTC. "
               "Kết quả không chứng minh simulator đúng trong mọi trường hợp và không phải chứng nhận của BTC.", ""]
-    (ROOT / "docs/api_validation_results.md").write_text("\n".join(lines), encoding="utf-8")
+    (directory / "audit_report.md").write_text("\n".join(lines), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 
 

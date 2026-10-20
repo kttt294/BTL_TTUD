@@ -15,7 +15,7 @@ from hexudon.simulator import simulate_day
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--folder', default='experiments/rl_policy_results')
+    parser.add_argument('--folder', default='experiments/data/rl_policy_results')
     parser.add_argument('--questions', nargs='*', default=['Q01','Q02','Q03','Q04','Q06','Q07','Q08','Q09','Q10'])
     parser.add_argument('--generated-per-size', type=int, default=4)
     args = parser.parse_args()
@@ -32,7 +32,7 @@ def main():
             models[variant,seed] = model
     cases = []
     for q in args.questions:
-        raw = json.loads((ROOT/'experiments/rl_branch_evidence'/f'{q}_config.json').read_text(encoding='utf8'))
+        raw = json.loads((ROOT/'experiments/data/rl_branch_evidence'/f'{q}_config.json').read_text(encoding='utf8'))
         cfg = raw.get('response',raw)
         cases.append((q, 'official', Board.from_dict(cfg)))
     for size in (8,16,32):

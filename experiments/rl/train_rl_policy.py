@@ -57,7 +57,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--episodes', type=int, default=512)
     parser.add_argument('--seeds', nargs='+', type=int, default=[71, 72, 73])
-    parser.add_argument('--output', default='experiments/rl_policy_results')
+    parser.add_argument('--output', default='experiments/data/rl_policy_results')
     args = parser.parse_args()
     torch.set_num_threads(1)
     folder = ROOT / args.output

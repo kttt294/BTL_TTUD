@@ -7,8 +7,8 @@ import statistics
 import sys
 
 
-ROOT = Path(__file__).resolve().parents[1]
-RESULTS = ROOT / "experiments" / "results"
+ROOT = Path(__file__).resolve().parents[2]
+RESULTS = ROOT / "experiments" / "data" / "results"
 
 
 def read_rows(name):

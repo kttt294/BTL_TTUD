@@ -6,7 +6,8 @@ import shutil
 import sys
 import time
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 from hexudon.api import CompetitionAPI
 
@@ -14,7 +15,7 @@ from hexudon.api import CompetitionAPI
 def main():
     sys.stdout.reconfigure(encoding="utf-8")
     rl_mode = "--rl" in sys.argv
-    api = CompetitionAPI(evidence_dir="experiments/rl_branch_evidence" if rl_mode else "experiments/legacy_branch_evidence")
+    api = CompetitionAPI(evidence_dir="experiments/data/rl_branch_evidence" if rl_mode else "experiments/data/legacy_branch_evidence")
     results = json.loads((api.directory / "summary.json").read_text(encoding="utf-8"))
     output = ROOT / ("output/rl_branch_evaluation" if rl_mode else "output/legacy_branch_evaluation")
     output.mkdir(parents=True, exist_ok=True)
@@ -40,7 +41,7 @@ def main():
         verified += len(expected)
         shutil.copyfile(api.directory / (question + "_output.txt"), output / (question + "_output.txt"))
         lines.append("| " + question + " | " + " | ".join(map(str, result["score"])) + " |")
-    lines.insert(6, "| Q05 | Không có trong danh sách | — | — |")
+    lines.insert(6, "| Q05 | Không có trong danh sách | - | - |")
     maximum = max(d["planning_seconds"] for r in results for d in r["days"])
     audit = {"verified_days": verified, "server_plan_mismatches": 0,
              "score_mismatches": 0, "max_planning_seconds": maximum,
@@ -52,14 +53,16 @@ def main():
     (api.directory / "audit.json").write_text(json.dumps(audit, indent=2), encoding="utf-8")
     shutil.copyfile(api.directory / "summary.json", output / "summary.json")
     text = "\n".join(lines) + f"\n\nMáy chủ đã nhận và lưu đúng {verified} kế hoạch ngày. Thời gian lập kế hoạch lớn nhất: {maximum:.3f} giây, không gồm truyền mạng.\n"
-    document = ROOT / ("docs/rl_branch_evaluation.md" if rl_mode else "docs/legacy_branch_evaluation.md")
-    report = document.read_text(encoding="utf-8")
+    name = "rl_branch_evaluation.md" if rl_mode else "legacy_branch_evaluation.md"
+    guide = (ROOT / "docs/huong_dan.md").read_text(encoding="utf-8")
+    report = guide.split(f"<!-- begin:{name} -->", 1)[1].split(f"<!-- end:{name} -->", 1)[0].strip()
+    report = report.replace("\n### ", "\n## ")
     marker = "\n## Kết quả máy chủ\n"
     report = report.split(marker)[0] + marker + "\n" + text
     if rl_mode:
         shutil.copyfile(api.directory / "model_metadata.json", output / "model_metadata.json")
         baseline = {r["question"]: r["score"] for r in json.loads(
-            (ROOT / "experiments/legacy_branch_evidence/summary.json").read_text(encoding="utf-8"))}
+            (ROOT / "experiments/data/legacy_branch_evidence/summary.json").read_text(encoding="utf-8"))}
         comparison = ["\n## So sánh với lượt Greedy/Lookahead trước đó\n",
                       "| Bài | Greedy/Lookahead | RL kết hợp Greedy | So sánh |",
                       "|---|---|---|---|"]
@@ -72,7 +75,6 @@ def main():
         comparison.append(f"\nTrong 90 ngày, mô hình đã tạo {audit['rl_candidates']} ứng viên; bộ chọn đã dùng RL cho {audit['rl_selected_days']} ngày. Các ngày còn lại dùng Greedy.\n")
         comparison.append(f"Theo thứ tự ưu tiên ba thành phần điểm, lượt RL kết hợp Greedy tốt hơn ở {counts['Tốt hơn']} bài, kém hơn ở {counts['Kém hơn']} bài và bằng nhau ở {counts['Bằng nhau']} bài. Thống kê này bao gồm hai nhãn Q01/Q02 có input trùng nhau. Đây là so sánh hai cấu hình hoàn chỉnh, không tách riêng tác động của chính sách RL và các heuristic hỗ trợ.\n")
         report += "\n".join(comparison)
-    document.write_text(report, encoding="utf-8")
     (output / "README.md").write_text(report, encoding="utf-8")
     print(text)
     print(json.dumps(audit, indent=2))

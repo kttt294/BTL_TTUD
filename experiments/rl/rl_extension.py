@@ -9,7 +9,7 @@ from pathlib import Path
 import sys
 import time
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'src'))
 from hexudon.model import Board, State
 from hexudon.planner import plan_day
@@ -178,8 +178,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--questions', nargs='+', default=['Q01', 'Q02', 'Q03', 'Q04', 'Q06', 'Q07', 'Q08', 'Q09', 'Q10'])
     parser.add_argument('--variants', nargs='+', choices=VARIANTS, default=list(VARIANTS))
-    parser.add_argument('--config-dir', default='experiments/rl_branch_evidence')
-    parser.add_argument('--output', default='experiments/rl_extension_results')
+    parser.add_argument('--config-dir', default='experiments/data/rl_branch_evidence')
+    parser.add_argument('--output', default='experiments/data/rl_extension_results')
     parser.add_argument('--samples', type=int, default=3)
     args = parser.parse_args()
     folder = ROOT / args.output
