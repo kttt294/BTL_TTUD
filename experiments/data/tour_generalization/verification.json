@@ -1,0 +1,49 @@
+{
+  "checked_date_local": "2026-10-21",
+  "source_commit": "516b296fc754105314394c2df1600322ba16fdea",
+  "remote_main_verified_at_check": "516b296fc754105314394c2df1600322ba16fdea",
+  "hash_normalization": "SHA-256 sau khi chuyển CRLF thành LF; không sửa nội dung khác.",
+  "source_files_checked": 16,
+  "source_mismatches": [],
+  "experiment_script_matches_manifest": true,
+  "input_files_checked": 24,
+  "input_mismatches": [],
+  "summary_recomputed_from_all_runs_matches_saved": true,
+  "replay_audit": {
+    "runs": 132,
+    "daily_plans": 708,
+    "mismatches": 0,
+    "invalid": 0,
+    "fallback": 0
+  },
+  "regression_tests": {
+    "command": "python -X utf8 -m unittest discover -s tests -p test_tour.py -v",
+    "tests_run": 11,
+    "failures": 0,
+    "errors": 0,
+    "includes": [
+      "test_unreachable_leg_is_infinite_and_has_no_directions",
+      "test_tour_handles_spot_on_disconnected_island"
+    ]
+  },
+  "scope": "Đối chiếu phiên bản và phát lại output đã lưu; không lập tuyến lại, không gọi API, không thay điểm Practice. Các bảng 23 và 24 sau khi đánh số lại tương ứng mục 6.10.",
+  "source_hashes": {
+    "src/hexudon/__init__.py": "55c77a20188bff004691aab7087215035aa737842234dc6b0081ecc42eb35247",
+    "src/hexudon/__main__.py": "84302ec222e52be662a7e4643bbf1a92a50b5a0794c35e5649b82814d794c034",
+    "src/hexudon/api.py": "95a5dcc8150f92a13924b11771f59d5eec5c67c8f78d7366ee92119bc25cc575",
+    "src/hexudon/bounds.py": "f6954dae8cf808b3f6ba76a62b074bddc45c07ab1756840c778fea15adf90a13",
+    "src/hexudon/exact.py": "0006f3ec5a8da1d9618e71229d4ae0352ad17b6a45bdc985583e819f300e7b8d",
+    "src/hexudon/generator.py": "95fb453e223b8d39f16b2b4876ae6c23e798b3f5fb9e79ecb5a733f3cea8602a",
+    "src/hexudon/live.py": "0e74a5c61e49d167dadb8826fcea1bc9af1ab4d67a938b51404b4a855ec0a13e",
+    "src/hexudon/live_api.py": "9d49d83c26c4eef968fe99ee81d25016bf8ed713f196ebac3bbf786514714f14",
+    "src/hexudon/live_storage.py": "b2a0988fbff0d4ee956d7c3d355a8fbcfbf52d16d138e105014fb2576f3f568c",
+    "src/hexudon/model.py": "eb5b7f725dd4daa6dd767d53aecc173926a516bd1bb22245061825e7dc11f6e3",
+    "src/hexudon/planner.py": "7671d019e01ee2884baf6517618324e7b56c3722d9daba5577df0cf9b994e88f",
+    "src/hexudon/search.py": "19693c98bc67d8a69ecef45a876f595c6cfcee2b57a210dd21fb42066345b8b9",
+    "src/hexudon/simulator.py": "8b0583b87fc068cd667db92bb834700ae0c4ebb5467587e3beb981f2ec35f9a8",
+    "src/hexudon/team_selection.py": "c9dec7d27ea85225384f22e6eeb5936faf4f7a3c109f493e6baffaa60d261fd6",
+    "src/hexudon/tour.py": "ba71a801184cc31df251a5a6fb96275447201f8b206ad13ef8a71d37f2b986fc",
+    "src/main.py": "98f48677c7a4b05265da665bf033497c28e59027ffb6330dd132d2f00b49da7e"
+  },
+  "experiment_sha256": "7ac99e33043397d064ad1162e0e28c477b4af7808cb278d19e614ab1ef446818"
+}
