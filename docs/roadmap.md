@@ -142,6 +142,68 @@ thật (trận tính giờ, nhiều đội, bản đồ chưa biết), không ph
 
 Chỉ làm khi có bộ đo chuẩn để chứng minh lợi ích; luôn có `tour` làm dự phòng.
 - [ ] Học có giám sát: giá trị vị trí cuối ngày (số loại/suất ngày mai) thay ước lượng tham lam.
-- [ ] Xếp hạng đội hình nhanh từ đặc trưng bản đồ.
-- [ ] Học chọn toán tử/điểm phá cho tìm kiếm.
+- [x] Xếp hạng đội hình nhanh từ đặc trưng bản đồ: không cần. Đo bộ chọn thật (26 giây) so với
+  chơi trọn trận mọi đội hình ứng viên trên 60 bản đồ (`experiments/composition_value.py`): chỉ thiếu
+  1 D ở 4/60 bản đồ; cùng U/D thì thiếu Q TB 10,6 (btc) và 2,7 (wide), nhỏ hơn độ lệch do lấy max
+  trên 16 trận nhiễu. Bộ chọn gần bằng đội hình tốt nhất nên ML chọn đội hình không đáng làm.
+- [x] Học chọn toán tử/điểm phá cho tìm kiếm (ALNS tự chỉnh trọng số), đo trên bộ dev 200 bản đồ
+  (`experiments/suite.py`, 1 giây/ngày): alns btc +0,42% / wide −0,02%, alns_fast +0,25% / −0,18%;
+  các biến thể tham số khác (positions5, noise1, remove6, extended_heavy) đều trong ±0,5% và hòa
+  thắng/thua gần ngang nhau. Tìm kiếm trong ngày đã bão hòa; giữ cấu hình base (ALNS tắt).
 - [ ] RL (GPU) chỉ khi các thành phần trên cho thấy còn khoảng cách lớn tới cận trên.
+
+## Thử nghiệm chặn đường (nhánh ml_experiments, đã loại)
+
+Ý tưởng: xe tiếp tế của ta đứng cả trận ở ô đường nằm trên nhiều đường ngắn nhất giữa các điểm
+nhất, để lưu lượng (chia cho 20 đội) vượt ngưỡng tắc và làm đối thủ chậm lại. Mô phỏng 20 đội cùng
+mặt đường (ta 1 giây/ngày, 19 đối thủ `tour` 0,3 giây/ngày), 7 bài × 2 seed (`results/blocking_sim.txt`):
+
+| | Q ta TB | Q đối thủ mạnh nhất TB | Q đối thủ TB | ta − mạnh nhất | Trận ta mất D |
+|---|---|---|---|---|---|
+| Không chặn | 563,9 | 542,7 | 517,8 | +21,1 | 1/14 |
+| Chặn | 559,6 | 540,9 | 518,1 | +18,6 | 2/14 |
+
+Kết luận: trạng thái đường công khai và như nhau cho mọi đội, nên ô bị tắc hại cả ta lẫn đối thủ;
+ta còn mất thêm sự linh hoạt của xe tiếp tế (Q −4,3, M18 mất thêm 1 D). Đã xóa khỏi code.
+Mô phỏng cũng cho thấy với cùng đội hình, `tour` 1 giây hơn đối thủ `tour` 0,3 giây khoảng +21 Q.
+
+## Hộ tống tiếp tế khi thiếu nhiên liệu (nhánh ml_experiments, đã bật)
+
+Bộ đo (`experiments/suite.py`, 1 giây/ngày, 1 xe tiếp tế trung tâm). Lỗi bộ đo đã sửa: tiến trình
+con được dùng lại nên `tour.PARAMS` của biến thể trước còn sót sang biến thể sau. Nay mỗi job đặt
+lại về mặc định và các biến thể chạy xen kẽ theo bản đồ. Kết quả cũ lưu ở
+`results/suite/dev_1s_contaminated.json`. Đo lại sạch, alns và noise1 vẫn trong ±0,4% Q.
+
+| Tập | ΔD hộ tống − base | Bản đồ thay đổi lớn |
+|---|---|---|
+| dev btc (100) | +10 (nhiễu, hộ tống không kích hoạt trên btc) | — |
+| dev wide (100) | +37 | 3011 +23 (đủ 126/126), 3015 +13, 3064 +9 |
+| test btc (50) | +1 (nhiễu) | — |
+| test wide (50) | +24 | 8539 +23 |
+
+Hộ tống chỉ kích hoạt trên các bản đồ một bình không đủ cho cả ngày (3 bản đồ dev). Không kích
+hoạt trên 8 đề Practice và mock của BTC (M18 có nhiên liệu tối đa 68). Không có lần fallback nào.
+Diễn tập thi tính giờ trên 3011 (12 giây/ngày, độ trễ 0,3 giây, 5% lỗi 503): (14, 126, 621), không
+ngày nào thiếu bài.
+
+Còn lại: Q giữa các lần chạy trên cả bộ dao động tới ±1% tùy tải máy, nên so Q cần chạy xen kẽ.
+Mất D do vị trí trước ngày ngắn (1–3 D, khoảng 10 bản đồ) chưa xử lý.
+
+## Đổ xăng ở điểm hẹn và ô neo điểm hẹn (nhánh ml_experiments, đã bật)
+
+Chẩn đoán mất D trước ngày ngắn (2058, ngày 6 chỉ 60 step) tìm ra hai lỗ hổng mô hình và một lỗ
+hổng tìm kiếm: `run()` không tính đổ đầy khi xe tuần tra dừng/kết thúc ngày ở điểm hẹn sau khi xe
+tiếp tế tới (simulator có); `find_anchors` không xét điểm hẹn làm ô neo; `cover_types` chưa bao giờ
+thử bản dựng không nhiễu. Sửa cả ba (`experiments/suite.py`, 1 giây/ngày, chạy xen kẽ):
+
+| Tập | ΔQ | Thắng/hòa/thua | Đủ D (base → mới) |
+|---|---|---|---|
+| dev btc (100) | **+1,83%** | 83/0/17 | 95 → 95 |
+| dev wide (100) | −0,11% | 43/17/40 | 88 → 86 (tổng D +12) |
+| test btc (50) | **+1,89%** | 36/4/10 | 48 → 49 |
+| test wide (50) | −0,39% | 21/8/21 | 45 → 47 |
+
+Đề BTC (1 xe tiếp tế trung tâm, 3 seed): Q05 +21, Q06 +18, Q03 +11, Q02 +6, Q11 +3 suất TB.
+Mất D ở 1 giây/ngày ngang nhau (Q01 3/8 cả hai, Q03 0/8 so với 1/8). Diễn tập thi tính giờ
+(12 giây/ngày, độ trễ 0,3 giây, 5% lỗi 503): Q01 (20, 200, 615), Q03 (20, 200, 693), không ngày
+nào thiếu bài. Đo bộ chọn đội hình: gần bằng đội hình tốt nhất (xem giai đoạn 5).

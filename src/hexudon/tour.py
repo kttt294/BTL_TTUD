@@ -104,6 +104,11 @@ class DayProblem:
         self.legs = legs or Legs(board, state.traffic, set(self.spot_at))
         self.patrols = [i for i, a in enumerate(state.agents) if a.kind == 0]
         self.hubs = hubs  # danh sách (ô hẹn, step xe tiếp tế tới nơi)
+        self.hub_arrival = {}
+        for hub, arrival in hubs:
+            self.hub_arrival[hub] = min(arrival, self.hub_arrival.get(hub, INF))
+        # escort: xe tuần tra có xe tiếp tế đi kèm -> (xe tiếp tế, step xe tiếp tế tới chỗ nó).
+        self.escort = {}
         self.allowance = allowance
         self.limit = board.fuel_limit
         self.reserves = {}
@@ -131,6 +136,8 @@ class DayProblem:
         anchor = self.anchors.get(car)
         if anchor is not None and (not stops or stops[-1] != anchor):
             stops = list(stops) + [anchor]
+        if car in self.escort:
+            return self.escorted(car, stops, variant, self.escort[car][1])
         agent = self.state.agents[car]
         pos, t, fuel, spent_since = agent.pos, 0, agent.fuel, 0
         visited = {pos} if pos in self.spot_at else set()
@@ -163,6 +170,12 @@ class DayProblem:
             pos = stop
             if t > T:
                 return CarRun(False)
+            if t >= self.hub_arrival.get(pos, INF):
+                # Dừng ở điểm hẹn khi xe tiếp tế đã tới: simulator đổ đầy bình.
+                fuel, refueled = self.limit, True
+        if stops and self.hub_arrival.get(pos, INF) <= T:
+            # Kết thúc ngày ở điểm hẹn: xe tiếp tế tới trước cuối ngày thì bình đầy.
+            fuel, refueled = self.limit, True
         if self.hubs and stops:
             # Xe đứng yên luôn hợp lệ; xe đã di chuyển phải còn đủ nhiên liệu về điểm hẹn.
             if fuel < self.reserve(pos):
@@ -181,6 +194,22 @@ class DayProblem:
         scale = self.limit if self.hubs else max(1, self.allowance[car])
         return CarRun(True, t, fuel, max(0, spent), frozenset(visited), tuple(segments),
                       t / T + max(0, agent.fuel - fuel) / scale, pos)
+
+    def escorted(self, car, stops, variant, arrival):
+        """Xe tuần tra chờ xe tiếp tế tới rồi hai xe đi cùng lệnh: cùng tới mỗi ô ở cùng step nên
+        xe tuần tra được đổ đầy sau mỗi bước, không giới hạn nhiên liệu."""
+        pos = self.state.agents[car].pos
+        t, visited = arrival, {pos} if pos in self.spot_at else set()
+        segments = [("wait", arrival)] if arrival else []
+        for stop in stops:
+            leg = self.legs.leg(pos, stop, variant)
+            segments.append(("leg", pos, stop, variant))
+            t += leg[0]
+            visited |= leg[2]
+            pos = stop
+            if t > self.steps:
+                return CarRun(False)
+        return CarRun(True, t, self.limit, 0, frozenset(visited), tuple(segments), t / self.steps, pos)
 
     def score(self, runs):
         counts = Counter(p for run in runs.values() for p in run.visited)
@@ -201,15 +230,16 @@ class DayProblem:
         ends = dict(zip(self.patrols, key))
         if key not in self.coverages:
             hubs = iter([hub for hub, _ in self.hubs])
+            escorting = {supply: ends[patrol][0] for patrol, (supply, _) in self.escort.items()}
             agents = []
             for car, agent in enumerate(self.state.agents):
                 if agent.kind == 0:
                     agents.append(Agent(0, *ends[car]))
                 else:
-                    agents.append(Agent(1, next(hubs, agent.pos), 0))
+                    agents.append(Agent(1, escorting[car] if car in escorting else next(hubs, agent.pos), 0))
             tomorrow = State(agents, self.state.traffic, set(), day=self.state.day + 1)
             self.coverages[key] = types_coverage(self.board, tomorrow, self.next_steps,
-                                                 [(h, 0) for h, _ in self.hubs], self.alpha)
+                                                 [(a.pos, 0) for a in agents if a.kind == 1], self.alpha)
         return self.coverages[key]
 
     @property
@@ -217,9 +247,10 @@ class DayProblem:
         return len({s["brand"] for s in self.board.spots})
 
 
-def car_insertions(problem, car, route, variant, current, positions=3):
+def car_insertions(problem, car, route, variant, current, positions=None):
     """Phương án chèn rẻ nhất cho từng điểm vào tuyến của một xe."""
     legs, T = problem.legs, problem.steps
+    positions = positions or PARAMS["positions"]
     seq = [problem.state.agents[car].pos] + route
     options = {}
     for spot in problem.spot_at:
@@ -293,8 +324,11 @@ def cover_types(candidates, deadline, rng, variants, best):
     while time.perf_counter() < deadline:
         _, option, problem = candidates[attempt % len(candidates)]
         variant = variants[(attempt // len(candidates)) % len(variants)]
+        # Lượt đầu mỗi (phương án, kiểu đường) dựng không nhiễu: trên ngày ngắn bản này thường đủ
+        # loại khi bản có nhiễu không tìm ra (2058 ngày 6: 18/18 so với 15–17).
+        noise = 0.0 if attempt < len(candidates) * len(variants) else 1.0 + rng.random()
         attempt += 1
-        skeleton = construct(problem, variant, deadline, True, rng, 1.0 + rng.random())
+        skeleton = construct(problem, variant, deadline, True, rng, noise)
         if skeleton is None or skeleton[0][1] < best[0][0][1]:
             continue
         _, routes, chosen, runs = skeleton
@@ -338,13 +372,15 @@ def removal_savings(problem, car, route, variant):
     return savings
 
 
-def extended_move(problem, routes, variants, rng):
-    """Một toán tử mới: đảo đoạn, đổi điểm giữa hai xe hoặc bỏ điểm tốn kém nhất. False = bỏ qua."""
+def extended_move(problem, routes, variants, rng, kind=None):
+    """Một toán tử mới: đảo đoạn ("reverse"), đổi điểm giữa hai xe ("swap") hoặc bỏ điểm tốn kém
+    nhất ("worst"); kind=None thì chọn ngẫu nhiên theo tỷ lệ 4:3:3. False = bỏ qua."""
     cars = [c for c in problem.patrols if routes[c]]
     if not cars:
         return False
-    kind = rng.random()
-    if kind < 0.4:
+    if kind is None:
+        kind = rng.choices(("reverse", "swap", "worst"), (4, 3, 3))[0]
+    if kind == "reverse":
         car = rng.choice(cars)
         route = routes[car]
         if len(route) < 3:
@@ -352,7 +388,7 @@ def extended_move(problem, routes, variants, rng):
         i = rng.randrange(len(route) - 1)
         j = rng.randint(i + 2, min(len(route), i + 8))
         route[i:j] = route[i:j][::-1]
-    elif kind < 0.7:
+    elif kind == "swap":
         if len(cars) < 2:
             return False
         a, b = rng.sample(cars, 2)
@@ -369,57 +405,79 @@ def extended_move(problem, routes, variants, rng):
     return True
 
 
+# Tham số tìm kiếm (giá trị mặc định = cấu hình đã kiểm chứng). Các thí nghiệm ghi đè trong tiến
+# trình con. OPERATOR_WEIGHTS: xác suất chọn từng toán tử phá; ALNS > 0 bật tự điều chỉnh trọng số
+# theo mức thành công (tốc độ học), 0 = giữ cố định.
+PARAMS = {"positions": 3, "noise": 0.5, "max_remove": 4, "segment": 4, "alns": 0.0, "escort": True,
+          "weights": {"variant_segment": 0.105, "segment": 0.14, "random": 0.455,
+                      "reverse": 0.12, "swap": 0.09, "worst": 0.09}}
+EXTENDED = ("reverse", "swap", "worst")
+
+
+def destroy(problem, routes, variants, rng, operator):
+    """Áp một toán tử phá; trả False nếu không áp được (bỏ qua vòng này)."""
+    if operator in EXTENDED:
+        return extended_move(problem, routes, variants, rng, operator)
+    if operator == "variant_segment":
+        car = rng.choice(problem.patrols)
+        variants[car] = rng.randrange(len(VARIANTS))
+    stops = [(c, i) for c, r in routes.items() for i in range(len(r))]
+    if stops:
+        if operator in ("variant_segment", "segment"):
+            car = rng.choice(problem.patrols)
+            if routes[car]:
+                i = rng.randrange(len(routes[car]))
+                j = rng.randint(i + 1, min(len(routes[car]), i + PARAMS["segment"]))
+                del routes[car][i:j]
+        else:
+            count = rng.randint(1, min(PARAMS["max_remove"], len(stops)))
+            for c, i in sorted(rng.sample(stops, count), key=lambda x: -x[1]):
+                del routes[c][i]
+    return True
+
+
 def improve(problem, solution, deadline, rng):
     """Phá và dựng lại: bỏ vài điểm, một đoạn tuyến hoặc đổi kiểu đường của một xe; hoặc đảo đoạn,
-    đổi điểm giữa hai xe, bỏ điểm tốn kém nhất; rồi chèn lại có nhiễu, nhận nếu điểm không giảm."""
+    đổi điểm giữa hai xe, bỏ điểm tốn kém nhất; rồi chèn lại có nhiễu, nhận nếu điểm không giảm.
+    Toán tử chọn theo PARAMS["weights"]; với PARAMS["alns"] > 0 trọng số tự điều chỉnh (ALNS)."""
     score, routes, variants, runs = solution
     emit_checkpoint(problem, runs)
+    weights = dict(PARAMS["weights"])
+    names = list(weights)
+    gained = {name: 0.0 for name in names}
+    used = {name: 0 for name in names}
+    rate = PARAMS["alns"]
+    rounds = 0
     while time.perf_counter() < deadline and problem.patrols:
         new_routes = {c: list(r) for c, r in routes.items()}
         new_variants = dict(variants)
-        # 30% số vòng dùng toán tử đảo đoạn / đổi điểm giữa hai xe / bỏ điểm tốn kém nhất
-        # (đo mức ngày: +0,6–0,8% suất ở 1 giây, +0,2% ở 3 giây, không mất loại).
-        if rng.random() < 0.3:
-            if not extended_move(problem, new_routes, new_variants, rng):
-                continue
-            new_runs = {c: problem.run(c, new_routes[c], new_variants[c]) for c in problem.patrols}
-            if not all(r.feasible for r in new_runs.values()):
-                continue
-            insert_greedy(problem, new_routes, new_variants, new_runs, rng, 0.5, deadline)
-            new_score = problem.score(new_runs)
-            if new_score >= score:
-                score, routes, variants, runs = new_score, new_routes, new_variants, new_runs
-            emit_checkpoint(problem, runs)
+        operator = rng.choices(names, [weights[n] for n in names])[0]
+        if not destroy(problem, new_routes, new_variants, rng, operator):
             continue
-        move = rng.random()
-        if move < 0.15:
-            car = rng.choice(problem.patrols)
-            new_variants[car] = rng.randrange(len(VARIANTS))
-        stops = [(c, i) for c, r in new_routes.items() for i in range(len(r))]
-        if stops:
-            count = rng.randint(1, min(4, len(stops)))
-            if move < 0.35:
-                car = rng.choice(problem.patrols)
-                if new_routes[car]:
-                    i = rng.randrange(len(new_routes[car]))
-                    j = rng.randint(i + 1, min(len(new_routes[car]), i + 4))
-                    del new_routes[car][i:j]
-            else:
-                for c, i in sorted(rng.sample(stops, count), key=lambda x: -x[1]):
-                    del new_routes[c][i]
         new_runs = {}
         for c in problem.patrols:
             run = problem.run(c, new_routes[c], new_variants[c])
             if not run.feasible:
+                if operator in EXTENDED:
+                    new_runs = None
+                    break
                 new_routes[c], run = [], problem.run(c, [], new_variants[c])
             new_runs[c] = run
-        if not all(r.feasible for r in new_runs.values()):
+        if new_runs is None or not all(r.feasible for r in new_runs.values()):
             continue
-        insert_greedy(problem, new_routes, new_variants, new_runs, rng, 0.5, deadline)
+        insert_greedy(problem, new_routes, new_variants, new_runs, rng, PARAMS["noise"], deadline)
         new_score = problem.score(new_runs)
+        used[operator] += 1
         if new_score >= score:
+            gained[operator] += 5.0 if new_score > score else 1.0
             score, routes, variants, runs = new_score, new_routes, new_variants, new_runs
         emit_checkpoint(problem, runs)
+        rounds += 1
+        if rate and rounds % 50 == 0:
+            for name in names:
+                if used[name]:
+                    weights[name] = max(0.02, (1 - rate) * weights[name] + rate * gained[name] / used[name])
+                gained[name], used[name] = 0.0, 0
     return score, routes, variants, runs
 
 
@@ -438,11 +496,14 @@ def commands(problem, runs, supply_routes):
                 used += legs.leg(a, b, variant)[0]
         if used < steps:
             actions[car].append(-(steps - used))
-    for car, (hub, arrival) in supply_routes.items():
+    for car, (hub, arrival, *escort) in supply_routes.items():
         pos = problem.state.agents[car].pos
         if hub != pos:
             actions[car].extend(legs.directions(pos, hub, 0))
-        if arrival < steps:
+        if escort:
+            # Hộ tống: tới ô của xe tuần tra rồi lặp lại đúng các lệnh của nó sau lượt chờ đầu.
+            actions[car].extend(actions[escort[0]][1:] if arrival else actions[escort[0]])
+        elif arrival < steps:
             actions[car].append(-(steps - arrival))
     return actions
 
@@ -465,6 +526,15 @@ def hub_candidates(board, state, car, legs, steps, count=4):
         if arrival <= steps:
             result.append((hub, arrival))
     return result
+
+
+def fuel_free_types(board, state, steps, legs):
+    """Số loại dựng chỉ nhắm loại được khi mọi xe là tuần tra hiện có và nhiên liệu không giới hạn."""
+    agents = [Agent(a.kind, a.pos, 10 ** 9 if a.kind == 0 else 0) for a in state.agents]
+    relaxed = State(agents, state.traffic, state.brands, day=state.day)
+    problem = DayProblem(board, relaxed, steps, [], {i: 10 ** 9 for i in range(len(agents))}, legs=legs)
+    result = construct(problem, 0, types_only=True)
+    return result[0][1] if result is not None else 0
 
 
 def allowances(board, state, steps, alpha):
@@ -499,9 +569,11 @@ def find_anchors(problem, runs, deadline, rng):
     mai), leo đồi từ bộ tốt nhất; kẹt lâu thì khởi động lại từ một bộ khởi đầu khác có xáo trộn.
     """
     reach = {}
+    # Ô neo: các điểm udon và cả điểm hẹn (kết thúc ngày ở đó thì bình đầy).
+    cells = list(problem.spot_at) + [h for h in problem.hub_arrival if h not in problem.spot_at]
     for car in problem.patrols:
         options = {}
-        for spot in problem.spot_at:
+        for spot in cells:
             run = problem.run(car, [spot], 0)
             if run.feasible:
                 options[spot] = run
@@ -558,9 +630,14 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0):
     # Đội không có tiếp tế phải tiết kiệm nhiên liệu nên thử cả ba kiểu đường khi dựng.
     variants = (0,) if supplies else (0, 1, 2)
     best, candidates = None, []
+    def make(option):
+        problem = DayProblem(board, state, steps, [hub for _, hub in option if len(hub) == 2], allowance,
+                             following, legs=base.legs)
+        problem.escort = {hub[2]: (car, hub[1]) for car, hub in option if len(hub) == 3}
+        return problem
+
     for index, option in enumerate(options):
-        problem = DayProblem(board, state, steps, [hub for _, hub in option], allowance, following,
-                             legs=base.legs)
+        problem = make(option)
         for variant in variants:
             # Luôn dựng xong phương án đầu tiên; các phương án sau chỉ dựng khi còn giờ.
             if best is not None and time.perf_counter() >= started + seconds * 0.4:
@@ -580,6 +657,39 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0):
         # Ngày ngắn: phủ đủ loại là bài toán chặt, chèn tham lam một lượt dễ thiếu một loại.
         cover_until = time.perf_counter() + max(0.0, deadline - time.perf_counter()) * 0.4
         best = cover_types(candidates, cover_until, rng, variants if supplies else (0, 2), best)
+    # Một bình đầy đi tối đa 2 step mỗi nhiên liệu (đồng bằng), nên 2 × bình < số step nghĩa là
+    # một bình không đủ cho cả ngày.
+    if (PARAMS["escort"] and supplies and 2 * board.fuel_limit < steps and best[0][0][1] < base.brand_count
+            and best[2].patrols and fuel_free_types(board, state, steps, base.legs) > best[0][0][1]):
+        # Điểm hẹn vẫn thiếu loại sau khi dựng lại và nhiên liệu là nút thắt (bỏ giới hạn nhiên liệu
+        # thì đi được nhiều loại hơn): thử hộ tống (một xe tiếp tế tới chỗ một xe tuần tra rồi đi
+        # cùng nó cả ngày, xe tiếp tế khác đứng yên làm điểm hẹn). Chỉ nhận khi đi được nhiều loại
+        # hơn: dùng hộ tống để tăng suất làm mất D về sau trên bản đồ nhiều nhiên liệu.
+        escort_until = time.perf_counter() + max(0.0, deadline - time.perf_counter()) * 0.3
+        escorts = []
+        for car in supplies:
+            pos = state.agents[car].pos
+            for patrol in base.patrols:
+                target = state.agents[patrol].pos
+                arrival = base.legs.leg(pos, target, 0)[0] if pos != target else 0
+                if arrival < steps:
+                    escorts.append([(c, (target, arrival, patrol)) if c == car else
+                                    (c, (state.agents[c].pos, 0)) for c in supplies])
+        escorts.sort(key=lambda o: sum(c[1] for _, c in o))
+        tried = []
+        for option in escorts:
+            if time.perf_counter() >= escort_until:
+                break
+            problem = make(option)
+            result = construct(problem, 0, escort_until)
+            if result is not None:
+                tried.append((result, option, problem))
+        if tried:
+            rescue = max(tried, key=lambda item: item[0][0])
+            if rescue[0][0][1] < base.brand_count:
+                rescue = cover_types(tried, escort_until, rng, (0,), rescue)
+            if rescue[0][0][:2] > best[0][0][:2]:
+                best = rescue
     solution, option, problem = best
     problem.alpha, problem.option = alpha, option
     if following and problem.patrols:
@@ -596,6 +706,7 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0):
             if found is not None and found[1] > covered:
                 anchored = DayProblem(board, state, steps, problem.hubs, allowance, following, legs=problem.legs)
                 anchored.coverages, anchored.option = problem.coverages, option
+                anchored.escort = problem.escort
                 anchored.anchors, anchored.alpha = found[0], alpha
                 trial = None
                 for variant in variants:

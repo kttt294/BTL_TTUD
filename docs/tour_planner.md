@@ -28,6 +28,17 @@ U thường đạt cận trên (số chuỗi trong config) với cả hai planne
   điểm gần các xe tuần tra, hoặc chỗ xe tuần tra sắp cạn nhiên liệu), đi đường nhanh nhất tới
   đó rồi chờ. Xe tuần tra tự rẽ vào điểm hẹn khi nhiên liệu không đủ cho chặng tiếp theo cộng
   đường quay về, và cuối ngày phải còn đủ nhiên liệu để về điểm hẹn. Xe đứng yên luôn hợp lệ.
+  Xe tuần tra dừng ở điểm hẹn sau khi xe tiếp tế tới, hoặc kết thúc ngày ở điểm hẹn mà xe tiếp tế
+  tới trước cuối ngày, được tính là đầy bình (đúng như simulator).
+- **Hộ tống (`PARAMS["escort"]`, bật mặc định):** xe tiếp tế chạy tới chỗ một xe tuần tra
+  (xe tuần tra chờ tại chỗ) rồi lặp lại đúng các lệnh của nó. Thời gian một bước chỉ phụ thuộc ô
+  nguồn và giao thông, nên hai xe luôn tới cùng ô ở cùng step và xe tuần tra được đổ đầy sau mỗi
+  bước: không còn giới hạn nhiên liệu. Cuối ngày hai xe đứng cùng ô nên hôm sau hộ tống tiếp
+  không phải chờ. Chỉ thử khi đủ ba điều kiện: một bình không đủ cho cả ngày
+  (2 × nhiên liệu tối đa < số step), mọi phương án điểm hẹn kể cả sau `cover_types` vẫn thiếu
+  loại, và bỏ giới hạn nhiên liệu thì dựng được nhiều loại hơn. Chỉ nhận khi đi được nhiều loại
+  hơn hôm nay. Dùng hộ tống để tăng suất (không giới hạn) làm mất tới 53 D trên btc vì các xe
+  khác mất điểm hẹn.
 
 ## Tìm kiếm
 
@@ -52,7 +63,17 @@ vào ngày ngắn (Q01 ngày 6: 69 step, Q03 ngày 5: 72 step, Q06 ngày 6: 62 s
 - **Ô neo cho ngày mai (`find_anchors`)**: sau 30% thời gian, ước lượng số loại ngày mai đi được từ
   vị trí và nhiên liệu cuối ngày (dựng chỉ nhắm loại, giao thông hôm nay làm dự báo). Nếu thiếu,
   leo đồi trên ô dừng cuối ngày của từng xe để ước lượng ngày mai cao nhất, rồi lập lại tuyến hôm
-  nay buộc dừng ở ô neo. Chỉ nhận khi `(loại mới, loại hôm nay, loại ngày mai)` tốt hơn.
+  nay buộc dừng ở ô neo. Chỉ nhận khi `(loại mới, loại hôm nay, loại ngày mai)` tốt hơn. Ô neo gồm
+  các điểm udon và điểm hẹn, nên xe có thể kết thúc ngày với bình đầy trước một ngày ngắn.
+- `cover_types` dựng lượt đầu của mỗi (phương án điểm hẹn, kiểu đường) không nhiễu rồi mới có
+  nhiễu: trên 2058 ngày 6 (60 step), bản không nhiễu đủ 18/18 loại còn planner cũ chỉ 15–17.
+
+**Nguyên nhân mất D trên bộ dev 200 bản đồ** (`experiments/d_loss.py`, `d_loss_cause.py`, 17 bản
+đồ chưa đạt D tối đa): lập lại đúng ngày mất với 5 giây gần như không cứu được, nên lỗi nằm ở trạng
+thái đầu ngày chứ không phải tìm kiếm trong ngày. Hai nhóm: thiếu nhiên liệu (đổ đầy bình thì đủ
+loại; mất nhiều nhất, bản đồ nhiên liệu tối đa 32–42) và vị trí trước ngày ngắn (đặt xe tự do
+thì đủ loại; mất 1–3 D). Đội hình cũng ảnh hưởng lớn (3011: 103 D với 1 xe tiếp tế trung tâm,
+126/126 với đội hình do bộ chọn chọn). Hộ tống xử lý nhóm thứ nhất.
 
 Đo trên 6 bài khó (Q01, Q03, Q04, Q06, Q09, Q10) với đội hình đã chọn: ở 1 giây/ngày còn 5/48
 lượt mất D; ở 5 giây/ngày là 0/36. Khi thi nên để ngân sách mỗi ngày từ 5 giây trở lên
@@ -100,8 +121,12 @@ Mỗi hướng được đo rồi loại vì không tốt hơn cấu hình hiệ
 - Rollout 2 ngày (lập kế hoạch ngày mai trong mỗi tiến trình): −0,9 Q trung bình, có ngày quá hạn.
 - Nạp sẵn nhiên liệu trước ngày ngắn: kém hơn 7/8 bài BTC.
 - Chọn vai trò thêm kịch bản có đối thủ: không tốt hơn, có lần chọn nhầm 2 xe tiếp tế.
+- Chặn đường (xe tiếp tế đứng cả trận ở ô đường trung tâm để gây tắc cho đối thủ): mô phỏng
+  20 đội, Q của ta −4,3, khoảng cách với đối thủ mạnh nhất giảm từ +21,1 xuống +18,6, có trận
+  mất thêm D. Trạng thái đường như nhau cho mọi đội nên tắc hại cả ta.
 
-Còn giữ dưới dạng tham số: α (tỷ lệ chia nhiên liệu khi không có xe tiếp tế); 0,7, 1,5 và 2,5
+Còn giữ dưới dạng tham số: `PARAMS` (số vị trí chèn, nhiễu, cỡ phá, trọng số toán tử, ALNS);
+trên bộ dev 200 bản đồ mọi biến thể đều trong ±0,5% Q nên giữ mặc định, ALNS tắt. α (tỷ lệ chia nhiên liệu khi không có xe tiếp tế); 0,7, 1,5 và 2,5
 đều không tốt hơn 1 trên Q01.
 
 ## Giới hạn

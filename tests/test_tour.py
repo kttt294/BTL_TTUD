@@ -11,7 +11,8 @@ from hexudon.model import Agent, Board, State
 from hexudon.planner import plan_day
 from hexudon.simulator import simulate_day
 from hexudon.team_selection import select_types
-from hexudon.tour import DayProblem, Legs, allowances, extended_move, find_anchors, plan_tour, removal_savings
+from hexudon.tour import (DayProblem, Legs, allowances, commands, construct, extended_move, find_anchors,
+                          plan_tour, removal_savings)
 
 
 def line_board(fuel=40, days=(30, 30, 30)):
@@ -75,6 +76,43 @@ class TourTests(unittest.TestCase):
         checked = simulate_day(board, state, actions, 30)
         self.assertTrue(checked.valid, checked.errors)
         self.assertGreater(checked.state.portions, 0)
+
+    def test_escorted_patrol_never_runs_out_of_fuel(self):
+        # Nhiên liệu 4 chỉ đủ 4 bước; xe tiếp tế tới chỗ xe tuần tra rồi đi cùng nên ghé được cả ba loại.
+        board = line_board(fuel=4)
+        state = State([Agent(0, 0, 4), Agent(1, 8, 0)])
+        problem = DayProblem(board, state, 30, [], {0: 4, 1: 0})
+        arrival = problem.legs.leg(8, 0, 0)[0]
+        problem.escort = {0: (1, arrival)}
+        _, _, _, runs = construct(problem, 0)
+        actions = commands(problem, runs, {1: (0, arrival, 0)})
+        checked = simulate_day(board, state, actions, 30)
+        self.assertTrue(checked.valid, checked.errors)
+        self.assertEqual(checked.state.score()[:2], (3, 3))
+        self.assertEqual(checked.state.agents[0].fuel, 4)
+        self.assertEqual(checked.state.agents[0].pos, checked.state.agents[1].pos)
+
+    def test_ending_at_hub_refuels_like_simulator(self):
+        board = line_board(fuel=20)
+        state = State([Agent(0, 0, 20), Agent(1, 8, 0)])
+        arrival = DayProblem(board, state, 30, [], {0: 20, 1: 0}).legs.leg(8, 5, 0)[0]
+        problem = DayProblem(board, state, 30, [(5, arrival)], {0: 20, 1: 0})
+        run = problem.run(0, [5], 0)
+        self.assertTrue(run.feasible)
+        self.assertEqual(run.fuel, 20)
+        actions = commands(problem, {0: run}, {1: (5, arrival)})
+        checked = simulate_day(board, state, actions, 30)
+        self.assertTrue(checked.valid, checked.errors)
+        self.assertEqual(checked.state.agents[0].fuel, run.fuel)
+
+    def test_escort_option_gives_valid_plans(self):
+        board = line_board(fuel=4)
+        state = State([Agent(0, 0, 4), Agent(1, 8, 0)])
+        with mock.patch.dict("hexudon.tour.PARAMS", {"escort": True}):
+            actions = plan_tour(board, state, 30, 0.3)
+        checked = simulate_day(board, state, actions, 30)
+        self.assertTrue(checked.valid, checked.errors)
+        self.assertEqual(checked.state.score()[:2], (3, 3))
 
     def test_budget_is_respected_after_first_construction(self):
         board = line_board()
