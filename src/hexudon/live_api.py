@@ -32,8 +32,10 @@ class LiveAPI:
             claims = json.loads(base64.urlsafe_b64decode(payload + '=' * (-len(payload) % 4)))
             # Chỉ lấy ID mặc định; việc xác thực token luôn do máy chủ thực hiện.
             self.team_id = str(claims['id'])
+            # Hạn token (giây Unix) chỉ dùng để cảnh báo sớm; máy chủ vẫn là nơi xác thực.
+            self.expires_at = claims.get('exp')
         except (ValueError, KeyError, IndexError):
-            self.team_id = None
+            self.team_id, self.expires_at = None, None
 
     def request(self, method, endpoint, game_id=None, body=None, timeout=None):
         url = self.base_url + endpoint

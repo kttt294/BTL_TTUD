@@ -7,6 +7,8 @@ tự rẽ vào điểm hẹn khi không đủ nhiên liệu cho chặng tiếp t
 """
 
 from collections import Counter
+from concurrent.futures import ProcessPoolExecutor, wait
+from concurrent.futures.process import BrokenProcessPool
 from dataclasses import dataclass
 import heapq
 import random
@@ -89,11 +91,11 @@ class Legs:
 
 
 class DayProblem:
-    def __init__(self, board, state, steps, hubs, allowance, next_steps=None, beta=0.0):
+    def __init__(self, board, state, steps, hubs, allowance, next_steps=None, legs=None):
         self.board, self.state, self.steps = board, state, steps
-        self.next_steps, self.beta, self.values = next_steps, beta, {}
+        self.next_steps = next_steps
         self.spot_at = {s["pos"]: s for s in board.spots}
-        self.legs = Legs(board, state.traffic, set(self.spot_at))
+        self.legs = legs or Legs(board, state.traffic, set(self.spot_at))
         self.patrols = [i for i, a in enumerate(state.agents) if a.kind == 0]
         self.hubs = hubs  # danh sách (ô hẹn, step xe tiếp tế tới nơi)
         self.allowance = allowance
@@ -174,24 +176,6 @@ class DayProblem:
         return CarRun(True, t, fuel, max(0, spent), frozenset(visited), tuple(segments),
                       t / T + max(0, agent.fuel - fuel) / scale, pos)
 
-    def value(self, pos):
-        """Số điểm một xe ghé được ngày mai nếu xuất phát tại pos, theo láng giềng gần nhất."""
-        if not self.next_steps or not self.beta:
-            return 0
-        if pos not in self.values:
-            left, here, seen, count = self.next_steps, pos, {pos}, int(pos in self.spot_at)
-            while True:
-                options = [(self.legs.leg(here, q, 0)[0], q) for q in self.spot_at if q not in seen]
-                options = [o for o in options if o[0] <= left]
-                if not options:
-                    break
-                cost, here = min(options)
-                left -= cost
-                seen.add(here)
-                count += 1
-            self.values[pos] = count
-        return self.values[pos]
-
     def score(self, runs):
         counts = Counter(p for run in runs.values() for p in run.visited)
         brands = {self.spot_at[p]["brand"] for p in counts}
@@ -199,8 +183,7 @@ class DayProblem:
         new = len(brands - self.state.brands)
         spent = sum(r.spent for r in runs.values())
         steps = sum(r.steps for r in runs.values())
-        future = self.beta * sum(self.value(r.end) for r in runs.values()) if self.beta else 0
-        return new, len(brands), portions + future, -spent, -steps
+        return new, len(brands), portions, -spent, -steps
 
     def coverage(self, runs):
         """Số loại tối đa ngày mai theo bản dựng chỉ nhắm loại, giao thông hôm nay làm dự báo."""
@@ -219,17 +202,8 @@ class DayProblem:
                 else:
                     agents.append(Agent(1, next(hubs, agent.pos), 0))
             tomorrow = State(agents, self.state.traffic, set(), day=self.state.day + 1)
-            problem = DayProblem(self.board, tomorrow, self.next_steps, [(h, 0) for h, _ in self.hubs],
-                                 allowances(self.board, tomorrow, self.next_steps, self.alpha))
-            problem.legs = self.legs
-            best = 0
-            for variant in ((0,) if self.hubs else (0, 2)):
-                result = construct(problem, variant, types_only=True)
-                if result is not None:
-                    best = max(best, result[0][1])
-                if best == self.brand_count:
-                    break
-            self.coverages[key] = best
+            self.coverages[key] = types_coverage(self.board, tomorrow, self.next_steps,
+                                                 [(h, 0) for h, _ in self.hubs], self.alpha)
         return self.coverages[key]
 
     @property
@@ -327,12 +301,90 @@ def cover_types(candidates, deadline, rng, variants, best):
     return best
 
 
+# Các mốc gửi kế hoạch của tiến trình con: {"times": [time.time(), ...], "queue": hàng đợi, "seed": số}.
+_CHECKPOINT = None
+
+
+def emit_checkpoint(problem, runs):
+    """Tới mỗi mốc thì gửi kế hoạch hiện có về tiến trình chính, rồi tối ưu tiếp."""
+    if _CHECKPOINT is None or not _CHECKPOINT["times"] or time.time() < _CHECKPOINT["times"][0]:
+        return
+    now = time.time()
+    while _CHECKPOINT["times"] and _CHECKPOINT["times"][0] <= now:
+        _CHECKPOINT["times"].pop(0)
+    supply = {car: hub for car, hub in getattr(problem, "option", [])}
+    try:
+        _CHECKPOINT["queue"].put((_CHECKPOINT["seed"], commands(problem, runs, supply)))
+    except Exception:
+        pass
+
+
+def removal_savings(problem, car, route, variant):
+    """Số step tiết kiệm được khi bỏ từng điểm khỏi tuyến (chưa tính rẽ tiếp nhiên liệu)."""
+    legs = problem.legs
+    seq = [problem.state.agents[car].pos] + route
+    savings = []
+    for i in range(1, len(seq)):
+        saved = legs.leg(seq[i - 1], seq[i], variant)[0]
+        if i + 1 < len(seq):
+            saved += legs.leg(seq[i], seq[i + 1], variant)[0] - legs.leg(seq[i - 1], seq[i + 1], variant)[0]
+        savings.append((saved, i - 1))
+    return savings
+
+
+def extended_move(problem, routes, variants, rng):
+    """Một toán tử mới: đảo đoạn, đổi điểm giữa hai xe hoặc bỏ điểm tốn kém nhất. False = bỏ qua."""
+    cars = [c for c in problem.patrols if routes[c]]
+    if not cars:
+        return False
+    kind = rng.random()
+    if kind < 0.4:
+        car = rng.choice(cars)
+        route = routes[car]
+        if len(route) < 3:
+            return False
+        i = rng.randrange(len(route) - 1)
+        j = rng.randint(i + 2, min(len(route), i + 8))
+        route[i:j] = route[i:j][::-1]
+    elif kind < 0.7:
+        if len(cars) < 2:
+            return False
+        a, b = rng.sample(cars, 2)
+        i, j = rng.randrange(len(routes[a])), rng.randrange(len(routes[b]))
+        if routes[a][i] in routes[b] or routes[b][j] in routes[a]:
+            return False
+        routes[a][i], routes[b][j] = routes[b][j], routes[a][i]
+    else:
+        car = rng.choice(cars)
+        savings = sorted(removal_savings(problem, car, routes[car], variants[car]), reverse=True)
+        count = rng.randint(1, min(3, len(savings)))
+        for _, index in sorted(savings[:count], key=lambda item: -item[1]):
+            del routes[car][index]
+    return True
+
+
 def improve(problem, solution, deadline, rng):
-    """Phá và dựng lại: bỏ vài điểm hoặc đổi kiểu đường của một xe, chèn lại có nhiễu."""
+    """Phá và dựng lại: bỏ vài điểm, một đoạn tuyến hoặc đổi kiểu đường của một xe; hoặc đảo đoạn,
+    đổi điểm giữa hai xe, bỏ điểm tốn kém nhất; rồi chèn lại có nhiễu, nhận nếu điểm không giảm."""
     score, routes, variants, runs = solution
+    emit_checkpoint(problem, runs)
     while time.perf_counter() < deadline and problem.patrols:
         new_routes = {c: list(r) for c, r in routes.items()}
         new_variants = dict(variants)
+        # 30% số vòng dùng toán tử đảo đoạn / đổi điểm giữa hai xe / bỏ điểm tốn kém nhất
+        # (đo mức ngày: +0,6–0,8% suất ở 1 giây, +0,2% ở 3 giây, không mất loại).
+        if rng.random() < 0.3:
+            if not extended_move(problem, new_routes, new_variants, rng):
+                continue
+            new_runs = {c: problem.run(c, new_routes[c], new_variants[c]) for c in problem.patrols}
+            if not all(r.feasible for r in new_runs.values()):
+                continue
+            insert_greedy(problem, new_routes, new_variants, new_runs, rng, 0.5, deadline)
+            new_score = problem.score(new_runs)
+            if new_score >= score:
+                score, routes, variants, runs = new_score, new_routes, new_variants, new_runs
+            emit_checkpoint(problem, runs)
+            continue
         move = rng.random()
         if move < 0.15:
             car = rng.choice(problem.patrols)
@@ -361,6 +413,7 @@ def improve(problem, solution, deadline, rng):
         new_score = problem.score(new_runs)
         if new_score >= score:
             score, routes, variants, runs = new_score, new_routes, new_variants, new_runs
+        emit_checkpoint(problem, runs)
     return score, routes, variants, runs
 
 
@@ -414,8 +467,31 @@ def allowances(board, state, steps, alpha):
     return {i: int(a.fuel * share) for i, a in enumerate(state.agents)}
 
 
+def spread_anchors(problem, reach, radius):
+    """Bộ ô neo rải đều: lần lượt chọn cho mỗi xe ô tới kịp hôm nay làm tăng nhiều nhất số loại
+    mới nằm trong `radius` step quanh nó (ước lượng tầm với ngày mai)."""
+    legs, covered, anchors = problem.legs, set(), {}
+    brand = {p: info["brand"] for p, info in problem.spot_at.items()}
+    near = {}
+    for car in sorted(problem.patrols, key=lambda c: len(reach[c])):
+        best = None
+        for spot in reach[car]:
+            if spot not in near:
+                near[spot] = {brand[q] for q in brand if legs.leg(spot, q, 0)[0] <= radius}
+            gain = len(near[spot] - covered), -reach[car][spot].steps
+            if best is None or gain > best[0]:
+                best = gain, spot
+        anchors[car] = best[1]
+        covered |= near[best[1]]
+    return anchors
+
+
 def find_anchors(problem, runs, deadline, rng):
-    """Leo đồi trên ô dừng cuối ngày của từng xe để ngày mai phủ đủ loại, đi ít step nhất."""
+    """Tìm ô dừng cuối ngày của từng xe để ngày mai phủ đủ loại, đi ít step nhất.
+
+    Bắt đầu từ vị trí cuối ngày hiện tại và vài bộ ô neo rải đều (bán kính 35/50/70% số step ngày
+    mai), leo đồi từ bộ tốt nhất; kẹt lâu thì khởi động lại từ một bộ khởi đầu khác có xáo trộn.
+    """
     reach = {}
     for car in problem.patrols:
         options = {}
@@ -426,31 +502,49 @@ def find_anchors(problem, runs, deadline, rng):
         if not options:
             return None
         reach[car] = options
-    current = {c: runs[c].end if runs[c].end in reach[c] else rng.choice(list(reach[c])) for c in problem.patrols}
 
     def key(anchors):
         ends = tuple((a, reach[c][a].fuel) for c, a in anchors.items())
         return problem.coverage_from(ends), -sum(reach[c][a].steps for c, a in anchors.items())
 
-    best = key(current)
-    while time.perf_counter() < deadline:
+    starts = [{c: runs[c].end if runs[c].end in reach[c] else rng.choice(list(reach[c])) for c in problem.patrols}]
+    for share in (0.35, 0.5, 0.7):
+        if time.perf_counter() >= deadline:
+            break
+        starts.append(spread_anchors(problem, reach, share * (problem.next_steps or problem.steps)))
+    scored = sorted(((key(a), a) for a in starts), key=lambda item: item[0], reverse=True)
+    best, best_anchors = scored[0]
+    current, current_key, stale = dict(best_anchors), best, 0
+    while time.perf_counter() < deadline and best[0] < problem.brand_count:
+        if stale >= 40:
+            # Kẹt: quay về một bộ khởi đầu khác rồi xáo trộn một xe.
+            current = dict(rng.choice(scored)[1])
+            car = rng.choice(problem.patrols)
+            current[car] = rng.choice(list(reach[car]))
+            current_key, stale = key(current), 0
         trial = dict(current)
         for car in rng.sample(problem.patrols, rng.randint(1, min(2, len(problem.patrols)))):
             trial[car] = rng.choice(list(reach[car]))
         score = key(trial)
-        if score >= best:
-            current, best = trial, score
-    return current, best[0]
+        if score >= current_key:
+            stale = 0 if score > current_key else stale + 1
+            current, current_key = trial, score
+            if score > best:
+                best, best_anchors = score, dict(trial)
+        else:
+            stale += 1
+    return best_anchors, best[0]
 
 
-def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0, beta=0.0):
+def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0):
     started = time.perf_counter()
     deadline = started + max(0.0, seconds)
+    first_deadline = started + max(seconds, 0.5)
     rng = random.Random(seed + 7919 * state.day)
     supplies = [i for i, a in enumerate(state.agents) if a.kind == 1]
     allowance = allowances(board, state, steps, alpha)
     following = board.day_steps[state.day + 1] if state.day + 1 < len(board.day_steps) else None
-    base = DayProblem(board, state, steps, [], allowance, following, beta)
+    base = DayProblem(board, state, steps, [], allowance, following)
     options = [[]]
     for car in supplies:
         cands = hub_candidates(board, state, car, base.legs, steps)
@@ -459,13 +553,15 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0, beta=0.0):
     variants = (0,) if supplies else (0, 1, 2)
     best, candidates = None, []
     for index, option in enumerate(options):
-        problem = DayProblem(board, state, steps, [hub for _, hub in option], allowance, following, beta)
-        problem.legs, problem.values = base.legs, base.values
+        problem = DayProblem(board, state, steps, [hub for _, hub in option], allowance, following,
+                             legs=base.legs)
         for variant in variants:
             # Luôn dựng xong phương án đầu tiên; các phương án sau chỉ dựng khi còn giờ.
             if best is not None and time.perf_counter() >= started + seconds * 0.4:
                 break
-            result = construct(problem, variant, None if best is None else deadline)
+            # Lượt dựng đầu được ít nhất 0,5 giây để không quá kém khi ngân sách rất nhỏ, nhưng không
+            # chạy quá max(ngân sách, 0,5 giây); bị cắt giữa chừng thì tuyến dựng dở vẫn hợp lệ.
+            result = construct(problem, variant, first_deadline if best is None else deadline)
             if result is None:
                 continue
             if (option, problem) not in [(o, p) for _, o, p in candidates]:
@@ -479,7 +575,7 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0, beta=0.0):
         cover_until = time.perf_counter() + max(0.0, deadline - time.perf_counter()) * 0.4
         best = cover_types(candidates, cover_until, rng, variants if supplies else (0, 2), best)
     solution, option, problem = best
-    problem.alpha = alpha
+    problem.alpha, problem.option = alpha, option
     if following and problem.patrols:
         # Kiểm tra ngày mai có đi đủ loại từ vị trí cuối ngày không. Nếu thiếu, tìm ô neo cho
         # từng xe rồi lập lại tuyến phải dừng ở ô neo; chỉ nhận khi (loại hôm nay, loại ngày mai)
@@ -488,10 +584,12 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0, beta=0.0):
         solution = improve(problem, solution, time.perf_counter() + remaining() * 0.3, rng)
         covered = problem.coverage(solution[3])
         if covered < problem.brand_count:
-            found = find_anchors(problem, solution[3], time.perf_counter() + remaining() * 0.25, rng)
+            # Ngày mai ngắn (ít step hơn hôm nay) thì phủ loại khó hơn: dành nhiều thời gian hơn cho ô neo.
+            share = 0.4 if following < steps else 0.25
+            found = find_anchors(problem, solution[3], time.perf_counter() + remaining() * share, rng)
             if found is not None and found[1] > covered:
-                anchored = DayProblem(board, state, steps, problem.hubs, allowance, following, beta)
-                anchored.legs, anchored.values, anchored.coverages = problem.legs, problem.values, problem.coverages
+                anchored = DayProblem(board, state, steps, problem.hubs, allowance, following, legs=problem.legs)
+                anchored.coverages, anchored.option = problem.coverages, option
                 anchored.anchors, anchored.alpha = found[0], alpha
                 trial = None
                 for variant in variants:
@@ -506,3 +604,275 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0, beta=0.0):
                         problem, solution = anchored, trial
     _, _, _, runs = improve(problem, solution, deadline, rng)
     return commands(problem, runs, {car: hub for car, hub in option})
+
+
+_POOL = None
+
+
+def _pool(workers):
+    """Giữ một nhóm tiến trình cho cả trận để không tốn thời gian khởi động mỗi ngày."""
+    global _POOL
+    if _POOL is None or _POOL._max_workers != workers:
+        if _POOL is not None:
+            _POOL.shutdown(wait=False, cancel_futures=True)
+        _POOL = ProcessPoolExecutor(workers)
+    return _POOL
+
+
+_LEGS = {}
+
+
+def cached_legs(board, traffic):
+    """Cây đường đi theo một mặt đường, dùng lại giữa các lần ước lượng trong cùng ngày."""
+    key = id(board), frozenset((p, s) for p, s in traffic.items() if s)
+    if key not in _LEGS:
+        if len(_LEGS) > 16:
+            _LEGS.clear()
+        _LEGS[key] = Legs(board, traffic, {s["pos"] for s in board.spots})
+    return _LEGS[key]
+
+
+def types_coverage(board, state, steps, hubs, alpha=1.0):
+    """Số loại đi được trong ngày `steps` từ `state`, dựng chỉ nhắm loại."""
+    problem = DayProblem(board, state, steps, hubs, allowances(board, state, steps, alpha),
+                         legs=cached_legs(board, state.traffic))
+    best = 0
+    for variant in ((0,) if hubs else (0, 2)):
+        result = construct(problem, variant, types_only=True)
+        if result is not None:
+            best = max(best, result[0][1])
+        if best == problem.brand_count:
+            break
+    return best
+
+
+def next_coverage(board, state):
+    """Số loại ngày tiếp theo đi được từ trạng thái cuối ngày `state` (dựng chỉ nhắm loại),
+    với mặt đường simulator dự đoán từ riêng đội mình."""
+    if state.day >= len(board.day_steps):
+        return 0
+    steps = board.day_steps[state.day]
+    hubs = [(a.pos, 0) for a in state.agents if a.kind == 1]
+    return types_coverage(board, state, steps, hubs)
+
+
+def plan_tour_parallel(board, state, steps, seconds=2.0, alpha=1.0, workers=8):
+    """Chạy nhiều seed song song, chọn theo (U, loại hôm nay, loại ngày mai, số suất).
+
+    Mỗi tiến trình gửi một kế hoạch tạm ở nửa ngân sách; nếu kết quả cuối không kịp về (bản đồ
+    quá lớn, máy quá tải) thì dùng kế hoạch tạm tốt nhất thay vì bỏ trống.
+    """
+    started = time.time()
+    session = AnytimeSession(board, state, steps, seconds, seconds * 0.5, workers, alpha)
+    if not session.futures:
+        # Nhóm tiến trình hỏng hoặc đã đóng: hôm nay chạy một tiến trình, ngày sau tạo lại nhóm.
+        return plan_tour(board, state, steps, max(0.0, started + seconds * 0.8 - time.time()), alpha, 0)
+    return session.final()
+
+
+def choose_best(board, state, steps, candidates, limit):
+    """Chọn theo (U, loại hôm nay, loại ngày mai ước lượng, số suất) trong các kế hoạch hợp lệ.
+
+    Ước lượng ngày mai tốn thời gian: chỉ xét nhóm có (U, loại hôm nay) cao nhất, theo số suất
+    giảm dần, dừng ở kế hoạch đầu tiên đủ loại cho ngày mai hoặc khi quá `limit` (time.time()).
+    """
+    plans = []
+    for actions in candidates:
+        checked = simulate_day(board, state, actions, steps)
+        if checked.valid:
+            after = checked.state
+            plans.append(((len(after.brands), after.daily_sum - state.daily_sum,
+                           after.portions - state.portions), actions, after))
+    if not plans:
+        return None
+    plans.sort(key=lambda item: item[0], reverse=True)
+    top = [item for item in plans if item[0][:2] == plans[0][0][:2]]
+    full = len({s["brand"] for s in board.spots})
+    best = None
+    for (u, d, q), actions, after in top:
+        covered = next_coverage(board, after)
+        if best is None or (covered, q) > best[0]:
+            best = (covered, q), actions
+        if covered == full or time.time() > limit:
+            break
+    return best[1]
+
+
+def day_bound(board, state):
+    """Cận trên điểm ngày (số loại, số suất), bỏ qua nhiên liệu và thứ tự ghé.
+
+    Một điểm chỉ được tính cho những xe tuần tra đi tới nó kịp trong số step của ngày (đường ngắn
+    nhất theo giao thông của ngày); số suất ở điểm đó không vượt kho. Đây là điều kiện cần nên
+    là cận trên hợp lệ; đạt được nghĩa là kế hoạch tối ưu cho ngày, không cần tìm thêm.
+    """
+    steps = board.day_steps[state.day]
+    legs = cached_legs(board, state.traffic)
+    patrols = [a.pos for a in state.agents if a.kind == 0]
+    brands, portions = set(), 0
+    for spot in board.spots:
+        reach = sum(1 for start in patrols if legs.leg(start, spot["pos"], 0)[0] <= steps)
+        if reach:
+            brands.add(spot["brand"])
+            portions += min(spot["stocks"], reach)
+    return len(brands), portions
+
+
+def reaches_bound(board, state, actions):
+    checked = simulate_day(board, state, actions, board.day_steps[state.day])
+    if not checked.valid:
+        return False
+    after = checked.state
+    return (after.daily_sum - state.daily_sum, after.portions - state.portions) == day_bound(board, state)
+
+
+_MANAGER = None
+
+
+def _queue():
+    """Hàng đợi dùng chung giữa các tiến trình, tạo một lần cho cả trận."""
+    global _MANAGER
+    if _MANAGER is None:
+        from multiprocessing import Manager
+        _MANAGER = Manager()
+    return _MANAGER.Queue()
+
+
+def _ping(value):
+    return value
+
+
+def warm_up(workers):
+    """Khởi động sẵn nhóm tiến trình và hàng đợi để ngày 1 không mất vài giây cho việc này."""
+    global _POOL
+    try:
+        pool = _pool(workers)
+        list(pool.map(_ping, range(workers)))
+        _queue()
+        return True
+    except Exception:
+        _POOL = None
+        return False
+
+
+def _anytime_job(args):
+    board, state, steps, until, times, queue, alpha, seed = args
+    global _CHECKPOINT
+    _CHECKPOINT = {"times": list(times) if isinstance(times, list) else [times], "queue": queue, "seed": seed}
+    try:
+        return plan_tour(board, state, steps, max(0.0, until - time.time()), alpha, seed)
+    finally:
+        _CHECKPOINT = None
+
+
+class AnytimeSession:
+    """Một lượt tìm kiếm song song cho cả ngày, cho hai kết quả: bài nộp nhanh và bài cuối.
+
+    Mọi tiến trình chạy tới hết ngân sách; tại mốc nộp nhanh mỗi tiến trình gửi kế hoạch hiện có
+    qua hàng đợi rồi tối ưu tiếp, nên bài cuối không phải chạy lại từ đầu.
+    """
+
+    def __init__(self, board, state, steps, seconds, quick, workers=8, alpha=1.0, every=0.0):
+        self.board, self.state, self.steps, self.workers = board, state, steps, workers
+        started = time.time()
+        self.until = started + max(0.0, seconds - 0.4 - 0.05 * workers)
+        self.quick_at = started + max(0.0, min(quick, seconds) - 0.3 - 0.03 * workers)
+        # every > 0: sau bài nhanh, tiến trình con gửi kế hoạch hiện có mỗi `every` giây để tiến
+        # trình chính nộp lại ngay khi có bài tốt hơn.
+        self.marks = []
+        while every > 0 and (self.marks[-1] if self.marks else self.quick_at) + every < self.until:
+            self.marks.append((self.marks[-1] if self.marks else self.quick_at) + every)
+        # Chỉ chấm kế hoạch mới nhận; giữ vài kế hoạch tốt nhất theo (U, loại hôm nay, suất).
+        self.scored, self.top = 0, []
+        self.candidates, self.futures, self.queue = [], [], None
+        global _POOL
+        try:
+            self.queue = _queue()
+            times = [self.quick_at] + self.marks
+            jobs = [(board, state, steps, self.until, list(times), self.queue, alpha, seed)
+                    for seed in range(workers)]
+            self.futures = [_pool(workers).submit(_anytime_job, job) for job in jobs]
+        except Exception:
+            _POOL, self.futures = None, []
+
+    def _drain(self):
+        while self.queue is not None:
+            try:
+                _, actions = self.queue.get_nowait()
+            except Exception:
+                break
+            self.candidates.append(actions)
+
+    def quick(self):
+        """Kế hoạch tốt nhất tại mốc nộp nhanh (gồm cả tiến trình đã chạy xong sớm)."""
+        if not self.futures:
+            return None
+        while time.time() < self.quick_at + 0.25 and len(self.candidates) < self.workers:
+            self._drain()
+            if all(f.done() for f in self.futures):
+                break
+            time.sleep(0.02)
+        self._drain()
+        early = [f.result() for f in self.futures if f.done() and f.exception() is None and f.result()]
+        return choose_best(self.board, self.state, self.steps, self.candidates + early,
+                           time.time() + 0.3)
+
+    def _score_new(self, extra=()):
+        """Chấm các kế hoạch mới nhận (và `extra`), giữ 4 kế hoạch tốt nhất theo (U, loại, suất)."""
+        fresh = self.candidates[self.scored:] + list(extra)
+        self.scored = len(self.candidates)
+        for actions in fresh:
+            checked = simulate_day(self.board, self.state, actions, self.steps)
+            if checked.valid:
+                after = checked.state
+                key = (len(after.brands), after.daily_sum - self.state.daily_sum,
+                       after.portions - self.state.portions)
+                self.top.append((key, actions))
+        self.top = sorted(self.top, key=lambda item: item[0], reverse=True)[:4]
+
+    def best_until(self, moment):
+        """Kế hoạch tốt nhất đã nhận được tới mốc `moment` (time.time()), gồm tiến trình đã xong."""
+        if not self.futures:
+            return None
+        while time.time() < min(moment, self.until) + 0.25:
+            time.sleep(0.02)
+        self._drain()
+        done = [f.result() for f in self.futures if f.done() and f.exception() is None and f.result()]
+        self._score_new(done)
+        return choose_best(self.board, self.state, self.steps, [a for _, a in self.top], time.time() + 0.3)
+
+    def final(self):
+        """Kế hoạch tốt nhất khi mọi tiến trình hết ngân sách, so cả với các kế hoạch tạm."""
+        global _POOL
+        if not self.futures:
+            return None
+        done, pending = wait(self.futures, timeout=max(0.0, self.until + 0.3 - time.time()))
+        for future in pending:
+            future.cancel()
+        results = []
+        for future in done:
+            if isinstance(future.exception(), BrokenProcessPool):
+                _POOL = None
+            if future.exception() is None and future.result() is not None:
+                results.append(future.result())
+        self._drain()
+        self._score_new(results)
+        return choose_best(self.board, self.state, self.steps, [a for _, a in self.top],
+                           self.until + 0.3 + 0.05 * self.workers)
+
+
+def plan_key(board, state, actions, after=None, floor=None):
+    """Thứ tự so hai kế hoạch cùng ngày: (U, loại hôm nay, loại ngày mai ước lượng, số suất).
+
+    Kết quả trong ngày của đội mình chỉ phụ thuộc lệnh của đội và giao thông cố định của ngày,
+    nên simulator tính đúng điểm ngày mà không cần hỏi máy chủ. Trả None nếu kế hoạch lỗi hoặc
+    hai thành phần đầu đã kém floor (bỏ qua bước ước lượng ngày mai tốn thời gian).
+    """
+    if after is None:
+        checked = simulate_day(board, state, actions, board.day_steps[state.day])
+        if not checked.valid:
+            return None
+        after = checked.state
+    key = (len(after.brands), after.daily_sum - state.daily_sum)
+    if floor is not None and key < floor[:2]:
+        return None
+    return key + (next_coverage(board, after), after.portions - state.portions)

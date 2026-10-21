@@ -7,11 +7,12 @@ import json
 from pathlib import Path
 import sys
 import tempfile
+import time
 import unittest
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from hexudon.generator import to_dict
-from hexudon.live import MatchRunner, APIError, detect_mode, predict, cleanup_run
+from hexudon.live import MatchRunner, APIError, detect_mode, predict, cleanup_run, preflight
 from hexudon.model import Board, State
 from hexudon.planner import plan_day
 from hexudon.simulator import simulate_day
@@ -170,7 +171,8 @@ class LiveRunnerTests(unittest.TestCase):
         api,seen,_=self.run_case(mode='timed')
         posts=[c for c in api.calls if c[0]=='POST' and c[1]=='/api/game/actions']
         self.assertEqual([c[2]['day'] for c in posts],[0,1])
-        self.assertEqual(len(seen),2)
+        # Bản đồ thử nhỏ: bài nộp sớm đã chạm cận trên của ngày nên không tối ưu thêm, nộp một lần.
+        self.assertEqual([s[0] for s in seen],[0,1])
         self.assertTrue(all(s[3]<=20 for s in seen))
 
     def test_practice_lost_response_does_not_resubmit_previous_day(self):
@@ -250,6 +252,108 @@ class LiveRunnerTests(unittest.TestCase):
             second=MatchRunner(api,'test',directory,mode='timed',clock=clock,seconds=.01)
             second.run()
         self.assertEqual([c[2]['day'] for c in api.calls if c[1]=='/api/game/actions'],[0,1])
+
+    def test_practice_budget_follows_config_day_seconds(self):
+        clock = Clock()
+        class SecondsAPI(FakeAPI):
+            def request(self, method, endpoint, game_id=None, body=None, timeout=None):
+                response = super().request(method, endpoint, game_id, body, timeout)
+                if endpoint == '/api/game/config':
+                    response['daySeconds'] = [10, 12]
+                return response
+        api = SecondsAPI(clock)
+        budgets = []
+        def record(board, state, algorithm, seconds):
+            budgets.append(seconds)
+            return plan_day(board, state, board.day_steps[state.day], 'greedy', .05).actions, {}
+        with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as directory, contextlib.redirect_stdout(io.StringIO()):
+            MatchRunner(api, 'test', directory, clock=clock, roles='all-patrol', seconds=None,
+                        selection_seconds=None, predictor=record).run()
+        self.assertEqual(budgets, [6, 8])
+
+    def test_timed_resubmits_only_a_better_plan(self):
+        # (bài đầu, bài sau, số lần gọi planner, số lần nộp)
+        cases = (('wait', 'good', 2, 2),   # bài sau tốt hơn: nộp lại
+                 ('wait', 'wait', 2, 1),   # bài sau không tốt hơn: giữ bài đầu
+                 ('good', 'good', 1, 1))   # bài đầu đã chạm cận trên của ngày: dừng luôn
+        for first, second, expected_calls, expected_posts in cases:
+            clock = Clock()
+            api = FakeAPI(clock, 'timed')
+            calls = []
+            def plan(board, state, algorithm, seconds):
+                calls.append(seconds)
+                good = plan_day(board, state, board.day_steps[state.day], 'greedy', .05).actions
+                waiting = [[-board.day_steps[state.day]] for _ in state.agents]
+                choice = first if len(calls) == 1 else second
+                return (good if choice == 'good' else waiting), {}
+            with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as directory, contextlib.redirect_stdout(io.StringIO()):
+                MatchRunner(api, 'test', directory, mode='timed', roles='all-patrol', clock=clock,
+                            seconds=None, predictor=plan, max_days=1).run()
+            posts = [c for c in api.calls if c[1] == '/api/game/actions']
+            self.assertEqual((len(calls), len(posts)), (expected_calls, expected_posts), (first, second))
+            if expected_calls == 2:
+                # Lần đầu chỉ dùng phần nhỏ ngân sách, lần sau dùng phần còn lại của hạn ngày.
+                self.assertLess(calls[0], calls[1])
+            final = second if expected_posts == 2 else first
+            self.assertEqual(api.pending[0] == [[-6]] * 3, final == 'wait')
+
+    def test_day_fetch_timeout_near_deadline_does_not_stop_runner(self):
+        clock = Clock()
+        class FlakyDayAPI(FakeAPI):
+            failed_once = False
+            def request(self, method, endpoint, game_id=None, body=None, timeout=None):
+                if endpoint == '/api/game/day' and not self.failed_once:
+                    self.failed_once = True
+                    raise TimeoutError('Đã hết thời gian gửi request của ngày này.')
+                return super().request(method, endpoint, game_id, body, timeout)
+        api = FlakyDayAPI(clock, 'timed')
+        with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as directory, contextlib.redirect_stdout(io.StringIO()):
+            self.assertTrue(MatchRunner(api, 'test', directory, mode='timed', roles='all-patrol',
+                                        clock=clock, seconds=.05).run())
+        self.assertEqual(set(api.pending), {0, 1})
+
+    def test_preflight_only_reads_and_reports_warnings(self):
+        clock = Clock()
+        api = FakeAPI(clock)
+        with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as directory, contextlib.redirect_stdout(io.StringIO()) as out:
+            warnings = preflight(api, 'test', directory, 1, 4.)
+        self.assertFalse(any(method == 'POST' for method, _, _ in api.calls))
+        # Config thử không có daySeconds và không có hạn token nên phải có cảnh báo.
+        self.assertGreater(warnings, 0)
+        self.assertIn('Thử lập kế hoạch ngày 1', out.getvalue())
+
+    def test_waits_until_just_before_next_day(self):
+        clock = Clock()
+        api = FakeAPI(clock)
+        with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as directory:
+            runner = MatchRunner(api, 'test', directory, clock=clock)
+            clock.now = 10.
+            runner.wait_next_day(12., 10.)   # còn 12 giây: ngủ tối đa 5 giây
+            self.assertAlmostEqual(clock.now, 15.)
+            runner.wait_next_day(2., 15.)    # còn 2 giây: ngủ tới 0,3 giây trước khi hết ngày
+            self.assertAlmostEqual(clock.now, 16.7)
+            runner.wait_next_day(.3, 16.7)   # sát giờ: hỏi lại sau 0,1 giây
+            self.assertAlmostEqual(clock.now, 16.8)
+
+    def test_planner_crash_falls_back_to_greedy_and_submits(self):
+        clock = Clock()
+        api = FakeAPI(clock)
+        def broken(board, state, algorithm, seconds):
+            raise KeyError('lỗi giả lập trong planner')
+        with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as directory, contextlib.redirect_stdout(io.StringIO()):
+            self.assertTrue(MatchRunner(api, 'test', directory, clock=clock, roles='all-patrol',
+                                        seconds=.05, predictor=broken).run())
+        self.assertEqual(set(api.pending), {0, 1})
+        self.assertGreater(api.state.portions, 0)
+
+    def test_token_expiring_before_match_end_stops_before_selection(self):
+        clock = Clock()
+        api = FakeAPI(clock)
+        api.expires_at = time.time() + 60
+        with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as directory, contextlib.redirect_stdout(io.StringIO()):
+            with self.assertRaisesRegex(ValueError, 'Token'):
+                MatchRunner(api, 'test', directory, clock=clock, seconds=.01).run()
+        self.assertFalse(any(c[1] == '/api/game/agent-types' for c in api.calls))
 
     def test_algorithm_switch_generates_valid_plans(self):
         clock=Clock()

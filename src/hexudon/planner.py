@@ -17,13 +17,20 @@ class Plan:
     searches: int
 
 
-def plan_day(board, state, steps, strategy="greedy", seconds=2.0, alpha=1.0, beta=0.0):
+def plan_day(board, state, steps, strategy="greedy", seconds=2.0, alpha=1.0, workers=1, seed=0):
     if strategy not in ("greedy", "lookahead", "tour"):
         raise ValueError("Chiến lược phải là greedy, lookahead hoặc tour.")
     started = time.perf_counter()
     if strategy == "tour":
-        from .tour import plan_tour
-        actions = plan_tour(board, state, steps, seconds * 0.9, alpha, beta=beta)
+        from .tour import plan_tour, plan_tour_parallel
+        try:
+            if workers > 1:
+                actions = plan_tour_parallel(board, state, steps, seconds * 0.9, alpha, workers)
+            else:
+                actions = plan_tour(board, state, steps, seconds * 0.9, alpha, seed)
+        except Exception as error:  # Lỗi lập trình trên bản đồ lạ không được làm mất ngày thi.
+            print(f"Planner tour lỗi ({type(error).__name__}: {error}); dùng Greedy.", flush=True)
+            actions = None
         if actions is not None:
             checked = simulate_day(board, state, actions, steps)
             if checked.valid:

@@ -109,9 +109,17 @@ class MultipleTeamTests(unittest.TestCase):
         self.assertEqual(states, original)
 
 
+def evidence_directory():
+    """Bằng chứng API đã được chuyển vào experiments/data; vẫn đọc được vị trí cũ."""
+    for folder in ("experiments/data/api_evidence", "experiments/api_evidence"):
+        if (ROOT / folder / "q03_config.json").exists():
+            return ROOT / folder
+    return ROOT / "experiments/data/api_evidence"
+
+
 class ServerReplayTests(unittest.TestCase):
     def test_saved_server_replays(self):
-        directory = ROOT / "experiments/api_evidence"
+        directory = evidence_directory()
         cases = [("q02_before_config", "q02_in_transit_replay", "q02_final_actions"),
                  ("q10_config", "q10_immediate_replay", "q10_immediate_actions"),
                  ("q10_config", "q10_wait_replay", "q10_wait_actions")]
@@ -126,7 +134,7 @@ class ServerReplayTests(unittest.TestCase):
                 self.assertEqual(result["mismatch_count"], 0, result["examples"])
 
     def test_server_rejects_invalid_plans(self):
-        directory = ROOT / "experiments/api_evidence"
+        directory = evidence_directory()
         for name in ("q02_invalid_command", "q02_invalid_too_many_steps",
                      "q02_invalid_pond", "q06_invalid_fuel"):
             record = json.loads((directory / (name + ".json")).read_text(encoding="utf-8"))

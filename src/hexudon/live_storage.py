@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import re
+import time
 
 
 def cleanup_run(folder):
@@ -54,4 +55,13 @@ def write_json(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + '.tmp')
     temporary.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')
-    temporary.replace(path)
+    # Windows từ chối thay tệp khi trình quét virus/lập chỉ mục đang mở nó trong chốc lát;
+    # thử lại vài lần để một lần khóa thoáng qua không làm dừng runner giữa trận.
+    for attempt in range(20):
+        try:
+            temporary.replace(path)
+            return
+        except PermissionError:
+            if attempt == 19:
+                raise
+            time.sleep(.05)

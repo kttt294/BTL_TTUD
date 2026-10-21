@@ -23,20 +23,19 @@ CASES = ["Q01", "Q03", "Q04", "Q06", "Q07", "Q08", "Q09", "Q10",
 
 
 def run_match(job):
-    case, kinds, strategy, seconds, alpha = job[:5]
-    beta = job[5] if len(job) > 5 else 0.0
+    case, kinds, strategy, seconds, alpha = job
     config = json.loads((ROOT / "output/team_selection" / case / "config.json").read_text(encoding="utf-8"))
     board = Board.from_dict(config)
     state = State.initial(board, kinds)
     started, fallbacks = time.perf_counter(), 0
     for steps in board.day_steps:
-        plan = plan_day(board, state, steps, strategy, seconds, alpha, beta)
+        plan = plan_day(board, state, steps, strategy, seconds, alpha)
         fallbacks += plan.fallback
         checked = simulate_day(board, state, plan.actions, steps)
         if not checked.valid:
             raise ValueError(f"{case} {kinds} {strategy}: {checked.errors}")
         state = checked.state
-    return {"case": case, "types": kinds, "strategy": strategy, "alpha": alpha, "beta": beta,
+    return {"case": case, "types": kinds, "strategy": strategy, "alpha": alpha,
             "seconds": seconds, "score": list(state.score()), "fallbacks": fallbacks,
             "elapsed": time.perf_counter() - started}
 

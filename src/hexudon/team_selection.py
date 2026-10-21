@@ -45,7 +45,7 @@ def candidate_types(board, limit=16):
     return options
 
 
-def evaluate_types(board, kinds, day_seconds, strategy="greedy", deadline=None):
+def evaluate_types(board, kinds, day_seconds, strategy="greedy", deadline=None, seed=0):
     from .planner import plan_day
 
     started = time.perf_counter()
@@ -57,7 +57,7 @@ def evaluate_types(board, kinds, day_seconds, strategy="greedy", deadline=None):
         budget = day_seconds
         if deadline is not None:
             budget = min(budget, max(0, deadline - time.perf_counter()))
-        plan = plan_day(board, state, steps, strategy, budget)
+        plan = plan_day(board, state, steps, strategy, budget, seed=seed)
         checked = simulate_day(board, state, plan.actions, steps)
         if not checked.valid:
             raise ValueError("Kế hoạch không vượt qua simulator khi chọn đội hình.")
@@ -66,12 +66,19 @@ def evaluate_types(board, kinds, day_seconds, strategy="greedy", deadline=None):
                      "fallback": plan.fallback, "planning_seconds": plan.elapsed})
     return {"types": kinds[:], "score": state.score(), "complete": len(days) == len(board.day_steps),
             "days": days, "seconds": time.perf_counter() - started,
-            "day_seconds": day_seconds, "strategy": strategy}
+            "day_seconds": day_seconds, "strategy": strategy, "seed": seed}
 
 
-def evaluate_with_budget(board, kinds, day_seconds, strategy, budget):
+def evaluate_with_budget(board, kinds, day_seconds, strategy, budget, seed=0):
     """Chạy trong tiến trình con; hạn giờ được tính lại theo đồng hồ của tiến trình đó."""
-    return evaluate_types(board, kinds, day_seconds, strategy, time.perf_counter() + budget)
+    return evaluate_types(board, kinds, day_seconds, strategy, time.perf_counter() + budget, seed)
+
+
+def average_trials(trials):
+    """Gộp các lần mô phỏng của một đội hình: (U thấp nhất, D thấp nhất, Q trung bình)."""
+    scores = [t["score"] for t in trials]
+    return (min(s[0] for s in scores), min(s[1] for s in scores),
+            sum(s[2] for s in scores) / len(scores))
 
 
 def select_types_parallel(board, seconds=20.0, strategy="tour", limit=16, workers=None):
@@ -89,11 +96,11 @@ def select_types_parallel(board, seconds=20.0, strategy="tour", limit=16, worker
     if usable <= 0:
         return best_types, records, time.perf_counter() - started
 
-    def run(pool, kinds_list, day_seconds, phase):
+    def run(pool, kinds_list, day_seconds, phase, repeats=1):
         nonlocal best_types, best_score
         budget = max(0, deadline - time.perf_counter() - 0.5)
-        futures = {pool.submit(evaluate_with_budget, board, k, day_seconds, strategy, budget): k
-                   for k in kinds_list}
+        futures = {pool.submit(evaluate_with_budget, board, k, day_seconds, strategy, budget, seed): k
+                   for k in kinds_list for seed in range(repeats)}
         done, pending = wait(futures, timeout=max(0, deadline - time.perf_counter()))
         for future in pending:
             future.cancel()
@@ -124,10 +131,16 @@ def select_types_parallel(board, seconds=20.0, strategy="tour", limit=16, worker
         remaining = deadline - time.perf_counter() - 1.0
         refine_seconds = remaining * 0.7 / (days * 1.5)
         if len(finalists) > 1 and refine_seconds > screen_seconds:
-            refined = run(pool, finalists, refine_seconds, "refine")
-            if refined:
-                winner = max(refined, key=lambda r: tuple(r["score"]))
-                best_types, best_score = winner["types"][:], tuple(winner["score"])
+            # Một lần mô phỏng dao động ±15–20 Q, cỡ chênh lệch giữa các đội hình tốt; dùng hết tiến
+            # trình rảnh để chạy mỗi đội hình nhiều seed, so theo (U, D thấp nhất, Q trung bình).
+            repeats = max(1, workers // len(finalists))
+            refined = run(pool, finalists, refine_seconds, "refine", repeats)
+            groups = {}
+            for trial in refined:
+                groups.setdefault(tuple(trial["types"]), []).append(trial)
+            if groups:
+                kinds, trials = max(groups.items(), key=lambda item: average_trials(item[1]))
+                best_types, best_score = list(kinds), average_trials(trials)
     finally:
         pool.shutdown(wait=False, cancel_futures=True)
     return best_types, records, time.perf_counter() - started

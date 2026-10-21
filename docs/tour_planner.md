@@ -90,16 +90,25 @@ Bản mới đạt cận trên U và D ở cả 8 bài BTC; không có lần nà
 Cận Q là `Σ min(kho, số xe tuần tra) × số ngày`, bỏ qua giới hạn step nên không đạt được ở ngày ngắn.
 Q01 và Q02 cùng cấu hình nên chỉ chạy Q01. Một lượt chạy cho mỗi case; kết quả dao động theo đồng hồ.
 
-## Tham số đã thử nhưng không bật
+## Hướng đã thử và đã xóa khỏi code
 
-- β (giá trị vị trí cuối ngày theo số điểm ghé được hôm sau): kết quả trong biên độ nhiễu,
-  đôi khi mất 1 điểm D, nên mặc định β = 0.
-- α khác 1 với đội toàn tuần tra: 0,7, 1,5 và 2,5 đều không tốt hơn 1 trên Q01.
+Mỗi hướng được đo rồi loại vì không tốt hơn cấu hình hiện tại (chi tiết trong `docs/roadmap.md`):
+
+- Giá trị vị trí cuối ngày (β, số điểm ghé được hôm sau): trong biên độ nhiễu, đôi khi mất 1 D.
+- Nhìn trước nhiều kịch bản mặt đường (dự báo nhiều đội, bi quan): ngang cách hiện tại trên
+  192 trận nhiều đội; kịch bản bi quan làm mất D.
+- Rollout 2 ngày (lập kế hoạch ngày mai trong mỗi tiến trình): −0,9 Q trung bình, có ngày quá hạn.
+- Nạp sẵn nhiên liệu trước ngày ngắn: kém hơn 7/8 bài BTC.
+- Chọn vai trò thêm kịch bản có đối thủ: không tốt hơn, có lần chọn nhầm 2 xe tiếp tế.
+
+Còn giữ dưới dạng tham số: α (tỷ lệ chia nhiên liệu khi không có xe tiếp tế); 0,7, 1,5 và 2,5
+đều không tốt hơn 1 trên Q01.
 
 ## Giới hạn
 
 - Điểm đo là offline một đội; giao thông tương lai chỉ do đội mình tạo. Khi thi nhiều đội,
   lưu lượng được chia cho số đội.
 - Tìm kiếm cục bộ phụ thuộc đồng hồ nên kết quả dao động khoảng ±15 suất giữa các lần chạy.
-- Xe tiếp tế chỉ có một điểm hẹn mỗi ngày; chưa có lịch hẹn nhiều điểm hay đi kèm xe tuần tra.
-- Lượt dựng đầu tiên không bị cắt theo hạn giờ: 32×32, 8 xe, 110 điểm mất khoảng 2,4 giây.
+- Xe tiếp tế chỉ có một điểm hẹn mỗi ngày; cận trên đo bằng nhiên liệu vô hạn chỉ +1,6–2,5% Q.
+- Lượt dựng đầu tiên được ít nhất 0,5 giây và không quá max(ngân sách, 0,5 giây); trên bản đồ
+  110 điểm, 8 xe, thời gian vượt ngân sách còn khoảng 0,2–0,4 giây.
