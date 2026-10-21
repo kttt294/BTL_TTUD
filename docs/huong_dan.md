@@ -754,3 +754,20 @@ Muốn tính lại từ đầu, chuyển `experiments/data/tour_robustness/resul
 `summary.json` giữ thống kê theo kích thước, theo input, các cặp thắng/hòa/thua và thời gian thực tế; `results.json` giữ output và trạng thái từng ngày. `manifest.json` giữ input cùng dấu kiểm tra mã, còn `audit.json` ghi kết quả phát lại. Kiểm tra thời gian làm giảm bước xử lý không bị ngắt, nhưng không phải bảo đảm deadline cứng cho mọi máy hoặc mạng.
 
 Ở cả hai bộ đo, `--audit-only` kiểm tra dấu của model và simulator rồi phát lại output; nó không cần planner hiện tại giống phiên bản đã tạo output. Việc tính lại từ đầu kiểm tra toàn bộ mã lõi. Bộ `tour_study` ban đầu vì vậy vẫn chấm lại được sau khi cải tiến kiểm soát thời gian, nhưng không trộn số liệu mới vào kết quả cũ.
+
+## Tra cứu điểm Practice của các đội
+
+`experiments/data/shared_leaderboard/bang_diem.md` trình bày điểm từng bài, thứ hạng theo bài và số loại, số suất từng ngày. Bản chụp ngày 21/10/2026 khảo sát 23 tài khoản, 9 nhãn bài của Practice Match 11. Tài khoản Phenikaa 2 đứng đầu 8/9 bài đã có lượt hoàn tất và đứng thứ hai ở Q02. Không có thứ hạng chung được tạo bằng cách cộng điểm các bài. Điểm hiện tại của tài khoản được giữ riêng với lượt tour đã lưu trong báo cáo.
+
+```powershell
+# Chỉ tạo lại bảng từ dữ liệu đã lưu, không cần mạng hoặc token
+python -X utf8 experiments/run.py compare_practice_leaderboard --summarize-only
+# Đọc điểm mới bằng token đội ta trong .env; chỉ gửi GET
+python -X utf8 experiments/run.py compare_practice_leaderboard
+# Chỉ đọc bù các mục lỗi trong lần thu thập trước
+python -X utf8 experiments/run.py compare_practice_leaderboard --resume
+```
+
+Chương trình dùng API giao diện `/manager/api/match/11` và `/manager/api/question?limit=100` để lấy danh sách đội, câu hỏi; sau đó lọc `match_id = 11`. Hai API Practice được mô tả trong OpenAPI là `/api/game/practice/score` và `/api/game/practice/peer`, với `game_id=<mã câu hỏi>:<mã đội>`. API giao diện dùng token thô ở header Authorization; API trò chơi dùng `Bearer`. Chương trình chỉ dùng token đội ta, không dùng token của đối thủ và không thay đổi bài nộp.
+
+Chỉ các lượt có đủ ngày, cờ đã nộp và tổng D, Q khớp replay được so điểm. Các mục chưa hoàn tất không được coi là đã thua. File `snapshot.json` lưu thời điểm đọc từng cặp và số liệu ngày, không chứa token; `summary.json` giữ kết quả đối chiếu. Các lượt được đọc tuần tự có nghỉ và chờ khi nhận HTTP 429, nên đây là dữ liệu trong một khoảng thời gian, không phải ảnh chụp đồng thời tuyệt đối. Lệnh `--resume` giữ các mục đã đọc hợp lệ, không thay thế cho một lần đọc mới toàn bộ.
