@@ -71,6 +71,10 @@ class Legs:
         key = start, goal, variant
         if key not in self.legs:
             steps, fuel, parent, _ = self.tree(start, variant)
+            # Ô ở vùng tách rời không có nút cha; không truy vết từ chỉ số -1.
+            if start != goal and parent[goal] == -1:
+                self.legs[key] = INF, INF, frozenset()
+                return self.legs[key]
             spots, pos = [], goal
             while pos != start:
                 if pos in self.spot_set:
@@ -81,6 +85,8 @@ class Legs:
 
     def directions(self, start, goal, variant):
         _, _, parent, pdir = self.tree(start, variant)
+        if start != goal and parent[goal] == -1:
+            raise ValueError("Không có đường đi giữa hai ô thuộc các vùng tách rời.")
         reverse, pos = [], goal
         while pos != start:
             reverse.append(pdir[pos])

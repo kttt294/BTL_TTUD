@@ -1,0 +1,135 @@
+{
+  "case": "V8_islands_2",
+  "group": "diverse",
+  "size": 8,
+  "topology": "islands",
+  "types": [
+    1,
+    0,
+    0
+  ],
+  "days": 2,
+  "fuel": 40,
+  "schedule": "ordinary",
+  "seed": 71,
+  "variant": "full",
+  "seconds": 1.0,
+  "score": [
+    5,
+    10,
+    26
+  ],
+  "U_bound": 8,
+  "D_bound": 16,
+  "daily": [
+    {
+      "day": 1,
+      "steps": 28,
+      "types": 5,
+      "servings": 13,
+      "score": [
+        5,
+        5,
+        13
+      ],
+      "actions": [
+        [
+          -28
+        ],
+        [
+          4,
+          2,
+          2,
+          2,
+          4,
+          2,
+          4,
+          4,
+          4,
+          4,
+          4,
+          -6
+        ],
+        [
+          1,
+          0,
+          4,
+          4,
+          3,
+          4,
+          4,
+          4,
+          -12
+        ]
+      ],
+      "seconds": 0.9004070999999385,
+      "positions": [
+        56,
+        57,
+        57
+      ],
+      "fuel": [
+        0,
+        29,
+        32
+      ]
+    },
+    {
+      "day": 2,
+      "steps": 28,
+      "types": 5,
+      "servings": 13,
+      "score": [
+        5,
+        10,
+        26
+      ],
+      "actions": [
+        [
+          -28
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          4,
+          -14
+        ],
+        [
+          1,
+          1,
+          1,
+          0,
+          1,
+          2,
+          0,
+          5,
+          5,
+          5,
+          -8
+        ]
+      ],
+      "seconds": 0.900416899999982,
+      "positions": [
+        56,
+        18,
+        8
+      ],
+      "fuel": [
+        0,
+        22,
+        22
+      ]
+    }
+  ],
+  "anchor_calls": [
+    {
+      "day": 1,
+      "found": true,
+      "seconds": 0.09113510000042879
+    }
+  ]
+}

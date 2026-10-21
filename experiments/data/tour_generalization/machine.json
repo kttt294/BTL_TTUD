@@ -1,0 +1,6 @@
+{
+  "python": "3.12.6",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "workers": 1,
+  "concurrent_other_workloads": "Không cô lập tải; người dùng đang chạy thí nghiệm riêng."
+}

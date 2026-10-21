@@ -1,0 +1,583 @@
+{
+  "runs": 132,
+  "daily_plans": 708,
+  "groups": {
+    "diverse/mixed": {
+      "comparisons": {
+        "greedy": {
+          "pairs": 12,
+          "full_wins": 12,
+          "ties": 0,
+          "full_losses": 0
+        },
+        "no_anchor": {
+          "pairs": 12,
+          "full_wins": 5,
+          "ties": 6,
+          "full_losses": 1
+        }
+      },
+      "stats": {
+        "greedy": {
+          "runs": 12,
+          "mean_score": [
+            10.667,
+            35.083,
+            92.083
+          ],
+          "full_U": 12,
+          "full_D": 7,
+          "mean_seconds": 0.3612,
+          "max_seconds": 1.0085,
+          "over_budget_days": 8,
+          "anchor_calls": 0,
+          "found_anchor_calls": 0
+        },
+        "full": {
+          "runs": 12,
+          "mean_score": [
+            10.667,
+            36.833,
+            123.917
+          ],
+          "full_U": 12,
+          "full_D": 10,
+          "mean_seconds": 0.9027,
+          "max_seconds": 0.9086,
+          "over_budget_days": 0,
+          "anchor_calls": 0,
+          "found_anchor_calls": 0
+        },
+        "no_anchor": {
+          "runs": 12,
+          "mean_score": [
+            10.667,
+            36.833,
+            123.333
+          ],
+          "full_U": 12,
+          "full_D": 10,
+          "mean_seconds": 0.903,
+          "max_seconds": 0.9082,
+          "over_budget_days": 0,
+          "anchor_calls": 0,
+          "found_anchor_calls": 0
+        }
+      }
+    },
+    "diverse/bridge": {
+      "comparisons": {
+        "greedy": {
+          "pairs": 12,
+          "full_wins": 12,
+          "ties": 0,
+          "full_losses": 0
+        },
+        "no_anchor": {
+          "pairs": 12,
+          "full_wins": 6,
+          "ties": 2,
+          "full_losses": 4
+        }
+      },
+      "stats": {
+        "greedy": {
+          "runs": 12,
+          "mean_score": [
+            10.667,
+            78.167,
+            274.25
+          ],
+          "full_U": 12,
+          "full_D": 8,
+          "mean_seconds": 0.4276,
+          "max_seconds": 1.0088,
+          "over_budget_days": 24,
+          "anchor_calls": 0,
+          "found_anchor_calls": 0
+        },
+        "full": {
+          "runs": 12,
+          "mean_score": [
+            10.667,
+            80,
+            381.167
+          ],
+          "full_U": 12,
+          "full_D": 12,
+          "mean_seconds": 0.9031,
+          "max_seconds": 0.9178,
+          "over_budget_days": 0,
+          "anchor_calls": 0,
+          "found_anchor_calls": 0
+        },
+        "no_anchor": {
+          "runs": 12,
+          "mean_score": [
+            10.667,
+            80,
+            381.167
+          ],
+          "full_U": 12,
+          "full_D": 12,
+          "mean_seconds": 0.9025,
+          "max_seconds": 0.9084,
+          "over_budget_days": 0,
+          "anchor_calls": 0,
+          "found_anchor_calls": 0
+        }
+      }
+    },
+    "diverse/islands": {
+      "comparisons": {
+        "greedy": {
+          "pairs": 12,
+          "full_wins": 12,
+          "ties": 0,
+          "full_losses": 0
+        },
+        "no_anchor": {
+          "pairs": 12,
+          "full_wins": 1,
+          "ties": 10,
+          "full_losses": 1
+        }
+      },
+      "stats": {
+        "greedy": {
+          "runs": 12,
+          "mean_score": [
+            6.667,
+            15.833,
+            17
+          ],
+          "full_U": 0,
+          "full_D": 0,
+          "mean_seconds": 0.2234,
+          "max_seconds": 0.8513,
+          "over_budget_days": 0,
+          "anchor_calls": 0,
+          "found_anchor_calls": 0
+        },
+        "full": {
+          "runs": 12,
+          "mean_score": [
+            6.667,
+            37.333,
+            214.25
+          ],
+          "full_U": 0,
+          "full_D": 0,
+          "mean_seconds": 0.9024,
+          "max_seconds": 0.9062,
+          "over_budget_days": 0,
+          "anchor_calls": 60,
+          "found_anchor_calls": 60
+        },
+        "no_anchor": {
+          "runs": 12,
+          "mean_score": [
+            6.667,
+            37.333,
+            214.167
+          ],
+          "full_U": 0,
+          "full_D": 0,
+          "mean_seconds": 0.9026,
+          "max_seconds": 0.9069,
+          "over_budget_days": 0,
+          "anchor_calls": 60,
+          "found_anchor_calls": 0
+        }
+      }
+    },
+    "anchor/steady": {
+      "comparisons": {
+        "no_anchor": {
+          "pairs": 6,
+          "full_wins": 1,
+          "ties": 4,
+          "full_losses": 1
+        }
+      },
+      "stats": {
+        "full": {
+          "runs": 6,
+          "mean_score": [
+            10.667,
+            42.667,
+            81.167
+          ],
+          "full_U": 6,
+          "full_D": 6,
+          "mean_seconds": 2.7027,
+          "max_seconds": 2.7099,
+          "over_budget_days": 0,
+          "anchor_calls": 1,
+          "found_anchor_calls": 1
+        },
+        "no_anchor": {
+          "runs": 6,
+          "mean_score": [
+            10.667,
+            42.667,
+            81.167
+          ],
+          "full_U": 6,
+          "full_D": 6,
+          "mean_seconds": 2.7023,
+          "max_seconds": 2.7046,
+          "over_budget_days": 0,
+          "anchor_calls": 1,
+          "found_anchor_calls": 0
+        }
+      }
+    },
+    "anchor/alternating": {
+      "comparisons": {
+        "no_anchor": {
+          "pairs": 6,
+          "full_wins": 4,
+          "ties": 1,
+          "full_losses": 1
+        }
+      },
+      "stats": {
+        "full": {
+          "runs": 6,
+          "mean_score": [
+            10.667,
+            39.833,
+            74.667
+          ],
+          "full_U": 6,
+          "full_D": 2,
+          "mean_seconds": 2.7031,
+          "max_seconds": 2.7144,
+          "over_budget_days": 0,
+          "anchor_calls": 9,
+          "found_anchor_calls": 9
+        },
+        "no_anchor": {
+          "runs": 6,
+          "mean_score": [
+            10.667,
+            37.5,
+            77.667
+          ],
+          "full_U": 6,
+          "full_D": 2,
+          "mean_seconds": 2.7027,
+          "max_seconds": 2.711,
+          "over_budget_days": 0,
+          "anchor_calls": 8,
+          "found_anchor_calls": 0
+        }
+      }
+    }
+  },
+  "per_case": {
+    "A16_alternating": {
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      }
+    },
+    "A16_steady": {
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 1,
+        "ties": 1,
+        "full_losses": 0
+      }
+    },
+    "A32_alternating": {
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      }
+    },
+    "A32_steady": {
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 0,
+        "ties": 1,
+        "full_losses": 1
+      }
+    },
+    "A8_alternating": {
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 0,
+        "ties": 1,
+        "full_losses": 1
+      }
+    },
+    "A8_steady": {
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 0,
+        "ties": 2,
+        "full_losses": 0
+      }
+    },
+    "V16_bridge_1": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      }
+    },
+    "V16_bridge_2": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 1,
+        "ties": 0,
+        "full_losses": 1
+      }
+    },
+    "V16_islands_1": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 1,
+        "ties": 1,
+        "full_losses": 0
+      }
+    },
+    "V16_islands_2": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 0,
+        "ties": 1,
+        "full_losses": 1
+      }
+    },
+    "V16_mixed_1": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 0,
+        "ties": 2,
+        "full_losses": 0
+      }
+    },
+    "V16_mixed_2": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      }
+    },
+    "V32_bridge_1": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 0,
+        "ties": 2,
+        "full_losses": 0
+      }
+    },
+    "V32_bridge_2": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 1,
+        "ties": 0,
+        "full_losses": 1
+      }
+    },
+    "V32_islands_1": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 0,
+        "ties": 2,
+        "full_losses": 0
+      }
+    },
+    "V32_islands_2": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 0,
+        "ties": 2,
+        "full_losses": 0
+      }
+    },
+    "V32_mixed_1": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 1,
+        "ties": 1,
+        "full_losses": 0
+      }
+    },
+    "V32_mixed_2": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 1,
+        "ties": 0,
+        "full_losses": 1
+      }
+    },
+    "V8_bridge_1": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 1,
+        "ties": 0,
+        "full_losses": 1
+      }
+    },
+    "V8_bridge_2": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 1,
+        "ties": 0,
+        "full_losses": 1
+      }
+    },
+    "V8_islands_1": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 0,
+        "ties": 2,
+        "full_losses": 0
+      }
+    },
+    "V8_islands_2": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 0,
+        "ties": 2,
+        "full_losses": 0
+      }
+    },
+    "V8_mixed_1": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 0,
+        "ties": 2,
+        "full_losses": 0
+      }
+    },
+    "V8_mixed_2": {
+      "greedy": {
+        "pairs": 2,
+        "full_wins": 2,
+        "ties": 0,
+        "full_losses": 0
+      },
+      "no_anchor": {
+        "pairs": 2,
+        "full_wins": 1,
+        "ties": 1,
+        "full_losses": 0
+      }
+    }
+  },
+  "found_anchor_is_acceptance": false,
+  "notes": "Số lần tìm thấy ô neo chỉ ghi đầu ra find_anchors, không khẳng định tuyến neo được chọn. Bỏ ô neo giải phóng thời gian cho phần khác; đây là so cấu hình cùng ngân sách."
+}

@@ -1,0 +1,442 @@
+{
+  "cases": [
+    {
+      "case": "V8_mixed_1",
+      "group": "diverse",
+      "size": 8,
+      "topology": "mixed",
+      "types": [
+        0,
+        0,
+        0
+      ],
+      "days": 2,
+      "fuel": 40,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V8_mixed_2",
+      "group": "diverse",
+      "size": 8,
+      "topology": "mixed",
+      "types": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "days": 5,
+      "fuel": 100,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V8_bridge_1",
+      "group": "diverse",
+      "size": 8,
+      "topology": "bridge",
+      "types": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "days": 5,
+      "fuel": 100,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V8_bridge_2",
+      "group": "diverse",
+      "size": 8,
+      "topology": "bridge",
+      "types": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "days": 10,
+      "fuel": 200,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V8_islands_1",
+      "group": "diverse",
+      "size": 8,
+      "topology": "islands",
+      "types": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "days": 10,
+      "fuel": 200,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V8_islands_2",
+      "group": "diverse",
+      "size": 8,
+      "topology": "islands",
+      "types": [
+        1,
+        0,
+        0
+      ],
+      "days": 2,
+      "fuel": 40,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V16_mixed_1",
+      "group": "diverse",
+      "size": 16,
+      "topology": "mixed",
+      "types": [
+        0,
+        0,
+        0
+      ],
+      "days": 2,
+      "fuel": 40,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V16_mixed_2",
+      "group": "diverse",
+      "size": 16,
+      "topology": "mixed",
+      "types": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "days": 5,
+      "fuel": 100,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V16_bridge_1",
+      "group": "diverse",
+      "size": 16,
+      "topology": "bridge",
+      "types": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "days": 5,
+      "fuel": 100,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V16_bridge_2",
+      "group": "diverse",
+      "size": 16,
+      "topology": "bridge",
+      "types": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "days": 10,
+      "fuel": 200,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V16_islands_1",
+      "group": "diverse",
+      "size": 16,
+      "topology": "islands",
+      "types": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "days": 10,
+      "fuel": 200,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V16_islands_2",
+      "group": "diverse",
+      "size": 16,
+      "topology": "islands",
+      "types": [
+        1,
+        0,
+        0
+      ],
+      "days": 2,
+      "fuel": 40,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V32_mixed_1",
+      "group": "diverse",
+      "size": 32,
+      "topology": "mixed",
+      "types": [
+        0,
+        0,
+        0
+      ],
+      "days": 2,
+      "fuel": 40,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V32_mixed_2",
+      "group": "diverse",
+      "size": 32,
+      "topology": "mixed",
+      "types": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "days": 5,
+      "fuel": 100,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V32_bridge_1",
+      "group": "diverse",
+      "size": 32,
+      "topology": "bridge",
+      "types": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "days": 5,
+      "fuel": 100,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V32_bridge_2",
+      "group": "diverse",
+      "size": 32,
+      "topology": "bridge",
+      "types": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "days": 10,
+      "fuel": 200,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V32_islands_1",
+      "group": "diverse",
+      "size": 32,
+      "topology": "islands",
+      "types": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "days": 10,
+      "fuel": 200,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "V32_islands_2",
+      "group": "diverse",
+      "size": 32,
+      "topology": "islands",
+      "types": [
+        1,
+        0,
+        0
+      ],
+      "days": 2,
+      "fuel": 40,
+      "schedule": "ordinary"
+    },
+    {
+      "case": "A8_steady",
+      "group": "anchor",
+      "size": 8,
+      "topology": "bridge",
+      "types": [
+        1,
+        0,
+        0
+      ],
+      "days": 4,
+      "fuel": 160,
+      "schedule": "steady"
+    },
+    {
+      "case": "A8_alternating",
+      "group": "anchor",
+      "size": 8,
+      "topology": "bridge",
+      "types": [
+        1,
+        0,
+        0
+      ],
+      "days": 4,
+      "fuel": 160,
+      "schedule": "alternating"
+    },
+    {
+      "case": "A16_steady",
+      "group": "anchor",
+      "size": 16,
+      "topology": "bridge",
+      "types": [
+        1,
+        0,
+        0
+      ],
+      "days": 4,
+      "fuel": 160,
+      "schedule": "steady"
+    },
+    {
+      "case": "A16_alternating",
+      "group": "anchor",
+      "size": 16,
+      "topology": "bridge",
+      "types": [
+        1,
+        0,
+        0
+      ],
+      "days": 4,
+      "fuel": 160,
+      "schedule": "alternating"
+    },
+    {
+      "case": "A32_steady",
+      "group": "anchor",
+      "size": 32,
+      "topology": "bridge",
+      "types": [
+        1,
+        0,
+        0
+      ],
+      "days": 4,
+      "fuel": 160,
+      "schedule": "steady"
+    },
+    {
+      "case": "A32_alternating",
+      "group": "anchor",
+      "size": 32,
+      "topology": "bridge",
+      "types": [
+        1,
+        0,
+        0
+      ],
+      "days": 4,
+      "fuel": 160,
+      "schedule": "alternating"
+    }
+  ],
+  "seeds": [
+    71,
+    72
+  ],
+  "diverse_seconds": 1.0,
+  "anchor_seconds": 3.0,
+  "variants": [
+    "greedy",
+    "full",
+    "no_anchor"
+  ],
+  "scope": "Một đội; giao thông từ lịch sử riêng; không dùng API; input không được lọc theo điểm.",
+  "design_limit": "Thiết kế cấu hình đan xen, không phải toàn bộ tích Descartes; hai lượt theo seed không là hai bản đồ độc lập.",
+  "source_hashes": {
+    "src/hexudon/__init__.py": "55c77a20188bff004691aab7087215035aa737842234dc6b0081ecc42eb35247",
+    "src/hexudon/__main__.py": "84302ec222e52be662a7e4643bbf1a92a50b5a0794c35e5649b82814d794c034",
+    "src/hexudon/api.py": "95a5dcc8150f92a13924b11771f59d5eec5c67c8f78d7366ee92119bc25cc575",
+    "src/hexudon/bounds.py": "f6954dae8cf808b3f6ba76a62b074bddc45c07ab1756840c778fea15adf90a13",
+    "src/hexudon/exact.py": "0006f3ec5a8da1d9618e71229d4ae0352ad17b6a45bdc985583e819f300e7b8d",
+    "src/hexudon/generator.py": "95fb453e223b8d39f16b2b4876ae6c23e798b3f5fb9e79ecb5a733f3cea8602a",
+    "src/hexudon/live.py": "0e74a5c61e49d167dadb8826fcea1bc9af1ab4d67a938b51404b4a855ec0a13e",
+    "src/hexudon/live_api.py": "9d49d83c26c4eef968fe99ee81d25016bf8ed713f196ebac3bbf786514714f14",
+    "src/hexudon/live_storage.py": "b2a0988fbff0d4ee956d7c3d355a8fbcfbf52d16d138e105014fb2576f3f568c",
+    "src/hexudon/model.py": "eb5b7f725dd4daa6dd767d53aecc173926a516bd1bb22245061825e7dc11f6e3",
+    "src/hexudon/planner.py": "7671d019e01ee2884baf6517618324e7b56c3722d9daba5577df0cf9b994e88f",
+    "src/hexudon/search.py": "19693c98bc67d8a69ecef45a876f595c6cfcee2b57a210dd21fb42066345b8b9",
+    "src/hexudon/simulator.py": "8b0583b87fc068cd667db92bb834700ae0c4ebb5467587e3beb981f2ec35f9a8",
+    "src/hexudon/team_selection.py": "c9dec7d27ea85225384f22e6eeb5936faf4f7a3c109f493e6baffaa60d261fd6",
+    "src/hexudon/tour.py": "ba71a801184cc31df251a5a6fb96275447201f8b206ad13ef8a71d37f2b986fc",
+    "src/main.py": "98f48677c7a4b05265da665bf033497c28e59027ffb6330dd132d2f00b49da7e"
+  },
+  "input_hashes": {
+    "A16_alternating.json": "4afc135ee17f0105768dea6930f7681a4bceea384519662049a92219a0d37b91",
+    "A16_steady.json": "e2d16a60ff140b5aa2b6c6a1e8a5f207361d542e80bcca4138ffd0e33dd832cc",
+    "A32_alternating.json": "11e3cae0ce4d98a4ed4fcd389504f187162bd47575908804526bb5b0d79bfc73",
+    "A32_steady.json": "4797b8b5184d268435e24ac3d675c341dfef45be7b6b67fc22a94e5a98e511d9",
+    "A8_alternating.json": "9bdd04c74cbbf0ae73f48af59448951855b7f63b6b6e9e572617fdac59b78b44",
+    "A8_steady.json": "b80bea2dc630a7664e77de09de7ceb27da79ab764d4f304292e4de9aa4251ee3",
+    "V16_bridge_1.json": "4a64c277f70c757eab69576cbfbff55fbb99b7735f6ed670722603c705e0805b",
+    "V16_bridge_2.json": "f2aaafcf5e12ac647218759a3dc10fee950830e24387607190ba8097f4238932",
+    "V16_islands_1.json": "cbe0c5c4fc4a86d039da83faa4fb820ec4203be6defe2061ebe8e78af83160b5",
+    "V16_islands_2.json": "330585f24d5ed079a023a817290aa68f8fb1aaee2acdf6c7883cec521681c13c",
+    "V16_mixed_1.json": "d8e1d758ef8ace95ce9e2f2b05c35ee5325c43689a35309b362b0f73c6e1f1ca",
+    "V16_mixed_2.json": "181bcd48e4bd3b380ffd63bbf77962c8abc8e7abc1839fd0ebbdb05ecfac73e9",
+    "V32_bridge_1.json": "795604ec4827c981c143288685b031ed8060bb620932e1405964fb9cdf41b108",
+    "V32_bridge_2.json": "b7d29d706e3a0273827671eec282d7b7de9a6f36cb2fe9d4713d9eea2bc641e5",
+    "V32_islands_1.json": "c3671c5edbf4251436b66316f3b00cdfe11a4aa6a7a778708574434f8e51e1bb",
+    "V32_islands_2.json": "34b6eddc7079069835cb7a9a08bbb36e97036d533c92891faaa9fd74f431b5bf",
+    "V32_mixed_1.json": "61ab1872a3aca219f03f9a33220b5ac886244b2bec9831e0a10c3103a2f0017d",
+    "V32_mixed_2.json": "f9d074f277d2f78039abe6228747ef1b15cfe3595109885090ff55bcbd2aa7a4",
+    "V8_bridge_1.json": "6edef7dd0bf3f088eeb41b44db65167171542e8c52517ddbae4fcfa2e356f02b",
+    "V8_bridge_2.json": "010bda64e9b3a63d5e083f666aea768b95f2a8b87f11c8cbcd6b5522763dbc41",
+    "V8_islands_1.json": "d30e3c18ee5b85dce0bf327eed3be057d593677608201cba6c68e9d820a6fc9c",
+    "V8_islands_2.json": "c34468fa3afb63f28b77762f1ff981c3a960596bb36b63edd9fcddc93ce682d6",
+    "V8_mixed_1.json": "0a1d27abdf8eae4ffee07275eb8a96e6b69d920a1a148dfb559f7c29b61493a8",
+    "V8_mixed_2.json": "908ee0a86ef97170053573a57518536db0c23b2d3864cbfafc4520985479c4c1"
+  },
+  "experiment_sha256": "7ac99e33043397d064ad1162e0e28c477b4af7808cb278d19e614ab1ef446818",
+  "created_date_local": "2026-10-21",
+  "initial_incomplete_runs_excluded": true
+}

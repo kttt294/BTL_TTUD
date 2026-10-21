@@ -771,3 +771,27 @@ python -X utf8 experiments/run.py compare_practice_leaderboard --resume
 Chương trình dùng API giao diện `/manager/api/match/11` và `/manager/api/question?limit=100` để lấy danh sách đội, câu hỏi; sau đó lọc `match_id = 11`. Hai API Practice được mô tả trong OpenAPI là `/api/game/practice/score` và `/api/game/practice/peer`, với `game_id=<mã câu hỏi>:<mã đội>`. API giao diện dùng token thô ở header Authorization; API trò chơi dùng `Bearer`. Chương trình chỉ dùng token đội ta, không dùng token của đối thủ và không thay đổi bài nộp.
 
 Chỉ các lượt có đủ ngày, cờ đã nộp và tổng D, Q khớp replay được so điểm. Các mục chưa hoàn tất không được coi là đã thua. File `snapshot.json` lưu thời điểm đọc từng cặp và số liệu ngày, không chứa token; `summary.json` giữ kết quả đối chiếu. Các lượt được đọc tuần tự có nghỉ và chờ khi nhận HTTP 429, nên đây là dữ liệu trong một khoảng thời gian, không phải ảnh chụp đồng thời tuyệt đối. Lệnh `--resume` giữ các mục đã đọc hợp lệ, không thay thế cho một lần đọc mới toàn bộ.
+
+## Mở rộng cấu hình và kiểm tra ô neo
+
+`experiments/benchmark/tour_generalization.py` chỉ chạy offline, không gọi API hoặc sửa bài Practice. Bộ dữ liệu ở `experiments/data/tour_generalization/` được xác định trước khi đo:
+
+- 18 input: ba kích thước 8×8, 16×16, 32×32; ba cấu trúc địa hình trộn, hai vùng nối bằng cầu và hai vùng tách rời; hai thiết lập vai trò cho mỗi tổ hợp. Số xe thay đổi giữa 3, 5, 8; số ngày giữa 2, 5, 10; nhiên liệu giữa 40, 100, 200. Greedy, tour đầy đủ và tour bỏ ô neo dùng cùng input, vai trò và ngân sách yêu cầu 1 giây/ngày.
+- Sáu input kiểm tra lịch ngày: ở mỗi kích thước s, hai lịch dùng chung bản đồ, vị trí, kho, nhiên liệu 160, một xe tiếp tế và hai xe tuần tra. Lịch đều có bốn ngày `3s + 8` step; lịch xen kẽ có `5s + 8, s + 8, 5s + 8, s + 8` step, nên tổng step cả trận bằng nhau. Có/bỏ ô neo được so ở 3 giây/ngày.
+
+Hai seed là 71 và 72. Các lượt Greedy là đo lặp của thuật toán xác định, còn các cặp trên cùng bản đồ không phải những input độc lập. Thiết kế đan xen này chưa tách riêng ảnh hưởng của mọi tham số và chưa phải toàn bộ tổ hợp cấu hình. Giao thông vẫn chỉ lấy từ đội đang mô phỏng; một tiến trình đo chạy trong khi máy có công việc khác.
+
+```powershell
+# Kiểm tra đúng output đã lưu, không cần token hay lập tuyến lại
+python -X utf8 experiments/run.py tour_generalization --audit-only
+# Chạy các lượt chưa có, giữ nguyên input và các lượt đã lưu
+python -X utf8 experiments/run.py tour_generalization --workers 1
+```
+
+`manifest.json` giữ thiết kế cùng dấu mã nguồn và input. `inputs/` giữ đủ 24 bản đồ; `runs/` giữ output, điểm, vị trí, nhiên liệu và thời gian từng ngày của 132 lượt. `summary.json` tổng hợp theo cấu trúc, lịch ngày và từng input; `audit.json` ghi kết quả phát lại. Để đo lại từ đầu, sao lưu rồi chuyển `runs/` ra chỗ khác. Không trộn output tạo từ mã nguồn khác dấu kiểm tra.
+
+Lượt đo ban đầu phát hiện vòng lặp truy vết khi Dijkstra không có đường tới ô ở vùng tách rời. `Legs.leg` đã được sửa để trả chi phí vô hạn, còn `directions` từ chối truy vết chặng đó. Hai kiểm thử hồi quy nằm trong `tests/test_tour.py`. Toàn bộ bộ đo mới được chạy lại sau sửa lỗi với cùng thiết kế input; các lượt dở ban đầu không dùng trong thống kê. Quy tắc chọn ô neo được giữ nguyên.
+
+Số lần tìm ô neo và số lần hàm trả về ứng viên là dữ liệu chẩn đoán; chúng không chứng minh tuyến cuối đã nhận ứng viên hay ứng viên đã tăng điểm. Khi bỏ ô neo, thời gian còn lại được dùng cho phần cải thiện khác, nên đây là so cấu hình trong cùng ngân sách. Trong bộ đối chứng trước, bỏ ô neo tốt hơn ở 19/36 cặp; vì thế báo cáo không coi cơ chế này là cải tiến có lợi ổn định trên mọi input.
+
+Bộ mới có 132 lượt và 708 kế hoạch ngày được phát lại hợp lệ, không có sai khác điểm, vị trí, nhiên liệu hoặc fallback. Tour thắng Greedy ở 36/36 cặp thuộc 18 input đa dạng cấu hình. Trên lịch đều, tour có ô neo thắng/bằng/thua biến thể bỏ ô neo là 1/4/1; lịch dài–ngắn là 4/1/1. Ở nhóm địa hình trộn và có cầu, hàm tìm ô neo không được gọi, nên chênh lệch giữa hai nhãn cấu hình không được quy cho tác dụng của ô neo. Các số liệu này không thay cho điểm Practice hoặc chứng minh một cơ chế luôn có lợi.
