@@ -11,7 +11,7 @@ from hexudon.model import Agent, Board, State
 from hexudon.planner import plan_day
 from hexudon.simulator import simulate_day
 from hexudon.team_selection import select_types
-from hexudon.tour import DayProblem, allowances, extended_move, find_anchors, plan_tour, removal_savings
+from hexudon.tour import DayProblem, Legs, allowances, extended_move, find_anchors, plan_tour, removal_savings
 
 
 def line_board(fuel=40, days=(30, 30, 30)):
@@ -24,6 +24,30 @@ def line_board(fuel=40, days=(30, 30, 30)):
 
 
 class TourTests(unittest.TestCase):
+    def test_unreachable_leg_is_infinite_and_has_no_directions(self):
+        # Cột ao ngăn hai vùng; truy vết trước đây bị lặp ở nút cha -1.
+        board = Board([[0, 0, 3, 0, 0] for _ in range(3)], [], [0, 5, 10], [12], 40)
+        legs = Legs(board, {}, set())
+        for variant in range(3):
+            self.assertEqual(legs.leg(0, 4, variant), (float('inf'), float('inf'), frozenset()))
+            with self.assertRaisesRegex(ValueError, 'Không có đường đi'):
+                legs.directions(0, 4, variant)
+        self.assertEqual(legs.leg(0, 0, 0), (0, 0, frozenset()))
+        self.assertEqual(legs.directions(0, 1, 0), [2])
+
+    def test_tour_handles_spot_on_disconnected_island(self):
+        cells = [[0] * 8 for _ in range(8)]
+        for row in cells:
+            row[4] = 3
+        board = Board(cells, [{'pos': 2, 'brand': 0, 'stocks': 2},
+                              {'pos': 7, 'brand': 1, 'stocks': 2}], [0, 8, 16], [12, 12], 40)
+        state = State.initial(board, [0, 0, 0])
+        for steps in board.day_steps:
+            result = simulate_day(board, state, plan_tour(board, state, steps, .15), steps)
+            self.assertTrue(result.valid, result.errors)
+            state = result.state
+        self.assertEqual(state.score()[:2], (1, 2))
+
     def test_plan_is_valid_and_collects_every_brand(self):
         board = line_board()
         state = State.initial(board, [0, 0])
