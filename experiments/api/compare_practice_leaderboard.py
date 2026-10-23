@@ -103,16 +103,21 @@ def summarize(snapshot):
     for team_id,name in names.items():
         if team_id==own:continue
         counts=[0,0,0];old=[0,0,0];complete=0;partial=0;unknown=0;comparable=0
+        unfinished_with_days=0;no_days=0
         for q in snapshot['questions']:
             peer=lookup[team_id,q['name']];ours=lookup[own,q['name']]
             if peer['complete'] and peer['consistent']:
                 complete+=1
                 if ours['complete'] and ours['consistent']:counts[compare(ours['score'],peer['score'])]+=1;comparable+=1
                 if q['name'] in baseline:old[compare(baseline[q['name']],peer['score'])]+=1
-            elif peer['status'] in ('no_days','no_record','partial'):partial+=1
+            elif peer['status'] in ('no_days','no_record','partial'):
+                partial+=1
+                if peer['status']=='partial':unfinished_with_days+=1
+                else:no_days+=1
             else:unknown+=1
         per_team.append({'team_id':team_id,'team':name,'complete_questions':complete,'comparable_questions':comparable,
-                         'current_wins_ties_losses':counts,'baseline_wins_ties_losses':old,'incomplete_or_no_days':partial,'unknown':unknown})
+                         'current_wins_ties_losses':counts,'baseline_wins_ties_losses':old,'incomplete_or_no_days':partial,'unknown':unknown,
+                         'unfinished_with_days':unfinished_with_days,'no_days':no_days})
     return {'started_at_utc':snapshot['started_at_utc'],'finished_at_utc':snapshot['finished_at_utc'],'team_count':len(names),
             'question_count':len(snapshot['questions']),'per_case':per_case,'per_team':per_team,
             'current_losses':current_losses,'baseline_losses':baseline_losses,
@@ -147,11 +152,13 @@ def write_tables(snapshot, summary):
     for team in snapshot['teams']:
         lines.append(f"| {team['name']} ({team['id']}) | " + ' | '.join(cell(team['id'], c) for c in cases) + ' |')
     lines += ['', '## Đối chiếu với đội ta', '',
-              '| Đối thủ | Số bài hoàn tất | Đội ta thắng | Bằng điểm | Đội ta thua | Chưa đủ dữ liệu |',
-              '|---|---|---|---|---|---|']
+              'Không có dữ liệu ngày hiện tại không chứng minh đội chưa từng nộp: lịch sử có thể đã được reset. '
+              'Bài đang dở được tách khỏi bài không có dữ liệu ngày; lỗi API hoặc điểm chưa khớp cũng được báo riêng.', '',
+              '| Đối thủ | Số bài hoàn tất | Bài đang dở | Bài không có dữ liệu ngày hiện tại | Bài lỗi hoặc chưa khớp | Đội ta thắng | Bằng điểm | Đội ta thua |',
+              '|---|---|---|---|---|---|---|---|']
     for team in summary['per_team']:
         w, t, l = team['current_wins_ties_losses']
-        lines.append(f"| {team['team']} ({team['team_id']}) | {team['complete_questions']} | {w} | {t} | {l} | {team['incomplete_or_no_days'] + team['unknown']} |")
+        lines.append(f"| {team['team']} ({team['team_id']}) | {team['complete_questions']} | {team['unfinished_with_days']} | {team['no_days']} | {team['unknown']} | {w} | {t} | {l} |")
     lines += ['', '## Số loại và số suất thu được từng ngày', '',
               'Mỗi ô ghi (số loại trong ngày, số suất trong ngày). Ngày API 0 được trình bày là ngày 1. '
               'Bảng này chỉ gồm các lượt đã hoàn tất và kiểm tra khớp điểm.', '']
@@ -176,13 +183,15 @@ def write_tables(snapshot, summary):
 
 
 def main():
+    global DATA
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--env',default=str(ROOT/'.env'))
     parser.add_argument('--match',type=int,default=11)
     parser.add_argument('--workers',type=int,default=1)
     parser.add_argument('--resume',action='store_true',help='Đọc lại các mục lỗi, giữ các mục đã kiểm tra được')
     parser.add_argument('--summarize-only',action='store_true')
-    args=parser.parse_args();DATA.mkdir(parents=True,exist_ok=True)
+    parser.add_argument('--output',default=str(DATA),help='Thư mục lưu lần tra cứu; dùng thư mục mới để giữ số liệu cũ')
+    args=parser.parse_args();DATA=Path(args.output);DATA.mkdir(parents=True,exist_ok=True)
     if args.summarize_only:snapshot=json.loads((DATA/'snapshot.json').read_text(encoding='utf8'))
     else:
         api=LiveAPI(args.env,timeout=20);start=datetime.now(timezone.utc).isoformat()

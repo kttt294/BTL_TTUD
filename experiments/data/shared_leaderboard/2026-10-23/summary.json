@@ -1,0 +1,818 @@
+{
+  "started_at_utc": "2026-10-23T14:53:57.691695+00:00",
+  "finished_at_utc": "2026-10-23T15:01:32.963536+00:00",
+  "team_count": 23,
+  "question_count": 9,
+  "per_case": [
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "baseline": [
+        20,
+        200,
+        614
+      ],
+      "ours": [
+        20,
+        200,
+        619
+      ],
+      "own_complete": true,
+      "best_peer_score": [
+        20,
+        200,
+        622
+      ],
+      "best_peer_teams": [
+        "Phenikaa 1"
+      ],
+      "complete_opponents": 6,
+      "current_wins_ties_losses": [
+        5,
+        0,
+        1
+      ],
+      "baseline_wins_ties_losses": [
+        5,
+        0,
+        1
+      ]
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "baseline": null,
+      "ours": [
+        20,
+        200,
+        609
+      ],
+      "own_complete": true,
+      "best_peer_score": [
+        20,
+        200,
+        621
+      ],
+      "best_peer_teams": [
+        "CTU 1"
+      ],
+      "complete_opponents": 4,
+      "current_wins_ties_losses": [
+        3,
+        0,
+        1
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "baseline": [
+        20,
+        200,
+        659
+      ],
+      "ours": [
+        20,
+        200,
+        697
+      ],
+      "own_complete": true,
+      "best_peer_score": [
+        20,
+        200,
+        670
+      ],
+      "best_peer_teams": [
+        "CTU 1"
+      ],
+      "complete_opponents": 4,
+      "current_wins_ties_losses": [
+        4,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        3,
+        0,
+        1
+      ]
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "baseline": [
+        20,
+        200,
+        636
+      ],
+      "ours": [
+        20,
+        200,
+        649
+      ],
+      "own_complete": true,
+      "best_peer_score": [
+        20,
+        200,
+        597
+      ],
+      "best_peer_teams": [
+        "HAUI 3"
+      ],
+      "complete_opponents": 3,
+      "current_wins_ties_losses": [
+        3,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "baseline": [
+        15,
+        150,
+        735
+      ],
+      "ours": [
+        15,
+        150,
+        757
+      ],
+      "own_complete": true,
+      "best_peer_score": [
+        15,
+        150,
+        677
+      ],
+      "best_peer_teams": [
+        "HAUI 3"
+      ],
+      "complete_opponents": 3,
+      "current_wins_ties_losses": [
+        3,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "baseline": [
+        15,
+        150,
+        820
+      ],
+      "ours": [
+        15,
+        150,
+        846
+      ],
+      "own_complete": true,
+      "best_peer_score": [
+        15,
+        150,
+        795
+      ],
+      "best_peer_teams": [
+        "HAUI 3"
+      ],
+      "complete_opponents": 3,
+      "current_wins_ties_losses": [
+        3,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "baseline": [
+        15,
+        150,
+        685
+      ],
+      "ours": [
+        15,
+        150,
+        695
+      ],
+      "own_complete": true,
+      "best_peer_score": [
+        15,
+        150,
+        620
+      ],
+      "best_peer_teams": [
+        "HCMUTE 1"
+      ],
+      "complete_opponents": 3,
+      "current_wins_ties_losses": [
+        3,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "baseline": [
+        15,
+        150,
+        701
+      ],
+      "ours": [
+        15,
+        150,
+        713
+      ],
+      "own_complete": true,
+      "best_peer_score": [
+        15,
+        150,
+        608
+      ],
+      "best_peer_teams": [
+        "HAUI 3"
+      ],
+      "complete_opponents": 3,
+      "current_wins_ties_losses": [
+        3,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "baseline": [
+        15,
+        150,
+        698
+      ],
+      "ours": [
+        15,
+        150,
+        713
+      ],
+      "own_complete": true,
+      "best_peer_score": [
+        15,
+        150,
+        637
+      ],
+      "best_peer_teams": [
+        "HAUI 3"
+      ],
+      "complete_opponents": 4,
+      "current_wins_ties_losses": [
+        4,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        4,
+        0,
+        0
+      ]
+    }
+  ],
+  "per_team": [
+    {
+      "team_id": "40",
+      "team": "UET.The Agents",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 1,
+      "no_days": 8
+    },
+    {
+      "team_id": "47",
+      "team": "Duy Tan 1",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 9
+    },
+    {
+      "team_id": "48",
+      "team": "Duy Tan 2",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 9
+    },
+    {
+      "team_id": "53",
+      "team": "IUH 1",
+      "complete_questions": 9,
+      "comparable_questions": 9,
+      "current_wins_ties_losses": [
+        9,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        8,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 0,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 0
+    },
+    {
+      "team_id": "54",
+      "team": "IUH 2",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 1,
+      "no_days": 8
+    },
+    {
+      "team_id": "55",
+      "team": "Test_HMI",
+      "complete_questions": 1,
+      "comparable_questions": 1,
+      "current_wins_ties_losses": [
+        1,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        1,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 8,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 8
+    },
+    {
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "complete_questions": 9,
+      "comparable_questions": 9,
+      "current_wins_ties_losses": [
+        9,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        8,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 0,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 0
+    },
+    {
+      "team_id": "58",
+      "team": "HCMUTE 2",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 9
+    },
+    {
+      "team_id": "59",
+      "team": "HCMUTE 3",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 9
+    },
+    {
+      "team_id": "60",
+      "team": "HCMUTE 4",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 9
+    },
+    {
+      "team_id": "61",
+      "team": "Phenikaa 1",
+      "complete_questions": 1,
+      "comparable_questions": 1,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        1
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        1
+      ],
+      "incomplete_or_no_days": 8,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 8
+    },
+    {
+      "team_id": "63",
+      "team": "HAUI 1",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 9
+    },
+    {
+      "team_id": "64",
+      "team": "HAUI 2",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 9
+    },
+    {
+      "team_id": "65",
+      "team": "HAUI 3",
+      "complete_questions": 9,
+      "comparable_questions": 9,
+      "current_wins_ties_losses": [
+        9,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        8,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 0,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 0
+    },
+    {
+      "team_id": "66",
+      "team": "HAUI 4",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 9
+    },
+    {
+      "team_id": "77",
+      "team": "DAU 1",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 3,
+      "no_days": 6
+    },
+    {
+      "team_id": "78",
+      "team": "DAU 2",
+      "complete_questions": 1,
+      "comparable_questions": 1,
+      "current_wins_ties_losses": [
+        1,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        1,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 8,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 8
+    },
+    {
+      "team_id": "79",
+      "team": "Duy Tan 3",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 9
+    },
+    {
+      "team_id": "80",
+      "team": "Duy Tan 4",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 9
+    },
+    {
+      "team_id": "81",
+      "team": "CTU 1",
+      "complete_questions": 3,
+      "comparable_questions": 3,
+      "current_wins_ties_losses": [
+        2,
+        0,
+        1
+      ],
+      "baseline_wins_ties_losses": [
+        1,
+        0,
+        1
+      ],
+      "incomplete_or_no_days": 6,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 6
+    },
+    {
+      "team_id": "82",
+      "team": "CTU 2",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 9
+    },
+    {
+      "team_id": "83",
+      "team": "HUIT 1",
+      "complete_questions": 0,
+      "comparable_questions": 0,
+      "current_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "baseline_wins_ties_losses": [
+        0,
+        0,
+        0
+      ],
+      "incomplete_or_no_days": 9,
+      "unknown": 0,
+      "unfinished_with_days": 0,
+      "no_days": 9
+    }
+  ],
+  "current_losses": [
+    {
+      "case": "Q01",
+      "team": "Phenikaa 1",
+      "team_id": "61",
+      "ours": [
+        20,
+        200,
+        619
+      ],
+      "peer": [
+        20,
+        200,
+        622
+      ]
+    },
+    {
+      "case": "Q02",
+      "team": "CTU 1",
+      "team_id": "81",
+      "ours": [
+        20,
+        200,
+        609
+      ],
+      "peer": [
+        20,
+        200,
+        621
+      ]
+    }
+  ],
+  "baseline_losses": [
+    {
+      "case": "Q01",
+      "team": "Phenikaa 1",
+      "team_id": "61",
+      "ours": [
+        20,
+        200,
+        614
+      ],
+      "peer": [
+        20,
+        200,
+        622
+      ]
+    },
+    {
+      "case": "Q03",
+      "team": "CTU 1",
+      "team_id": "81",
+      "ours": [
+        20,
+        200,
+        659
+      ],
+      "peer": [
+        20,
+        200,
+        670
+      ]
+    }
+  ],
+  "error_records": 0,
+  "completed_records": 42
+}

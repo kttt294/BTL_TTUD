@@ -1,0 +1,6733 @@
+{
+  "started_at_utc": "2026-10-23T14:53:57.691695+00:00",
+  "finished_at_utc": "2026-10-23T15:01:32.963536+00:00",
+  "match_id": 11,
+  "own_team_id": "62",
+  "teams": [
+    {
+      "id": 40,
+      "name": "UET.The Agents"
+    },
+    {
+      "id": 47,
+      "name": "Duy Tan 1"
+    },
+    {
+      "id": 48,
+      "name": "Duy Tan 2"
+    },
+    {
+      "id": 53,
+      "name": "IUH 1"
+    },
+    {
+      "id": 54,
+      "name": "IUH 2"
+    },
+    {
+      "id": 55,
+      "name": "Test_HMI"
+    },
+    {
+      "id": 57,
+      "name": "HCMUTE 1"
+    },
+    {
+      "id": 58,
+      "name": "HCMUTE 2"
+    },
+    {
+      "id": 59,
+      "name": "HCMUTE 3"
+    },
+    {
+      "id": 60,
+      "name": "HCMUTE 4"
+    },
+    {
+      "id": 61,
+      "name": "Phenikaa 1"
+    },
+    {
+      "id": 62,
+      "name": "Phenikaa 2"
+    },
+    {
+      "id": 63,
+      "name": "HAUI 1"
+    },
+    {
+      "id": 64,
+      "name": "HAUI 2"
+    },
+    {
+      "id": 65,
+      "name": "HAUI 3"
+    },
+    {
+      "id": 66,
+      "name": "HAUI 4"
+    },
+    {
+      "id": 77,
+      "name": "DAU 1"
+    },
+    {
+      "id": 78,
+      "name": "DAU 2"
+    },
+    {
+      "id": 79,
+      "name": "Duy Tan 3"
+    },
+    {
+      "id": 80,
+      "name": "Duy Tan 4"
+    },
+    {
+      "id": 81,
+      "name": "CTU 1"
+    },
+    {
+      "id": 82,
+      "name": "CTU 2"
+    },
+    {
+      "id": 83,
+      "name": "HUIT 1"
+    }
+  ],
+  "questions": [
+    {
+      "id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "name": "Q01",
+      "days": 10
+    },
+    {
+      "id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "name": "Q02",
+      "days": 10
+    },
+    {
+      "id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "name": "Q03",
+      "days": 10
+    },
+    {
+      "id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "name": "Q04",
+      "days": 10
+    },
+    {
+      "id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "name": "Q06",
+      "days": 10
+    },
+    {
+      "id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "name": "Q07",
+      "days": 10
+    },
+    {
+      "id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "name": "Q08",
+      "days": 10
+    },
+    {
+      "id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "name": "Q09",
+      "days": 10
+    },
+    {
+      "id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "name": "Q10",
+      "days": 10
+    }
+  ],
+  "endpoints": [
+    "GET /manager/api/match/{id}",
+    "GET /manager/api/question?limit=100",
+    "GET /api/game/practice/score?game_id={question_id}:{team_id}",
+    "GET /api/game/practice/peer?game_id={question_id}:{team_id}"
+  ],
+  "records": [
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "40",
+      "team": "UET.The Agents",
+      "read_at_utc": "2026-10-23T14:54:17.288424+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        20,
+        91
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 91,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 1,
+      "complete": false,
+      "consistent": true,
+      "status": "partial"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "40",
+      "team": "UET.The Agents",
+      "read_at_utc": "2026-10-23T14:55:05.639748+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "40",
+      "team": "UET.The Agents",
+      "read_at_utc": "2026-10-23T14:55:54.077188+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "40",
+      "team": "UET.The Agents",
+      "read_at_utc": "2026-10-23T14:56:42.593995+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "40",
+      "team": "UET.The Agents",
+      "read_at_utc": "2026-10-23T14:57:30.859868+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "40",
+      "team": "UET.The Agents",
+      "read_at_utc": "2026-10-23T14:58:19.267030+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "40",
+      "team": "UET.The Agents",
+      "read_at_utc": "2026-10-23T14:59:07.731140+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "40",
+      "team": "UET.The Agents",
+      "read_at_utc": "2026-10-23T14:59:56.075951+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "40",
+      "team": "UET.The Agents",
+      "read_at_utc": "2026-10-23T15:00:44.481172+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "47",
+      "team": "Duy Tan 1",
+      "read_at_utc": "2026-10-23T14:54:19.414592+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "47",
+      "team": "Duy Tan 1",
+      "read_at_utc": "2026-10-23T14:55:07.849908+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "47",
+      "team": "Duy Tan 1",
+      "read_at_utc": "2026-10-23T14:55:56.282629+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "47",
+      "team": "Duy Tan 1",
+      "read_at_utc": "2026-10-23T14:56:44.668862+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "47",
+      "team": "Duy Tan 1",
+      "read_at_utc": "2026-10-23T14:57:33.057444+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "47",
+      "team": "Duy Tan 1",
+      "read_at_utc": "2026-10-23T14:58:21.496338+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "47",
+      "team": "Duy Tan 1",
+      "read_at_utc": "2026-10-23T14:59:09.913431+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "47",
+      "team": "Duy Tan 1",
+      "read_at_utc": "2026-10-23T14:59:58.361992+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "47",
+      "team": "Duy Tan 1",
+      "read_at_utc": "2026-10-23T15:00:46.667727+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "48",
+      "team": "Duy Tan 2",
+      "read_at_utc": "2026-10-23T14:54:21.543462+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "48",
+      "team": "Duy Tan 2",
+      "read_at_utc": "2026-10-23T14:55:10.099871+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "48",
+      "team": "Duy Tan 2",
+      "read_at_utc": "2026-10-23T14:55:58.499101+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "48",
+      "team": "Duy Tan 2",
+      "read_at_utc": "2026-10-23T14:56:46.842483+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "48",
+      "team": "Duy Tan 2",
+      "read_at_utc": "2026-10-23T14:57:35.234155+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "48",
+      "team": "Duy Tan 2",
+      "read_at_utc": "2026-10-23T14:58:23.681822+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "48",
+      "team": "Duy Tan 2",
+      "read_at_utc": "2026-10-23T14:59:12.100623+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "48",
+      "team": "Duy Tan 2",
+      "read_at_utc": "2026-10-23T15:00:00.445249+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "48",
+      "team": "Duy Tan 2",
+      "read_at_utc": "2026-10-23T15:00:48.873567+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "53",
+      "team": "IUH 1",
+      "read_at_utc": "2026-10-23T14:54:23.797442+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        514
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 71,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 41,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 42,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 38,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 38,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 24,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 69,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 69,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 63,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 59,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "53",
+      "team": "IUH 1",
+      "read_at_utc": "2026-10-23T14:55:12.272008+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        192,
+        368
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 55,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 26,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 29,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 19,
+          "servings": 22,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 19,
+          "servings": 26,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 14,
+          "servings": 16,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 48,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 57,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 45,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 44,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "53",
+      "team": "IUH 1",
+      "read_at_utc": "2026-10-23T14:56:00.674052+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        195,
+        436
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 54,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 60,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 65,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 77,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 16,
+          "servings": 19,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 35,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 39,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 26,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 39,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 19,
+          "servings": 22,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "53",
+      "team": "IUH 1",
+      "read_at_utc": "2026-10-23T14:56:49.135841+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        540
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 43,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 56,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 68,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 52,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 45,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 69,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 51,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 42,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 65,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 49,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "53",
+      "team": "IUH 1",
+      "read_at_utc": "2026-10-23T14:57:37.502566+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        524
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 39,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 63,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 39,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 70,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 41,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 33,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 76,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 51,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 68,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 44,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "53",
+      "team": "IUH 1",
+      "read_at_utc": "2026-10-23T14:58:25.941745+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        579
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 76,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 62,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 42,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 70,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 42,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 71,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 36,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 69,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 55,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 56,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "53",
+      "team": "IUH 1",
+      "read_at_utc": "2026-10-23T14:59:14.313392+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        583
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 77,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 36,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 73,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 53,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 62,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 40,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 33,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 54,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 80,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 75,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "53",
+      "team": "IUH 1",
+      "read_at_utc": "2026-10-23T15:00:02.687461+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        595
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 46,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 77,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 65,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 73,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 57,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 47,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 75,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 72,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 42,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 41,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "53",
+      "team": "IUH 1",
+      "read_at_utc": "2026-10-23T15:00:51.127911+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        575
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 91,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 38,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 27,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 82,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 60,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 25,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 62,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 50,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 69,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 71,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "54",
+      "team": "IUH 2",
+      "read_at_utc": "2026-10-23T14:54:26.219488+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        20,
+        76
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 76,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 1,
+      "complete": false,
+      "consistent": true,
+      "status": "partial"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "54",
+      "team": "IUH 2",
+      "read_at_utc": "2026-10-23T14:55:14.606832+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "54",
+      "team": "IUH 2",
+      "read_at_utc": "2026-10-23T14:56:03.095677+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "54",
+      "team": "IUH 2",
+      "read_at_utc": "2026-10-23T14:56:51.581353+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "54",
+      "team": "IUH 2",
+      "read_at_utc": "2026-10-23T14:57:39.870178+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "54",
+      "team": "IUH 2",
+      "read_at_utc": "2026-10-23T14:58:28.212639+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "54",
+      "team": "IUH 2",
+      "read_at_utc": "2026-10-23T14:59:16.664754+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "54",
+      "team": "IUH 2",
+      "read_at_utc": "2026-10-23T15:00:04.986647+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "54",
+      "team": "IUH 2",
+      "read_at_utc": "2026-10-23T15:00:53.557107+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "55",
+      "team": "Test_HMI",
+      "read_at_utc": "2026-10-23T14:54:28.273895+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "55",
+      "team": "Test_HMI",
+      "read_at_utc": "2026-10-23T14:55:16.672494+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "55",
+      "team": "Test_HMI",
+      "read_at_utc": "2026-10-23T14:56:05.075155+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "55",
+      "team": "Test_HMI",
+      "read_at_utc": "2026-10-23T14:56:53.446665+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "55",
+      "team": "Test_HMI",
+      "read_at_utc": "2026-10-23T14:57:41.865718+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "55",
+      "team": "Test_HMI",
+      "read_at_utc": "2026-10-23T14:58:30.315160+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "55",
+      "team": "Test_HMI",
+      "read_at_utc": "2026-10-23T14:59:18.640747+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "55",
+      "team": "Test_HMI",
+      "read_at_utc": "2026-10-23T15:00:07.059902+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "55",
+      "team": "Test_HMI",
+      "read_at_utc": "2026-10-23T15:00:55.547387+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        147,
+        447
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 93,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 25,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 14,
+          "servings": 16,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 62,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 56,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 13,
+          "servings": 16,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 47,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 34,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 56,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 42,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "read_at_utc": "2026-10-23T14:54:30.363455+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        532
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 84,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 42,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 47,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 34,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 36,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 23,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 70,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 75,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 59,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 62,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "read_at_utc": "2026-10-23T14:55:18.886771+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        508
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 80,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 36,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 44,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 37,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 28,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 22,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 76,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 76,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 54,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 55,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "read_at_utc": "2026-10-23T14:56:07.248597+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        530
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 58,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 55,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 63,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 57,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 29,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 62,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 69,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 44,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 60,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 33,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "read_at_utc": "2026-10-23T14:56:55.759235+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        481
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 47,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 52,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 64,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 46,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 38,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 62,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 44,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 37,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 60,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 31,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "read_at_utc": "2026-10-23T14:57:44.066328+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        454
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 51,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 20,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 51,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 71,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 20,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 45,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 77,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 39,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 22,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 58,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "read_at_utc": "2026-10-23T14:58:32.497764+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        760
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 114,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 91,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 47,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 97,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 48,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 98,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 41,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 84,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 68,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 72,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "read_at_utc": "2026-10-23T14:59:20.885511+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        620
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 89,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 34,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 84,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 48,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 67,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 34,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 30,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 57,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 93,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 84,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "read_at_utc": "2026-10-23T15:00:09.241580+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        523
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 43,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 53,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 60,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 61,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 54,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 40,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 70,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 63,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 31,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 48,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "57",
+      "team": "HCMUTE 1",
+      "read_at_utc": "2026-10-23T15:00:57.896253+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        551
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 110,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 18,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 25,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 105,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 21,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 27,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 66,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 52,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 62,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 65,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "58",
+      "team": "HCMUTE 2",
+      "read_at_utc": "2026-10-23T14:54:32.811045+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "58",
+      "team": "HCMUTE 2",
+      "read_at_utc": "2026-10-23T14:55:21.338397+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "58",
+      "team": "HCMUTE 2",
+      "read_at_utc": "2026-10-23T14:56:09.692039+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "58",
+      "team": "HCMUTE 2",
+      "read_at_utc": "2026-10-23T14:56:57.985768+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "58",
+      "team": "HCMUTE 2",
+      "read_at_utc": "2026-10-23T14:57:46.408503+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "58",
+      "team": "HCMUTE 2",
+      "read_at_utc": "2026-10-23T14:58:35.111534+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "58",
+      "team": "HCMUTE 2",
+      "read_at_utc": "2026-10-23T14:59:23.299401+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "58",
+      "team": "HCMUTE 2",
+      "read_at_utc": "2026-10-23T15:00:11.869440+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "58",
+      "team": "HCMUTE 2",
+      "read_at_utc": "2026-10-23T15:01:00.135430+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "59",
+      "team": "HCMUTE 3",
+      "read_at_utc": "2026-10-23T14:54:34.747291+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "59",
+      "team": "HCMUTE 3",
+      "read_at_utc": "2026-10-23T14:55:23.237496+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "59",
+      "team": "HCMUTE 3",
+      "read_at_utc": "2026-10-23T14:56:11.673876+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "59",
+      "team": "HCMUTE 3",
+      "read_at_utc": "2026-10-23T14:57:00.128707+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "59",
+      "team": "HCMUTE 3",
+      "read_at_utc": "2026-10-23T14:57:48.479958+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "59",
+      "team": "HCMUTE 3",
+      "read_at_utc": "2026-10-23T14:58:36.850264+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "59",
+      "team": "HCMUTE 3",
+      "read_at_utc": "2026-10-23T14:59:25.362768+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "59",
+      "team": "HCMUTE 3",
+      "read_at_utc": "2026-10-23T15:00:13.664175+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "59",
+      "team": "HCMUTE 3",
+      "read_at_utc": "2026-10-23T15:01:02.156760+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "60",
+      "team": "HCMUTE 4",
+      "read_at_utc": "2026-10-23T14:54:36.963608+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "60",
+      "team": "HCMUTE 4",
+      "read_at_utc": "2026-10-23T14:55:25.457767+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "60",
+      "team": "HCMUTE 4",
+      "read_at_utc": "2026-10-23T14:56:13.882205+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "60",
+      "team": "HCMUTE 4",
+      "read_at_utc": "2026-10-23T14:57:02.283078+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "60",
+      "team": "HCMUTE 4",
+      "read_at_utc": "2026-10-23T14:57:50.641735+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "60",
+      "team": "HCMUTE 4",
+      "read_at_utc": "2026-10-23T14:58:39.081066+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "60",
+      "team": "HCMUTE 4",
+      "read_at_utc": "2026-10-23T14:59:27.483536+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "60",
+      "team": "HCMUTE 4",
+      "read_at_utc": "2026-10-23T15:00:15.917402+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "60",
+      "team": "HCMUTE 4",
+      "read_at_utc": "2026-10-23T15:01:04.340594+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "61",
+      "team": "Phenikaa 1",
+      "read_at_utc": "2026-10-23T14:54:39.173458+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        622
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 91,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 46,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 53,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 42,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 45,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 29,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 82,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 87,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 73,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 74,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "61",
+      "team": "Phenikaa 1",
+      "read_at_utc": "2026-10-23T14:55:27.645586+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "61",
+      "team": "Phenikaa 1",
+      "read_at_utc": "2026-10-23T14:56:16.095738+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "61",
+      "team": "Phenikaa 1",
+      "read_at_utc": "2026-10-23T14:57:04.449466+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "61",
+      "team": "Phenikaa 1",
+      "read_at_utc": "2026-10-23T14:57:52.844169+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "61",
+      "team": "Phenikaa 1",
+      "read_at_utc": "2026-10-23T14:58:41.280015+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "61",
+      "team": "Phenikaa 1",
+      "read_at_utc": "2026-10-23T14:59:29.659658+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "61",
+      "team": "Phenikaa 1",
+      "read_at_utc": "2026-10-23T15:00:18.084810+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "61",
+      "team": "Phenikaa 1",
+      "read_at_utc": "2026-10-23T15:01:06.501002+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "read_at_utc": "2026-10-23T14:53:58.241985+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        619
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 91,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 49,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 54,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 44,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 43,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 22,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 80,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 86,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 75,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 75,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "read_at_utc": "2026-10-23T14:53:59.699226+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        609
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 90,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 48,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 56,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 41,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 39,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 25,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 81,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 84,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 72,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 73,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "read_at_utc": "2026-10-23T14:54:01.902629+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        697
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 68,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 68,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 81,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 94,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 31,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 78,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 95,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 55,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 85,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 42,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "read_at_utc": "2026-10-23T14:54:04.336854+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        649
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 58,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 63,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 85,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 67,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 45,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 86,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 62,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 48,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 77,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 58,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "read_at_utc": "2026-10-23T14:54:06.298848+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        757
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 57,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 102,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 50,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 114,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 54,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 38,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 115,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 69,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 103,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 55,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "read_at_utc": "2026-10-23T14:54:08.654928+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        846
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 119,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 100,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 61,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 107,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 53,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 109,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 42,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 93,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 81,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 81,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "read_at_utc": "2026-10-23T14:54:10.859548+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        695
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 100,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 38,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 87,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 57,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 76,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 46,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 31,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 64,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 106,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 90,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "read_at_utc": "2026-10-23T14:54:13.058693+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        713
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 55,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 95,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 81,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 92,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 59,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 54,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 96,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 86,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 45,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 50,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "62",
+      "team": "Phenikaa 2",
+      "read_at_utc": "2026-10-23T14:54:15.157127+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        713
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 116,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 46,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 30,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 108,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 79,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 32,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 76,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 59,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 84,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 83,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "63",
+      "team": "HAUI 1",
+      "read_at_utc": "2026-10-23T14:54:41.567480+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "63",
+      "team": "HAUI 1",
+      "read_at_utc": "2026-10-23T14:55:29.901838+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "63",
+      "team": "HAUI 1",
+      "read_at_utc": "2026-10-23T14:56:18.262440+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "63",
+      "team": "HAUI 1",
+      "read_at_utc": "2026-10-23T14:57:06.723584+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "63",
+      "team": "HAUI 1",
+      "read_at_utc": "2026-10-23T14:57:55.007187+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "63",
+      "team": "HAUI 1",
+      "read_at_utc": "2026-10-23T14:58:43.509802+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "63",
+      "team": "HAUI 1",
+      "read_at_utc": "2026-10-23T14:59:31.910465+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "63",
+      "team": "HAUI 1",
+      "read_at_utc": "2026-10-23T15:00:20.272949+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "63",
+      "team": "HAUI 1",
+      "read_at_utc": "2026-10-23T15:01:08.728680+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "64",
+      "team": "HAUI 2",
+      "read_at_utc": "2026-10-23T14:54:43.569150+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "64",
+      "team": "HAUI 2",
+      "read_at_utc": "2026-10-23T14:55:32.618049+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "64",
+      "team": "HAUI 2",
+      "read_at_utc": "2026-10-23T14:56:20.463843+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "64",
+      "team": "HAUI 2",
+      "read_at_utc": "2026-10-23T14:57:08.941569+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "64",
+      "team": "HAUI 2",
+      "read_at_utc": "2026-10-23T14:57:57.217979+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "64",
+      "team": "HAUI 2",
+      "read_at_utc": "2026-10-23T14:58:45.734348+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "64",
+      "team": "HAUI 2",
+      "read_at_utc": "2026-10-23T14:59:34.056704+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "64",
+      "team": "HAUI 2",
+      "read_at_utc": "2026-10-23T15:00:22.435547+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "64",
+      "team": "HAUI 2",
+      "read_at_utc": "2026-10-23T15:01:11.287328+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "65",
+      "team": "HAUI 3",
+      "read_at_utc": "2026-10-23T14:54:45.760579+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        563
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 80,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 40,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 51,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 42,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 45,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 26,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 72,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 71,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 64,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 72,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 110,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "65",
+      "team": "HAUI 3",
+      "read_at_utc": "2026-10-23T14:55:34.247361+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        548
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 80,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 43,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 48,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 36,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 39,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 27,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 68,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 72,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 64,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 71,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 110,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "65",
+      "team": "HAUI 3",
+      "read_at_utc": "2026-10-23T14:56:22.689571+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        540
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 57,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 58,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 57,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 81,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 28,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 58,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 68,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 44,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 52,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 37,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 110,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "65",
+      "team": "HAUI 3",
+      "read_at_utc": "2026-10-23T14:57:11.311979+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        597
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 49,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 60,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 82,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 62,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 46,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 80,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 54,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 40,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 70,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 54,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 110,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "65",
+      "team": "HAUI 3",
+      "read_at_utc": "2026-10-23T14:57:59.461582+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        677
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 51,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 85,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 47,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 98,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 55,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 39,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 94,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 69,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 96,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 43,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 110,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "65",
+      "team": "HAUI 3",
+      "read_at_utc": "2026-10-23T14:58:47.880427+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        795
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 113,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 89,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 56,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 103,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 55,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 104,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 40,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 88,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 72,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 75,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 110,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "65",
+      "team": "HAUI 3",
+      "read_at_utc": "2026-10-23T14:59:36.305479+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        617
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 91,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 34,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 77,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 48,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 67,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 36,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 29,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 61,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 89,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 85,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 110,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "65",
+      "team": "HAUI 3",
+      "read_at_utc": "2026-10-23T15:00:24.593326+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        608
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 44,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 67,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 66,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 76,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 58,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 50,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 83,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 66,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 43,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 55,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 110,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "65",
+      "team": "HAUI 3",
+      "read_at_utc": "2026-10-23T15:01:13.086922+00:00",
+      "expected_days": 10,
+      "score": [
+        15,
+        150,
+        637
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 15,
+          "servings": 107,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 15,
+          "servings": 42,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 15,
+          "servings": 25,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 15,
+          "servings": 102,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 15,
+          "servings": 63,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 15,
+          "servings": 27,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 15,
+          "servings": 66,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 15,
+          "servings": 50,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 15,
+          "servings": 71,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 15,
+          "servings": 84,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 110,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "66",
+      "team": "HAUI 4",
+      "read_at_utc": "2026-10-23T14:54:48.136993+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "66",
+      "team": "HAUI 4",
+      "read_at_utc": "2026-10-23T14:55:36.636730+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "66",
+      "team": "HAUI 4",
+      "read_at_utc": "2026-10-23T14:56:25.266009+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "66",
+      "team": "HAUI 4",
+      "read_at_utc": "2026-10-23T14:57:13.402848+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "66",
+      "team": "HAUI 4",
+      "read_at_utc": "2026-10-23T14:58:01.844935+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "66",
+      "team": "HAUI 4",
+      "read_at_utc": "2026-10-23T14:58:50.249975+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "66",
+      "team": "HAUI 4",
+      "read_at_utc": "2026-10-23T14:59:38.707335+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "66",
+      "team": "HAUI 4",
+      "read_at_utc": "2026-10-23T15:00:27.028706+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "66",
+      "team": "HAUI 4",
+      "read_at_utc": "2026-10-23T15:01:15.568575+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "77",
+      "team": "DAU 1",
+      "read_at_utc": "2026-10-23T14:54:50.161612+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 0,
+          "servings": 0,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 0,
+          "servings": 0,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 0,
+          "servings": 0,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 14,
+      "complete": false,
+      "consistent": true,
+      "status": "partial"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "77",
+      "team": "DAU 1",
+      "read_at_utc": "2026-10-23T14:55:38.645666+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "77",
+      "team": "DAU 1",
+      "read_at_utc": "2026-10-23T14:56:27.551832+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "77",
+      "team": "DAU 1",
+      "read_at_utc": "2026-10-23T14:57:15.429644+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 0,
+          "servings": 0,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 0,
+          "servings": 0,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 0,
+          "servings": 0,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 0,
+          "servings": 0,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 0,
+          "servings": 0,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 0,
+          "servings": 0,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 0,
+          "servings": 0,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 28,
+      "complete": false,
+      "consistent": true,
+      "status": "partial"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "77",
+      "team": "DAU 1",
+      "read_at_utc": "2026-10-23T14:58:03.860306+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 0,
+          "servings": 0,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 1,
+      "complete": false,
+      "consistent": true,
+      "status": "partial"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "77",
+      "team": "DAU 1",
+      "read_at_utc": "2026-10-23T14:58:52.275479+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "77",
+      "team": "DAU 1",
+      "read_at_utc": "2026-10-23T14:59:40.679834+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "77",
+      "team": "DAU 1",
+      "read_at_utc": "2026-10-23T15:00:29.080786+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "77",
+      "team": "DAU 1",
+      "read_at_utc": "2026-10-23T15:01:17.486747+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "78",
+      "team": "DAU 2",
+      "read_at_utc": "2026-10-23T14:54:52.433908+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        566
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 87,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 44,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 46,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 38,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 39,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 27,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 74,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 78,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 60,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 73,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "78",
+      "team": "DAU 2",
+      "read_at_utc": "2026-10-23T14:55:40.874269+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "78",
+      "team": "DAU 2",
+      "read_at_utc": "2026-10-23T14:56:29.297315+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "78",
+      "team": "DAU 2",
+      "read_at_utc": "2026-10-23T14:57:17.832208+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "78",
+      "team": "DAU 2",
+      "read_at_utc": "2026-10-23T14:58:06.068546+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "78",
+      "team": "DAU 2",
+      "read_at_utc": "2026-10-23T14:58:54.567890+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "78",
+      "team": "DAU 2",
+      "read_at_utc": "2026-10-23T14:59:43.055983+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "78",
+      "team": "DAU 2",
+      "read_at_utc": "2026-10-23T15:00:31.274827+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "78",
+      "team": "DAU 2",
+      "read_at_utc": "2026-10-23T15:01:19.697000+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "79",
+      "team": "Duy Tan 3",
+      "read_at_utc": "2026-10-23T14:54:54.752495+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "79",
+      "team": "Duy Tan 3",
+      "read_at_utc": "2026-10-23T14:55:43.018774+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "79",
+      "team": "Duy Tan 3",
+      "read_at_utc": "2026-10-23T14:56:31.430963+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "79",
+      "team": "Duy Tan 3",
+      "read_at_utc": "2026-10-23T14:57:19.822537+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "79",
+      "team": "Duy Tan 3",
+      "read_at_utc": "2026-10-23T14:58:08.249606+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "79",
+      "team": "Duy Tan 3",
+      "read_at_utc": "2026-10-23T14:58:56.667058+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "79",
+      "team": "Duy Tan 3",
+      "read_at_utc": "2026-10-23T14:59:45.076675+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "79",
+      "team": "Duy Tan 3",
+      "read_at_utc": "2026-10-23T15:00:33.411722+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "79",
+      "team": "Duy Tan 3",
+      "read_at_utc": "2026-10-23T15:01:22.148380+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "80",
+      "team": "Duy Tan 4",
+      "read_at_utc": "2026-10-23T14:54:56.813428+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "80",
+      "team": "Duy Tan 4",
+      "read_at_utc": "2026-10-23T14:55:45.231941+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "80",
+      "team": "Duy Tan 4",
+      "read_at_utc": "2026-10-23T14:56:33.632496+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "80",
+      "team": "Duy Tan 4",
+      "read_at_utc": "2026-10-23T14:57:22.066465+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "80",
+      "team": "Duy Tan 4",
+      "read_at_utc": "2026-10-23T14:58:10.569269+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "80",
+      "team": "Duy Tan 4",
+      "read_at_utc": "2026-10-23T14:58:58.954958+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "80",
+      "team": "Duy Tan 4",
+      "read_at_utc": "2026-10-23T14:59:47.310946+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "80",
+      "team": "Duy Tan 4",
+      "read_at_utc": "2026-10-23T15:00:35.653557+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "80",
+      "team": "Duy Tan 4",
+      "read_at_utc": "2026-10-23T15:01:24.141374+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "81",
+      "team": "CTU 1",
+      "read_at_utc": "2026-10-23T14:54:58.980992+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        199,
+        610
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 91,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 48,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 54,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 43,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 43,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 19,
+          "servings": 25,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 78,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 86,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 73,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 69,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 55,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "81",
+      "team": "CTU 1",
+      "read_at_utc": "2026-10-23T14:55:47.472009+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        621
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 91,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 47,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 55,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 45,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 48,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 27,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 79,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 83,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 71,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 75,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 85,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "81",
+      "team": "CTU 1",
+      "read_at_utc": "2026-10-23T14:56:35.804080+00:00",
+      "expected_days": 10,
+      "score": [
+        20,
+        200,
+        670
+      ],
+      "daily": [
+        {
+          "day": 0,
+          "types": 20,
+          "servings": 67,
+          "submitted": true
+        },
+        {
+          "day": 1,
+          "types": 20,
+          "servings": 66,
+          "submitted": true
+        },
+        {
+          "day": 2,
+          "types": 20,
+          "servings": 78,
+          "submitted": true
+        },
+        {
+          "day": 3,
+          "types": 20,
+          "servings": 87,
+          "submitted": true
+        },
+        {
+          "day": 4,
+          "types": 20,
+          "servings": 30,
+          "submitted": true
+        },
+        {
+          "day": 5,
+          "types": 20,
+          "servings": 74,
+          "submitted": true
+        },
+        {
+          "day": 6,
+          "types": 20,
+          "servings": 91,
+          "submitted": true
+        },
+        {
+          "day": 7,
+          "types": 20,
+          "servings": 55,
+          "submitted": true
+        },
+        {
+          "day": 8,
+          "types": 20,
+          "servings": 80,
+          "submitted": true
+        },
+        {
+          "day": 9,
+          "types": 20,
+          "servings": 42,
+          "submitted": true
+        }
+      ],
+      "response_seconds": 0.0,
+      "days_submitted_field": 110,
+      "complete": true,
+      "consistent": true,
+      "status": "complete"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "81",
+      "team": "CTU 1",
+      "read_at_utc": "2026-10-23T14:57:24.204608+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "81",
+      "team": "CTU 1",
+      "read_at_utc": "2026-10-23T14:58:12.727647+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "81",
+      "team": "CTU 1",
+      "read_at_utc": "2026-10-23T14:59:01.154942+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "81",
+      "team": "CTU 1",
+      "read_at_utc": "2026-10-23T14:59:49.492928+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "81",
+      "team": "CTU 1",
+      "read_at_utc": "2026-10-23T15:00:37.800792+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "81",
+      "team": "CTU 1",
+      "read_at_utc": "2026-10-23T15:01:26.340390+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "82",
+      "team": "CTU 2",
+      "read_at_utc": "2026-10-23T14:55:01.387204+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "82",
+      "team": "CTU 2",
+      "read_at_utc": "2026-10-23T14:55:49.911925+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "82",
+      "team": "CTU 2",
+      "read_at_utc": "2026-10-23T14:56:38.395938+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "82",
+      "team": "CTU 2",
+      "read_at_utc": "2026-10-23T14:57:26.401249+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "82",
+      "team": "CTU 2",
+      "read_at_utc": "2026-10-23T14:58:14.852853+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "82",
+      "team": "CTU 2",
+      "read_at_utc": "2026-10-23T14:59:03.319529+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "82",
+      "team": "CTU 2",
+      "read_at_utc": "2026-10-23T14:59:51.704688+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "82",
+      "team": "CTU 2",
+      "read_at_utc": "2026-10-23T15:00:40.128180+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "82",
+      "team": "CTU 2",
+      "read_at_utc": "2026-10-23T15:01:28.524488+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q01",
+      "question_id": "c57bfe4b-55ef-416f-893f-1ccaf86a8b87",
+      "team_id": "83",
+      "team": "HUIT 1",
+      "read_at_utc": "2026-10-23T14:55:03.419670+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q02",
+      "question_id": "145bdf65-54f2-41ad-a0e0-29783efdf9b3",
+      "team_id": "83",
+      "team": "HUIT 1",
+      "read_at_utc": "2026-10-23T14:55:51.857864+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q03",
+      "question_id": "ca50dfe3-0423-4c4d-be40-7520becda4cf",
+      "team_id": "83",
+      "team": "HUIT 1",
+      "read_at_utc": "2026-10-23T14:56:40.208003+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q04",
+      "question_id": "83f54883-4731-472e-bec2-f36f161b1374",
+      "team_id": "83",
+      "team": "HUIT 1",
+      "read_at_utc": "2026-10-23T14:57:28.928538+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q06",
+      "question_id": "764f35b8-83d2-45f8-99ef-8561a8ceeed3",
+      "team_id": "83",
+      "team": "HUIT 1",
+      "read_at_utc": "2026-10-23T14:58:17.031509+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q07",
+      "question_id": "66bb1d31-0e5e-44b7-a5db-88cb20e31775",
+      "team_id": "83",
+      "team": "HUIT 1",
+      "read_at_utc": "2026-10-23T14:59:05.492578+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q08",
+      "question_id": "777d23b7-18c9-498d-a2b0-fb5e6bcfd0d6",
+      "team_id": "83",
+      "team": "HUIT 1",
+      "read_at_utc": "2026-10-23T14:59:53.894988+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q09",
+      "question_id": "aedebf80-4659-4b77-ae06-0aa2e272baa5",
+      "team_id": "83",
+      "team": "HUIT 1",
+      "read_at_utc": "2026-10-23T15:00:42.241796+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    },
+    {
+      "case": "Q10",
+      "question_id": "483dd871-8ccf-402d-971b-9f17c4615a8a",
+      "team_id": "83",
+      "team": "HUIT 1",
+      "read_at_utc": "2026-10-23T15:01:30.781879+00:00",
+      "expected_days": 10,
+      "score": [
+        0,
+        0,
+        0
+      ],
+      "daily": [],
+      "response_seconds": 0.0,
+      "days_submitted_field": 0,
+      "complete": false,
+      "consistent": true,
+      "status": "no_days"
+    }
+  ]
+}
