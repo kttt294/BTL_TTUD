@@ -1,0 +1,8 @@
+{
+  "unique_pairs_checked": 30000,
+  "weighted_cost_mismatches": 0,
+  "invalid_paths": 0,
+  "different_resource_pairs": 400,
+  "different_spot_sets": 538,
+  "unreachable_pairs": 0
+}

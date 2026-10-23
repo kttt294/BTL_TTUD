@@ -1,0 +1,105 @@
+{
+  "groups": [
+    {
+      "size": 8,
+      "mode": "single",
+      "timed_pairs": 60,
+      "mean_queries": 24,
+      "dijkstra_ms": 1.1650400000993009,
+      "astar_ms": 1.222801667487753,
+      "astar_over_dijkstra": 1.0495791280844684,
+      "dijkstra_faster_pairs": 35,
+      "astar_faster_pairs": 25
+    },
+    {
+      "size": 8,
+      "mode": "many",
+      "timed_pairs": 60,
+      "mean_queries": 372,
+      "dijkstra_ms": 1.553928333305521,
+      "astar_ms": 9.743909999572981,
+      "astar_over_dijkstra": 6.270501535193523,
+      "dijkstra_faster_pairs": 60,
+      "astar_faster_pairs": 0
+    },
+    {
+      "size": 8,
+      "mode": "reuse",
+      "timed_pairs": 60,
+      "mean_queries": 1116,
+      "dijkstra_ms": 1.722453333180359,
+      "astar_ms": 10.495926666771993,
+      "astar_over_dijkstra": 6.0935913122198695,
+      "dijkstra_faster_pairs": 60,
+      "astar_faster_pairs": 0
+    },
+    {
+      "size": 16,
+      "mode": "single",
+      "timed_pairs": 60,
+      "mean_queries": 24,
+      "dijkstra_ms": 4.470324999541238,
+      "astar_ms": 3.654751667030117,
+      "astar_over_dijkstra": 0.817558380521591,
+      "dijkstra_faster_pairs": 9,
+      "astar_faster_pairs": 51
+    },
+    {
+      "size": 16,
+      "mode": "many",
+      "timed_pairs": 60,
+      "mean_queries": 564,
+      "dijkstra_ms": 5.698846666928148,
+      "astar_ms": 47.09648499895896,
+      "astar_over_dijkstra": 8.264213401682099,
+      "dijkstra_faster_pairs": 60,
+      "astar_faster_pairs": 0
+    },
+    {
+      "size": 16,
+      "mode": "reuse",
+      "timed_pairs": 60,
+      "mean_queries": 1692,
+      "dijkstra_ms": 5.532916666440238,
+      "astar_ms": 47.25827666613137,
+      "astar_over_dijkstra": 8.541295579739202,
+      "dijkstra_faster_pairs": 60,
+      "astar_faster_pairs": 0
+    },
+    {
+      "size": 32,
+      "mode": "single",
+      "timed_pairs": 60,
+      "mean_queries": 24,
+      "dijkstra_ms": 21.08539333336618,
+      "astar_ms": 11.928684999535715,
+      "astar_over_dijkstra": 0.565732154527058,
+      "dijkstra_faster_pairs": 0,
+      "astar_faster_pairs": 60
+    },
+    {
+      "size": 32,
+      "mode": "many",
+      "timed_pairs": 60,
+      "mean_queries": 564,
+      "dijkstra_ms": 22.190111666471545,
+      "astar_ms": 174.5718200001041,
+      "astar_over_dijkstra": 7.86709966240845,
+      "dijkstra_faster_pairs": 60,
+      "astar_faster_pairs": 0
+    },
+    {
+      "size": 32,
+      "mode": "reuse",
+      "timed_pairs": 60,
+      "mean_queries": 1692,
+      "dijkstra_ms": 23.62341000007291,
+      "astar_ms": 178.65087333278402,
+      "astar_over_dijkstra": 7.56245069328402,
+      "dijkstra_faster_pairs": 60,
+      "astar_faster_pairs": 0
+    }
+  ],
+  "timed_runs": 1080,
+  "note": "Ba lần đo cùng input không phải ba bản đồ độc lập. Tỷ số là thời gian A* chia Dijkstra, không phải mức tăng điểm toàn trận."
+}

@@ -801,3 +801,17 @@ Bộ mới có 132 lượt và 708 kế hoạch ngày được phát lại hợp
 Bộ số liệu `tour_generalization` được tạo sau khi sửa lỗi truy vết đường không tồn tại trong `Legs.leg` và `Legs.directions`. Mã nguồn tương ứng nằm tại commit `516b296fc754105314394c2df1600322ba16fdea`. Tệp `experiments/data/tour_generalization/verification.json` ghi lần kiểm tra ngày 21/10/2026: đủ 16 tệp mã nguồn, script thí nghiệm và 24 input khớp SHA-256 trong manifest; tính lại summary từ đủ 132 lượt khớp bản lưu; phát lại 708 kế hoạch ngày không sai khác; 11 kiểm thử tour đạt. Hai kiểm thử hồi quy bao gồm chặng không thể tới và điểm bán nằm ở vùng tách rời.
 
 Lưu ý: `--audit-only` chỉ bắt buộc dấu input, model và simulator để phát lại; riêng lần đối chiếu phiên bản nêu trên đã kiểm tra toàn bộ danh sách `source_hashes` và `experiment_sha256`. Các hash chuẩn hóa CRLF thành LF trước khi tính. Tệp xác nhận không thay thế việc kiểm tra lại hash nếu người dùng sửa mã nguồn sau đó. Các kết quả cũ trong báo cáo vẫn giữ phạm vi phiên bản đã ghi nhận, không được coi là đã lập tuyến lại bằng commit này.
+
+## Khảo sát Dijkstra lưu cây và A* lưu từng cặp
+
+Phép thử tại `experiments/benchmark/path_reuse.py` phục vụ lựa chọn bộ tạo chặng của tour. Đây là bài toán chi phí trọng số với một nhãn mỗi ô; nó khác khảo sát đa nhãn có ràng buộc tài nguyên trong `search.py`. Mã `tour.py` được giữ nguyên.
+
+```powershell
+python -X utf8 experiments/run.py path_reuse --audit-only
+python -X utf8 experiments/run.py path_reuse --repeats 3
+python -X utf8 -m unittest discover -s tests -p test_path_reuse.py -v
+```
+
+Lệnh đầu kiểm tra SHA-256 mã nguồn, 30 input đã lưu và tính lại bảng tổng hợp thời gian. Lệnh thứ hai đo lại và ghi đè dữ liệu trong `experiments/data/path_reuse`, nên cần sao lưu thư mục này nếu muốn giữ lần đo cũ. Nó kiểm tra 30.000 cặp chặng trước khi đo: đối chiếu chi phí trọng số và tính lại step, nhiên liệu, điểm bán đi qua từ các hướng. `manifest.json` mô tả tác vụ, thứ tự và phạm vi; `results.json` giữ đủ 1.080 lượt thời gian, `summary.json` tổng hợp theo kích thước/tác vụ, `audit.json` giữ kết quả đối chiếu, `machine.json` ghi môi trường. Hai phương pháp đều lưu kết quả cặp; Dijkstra còn tái sử dụng cây chung nguồn.
+
+Trên lần đo 23/10/2026, A* nhanh hơn trung bình ở tác vụ một đích trên cỡ 16 và 32; Dijkstra lưu cây nhanh hơn khoảng 6–8 lần khi cần mọi đích. Có 400 cặp khác bộ step/nhiên liệu và 538 cặp khác tập điểm bán đi qua dù cùng chi phí trọng số. Vì vậy, kết quả này hỗ trợ lựa chọn kiến trúc cache của tour trong khối lượng công việc đã đo; nó không chứng minh ưu thế điểm toàn trận, không thay kết quả Practice và không khẳng định Dijkstra tốt nhất trên mọi tác vụ. Không có API hoặc token nào được sử dụng.

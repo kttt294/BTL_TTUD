@@ -26,7 +26,7 @@
       "test_tour_handles_spot_on_disconnected_island"
     ]
   },
-  "scope": "Đối chiếu phiên bản và phát lại output đã lưu; không lập tuyến lại, không gọi API, không thay điểm Practice. Các bảng 23 và 24 sau khi đánh số lại tương ứng mục 6.10.",
+  "scope": "Đối chiếu phiên bản và phát lại output đã lưu; không lập tuyến lại, không gọi API, không thay điểm Practice. Các kết quả tương ứng hai bảng ở mục 6.10, độc lập với việc đánh lại số bảng trong báo cáo.",
   "source_hashes": {
     "src/hexudon/__init__.py": "55c77a20188bff004691aab7087215035aa737842234dc6b0081ecc42eb35247",
     "src/hexudon/__main__.py": "84302ec222e52be662a7e4643bbf1a92a50b5a0794c35e5649b82814d794c034",
