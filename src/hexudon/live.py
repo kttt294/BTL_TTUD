@@ -613,8 +613,8 @@ def main():
     parser.add_argument('game_id',nargs='?',help='ID trận hoặc ID Practice, có thể nhập khi được hỏi')
     parser.add_argument('--game-id',dest='id_option')
     parser.add_argument('--algorithm','--predict',choices=['greedy','lookahead','rollout','tour'],default='tour')
-    parser.add_argument('--mode',choices=['auto','timed','practice'],
-                        help='Mặc định timed; ID có dạng câu_hỏi:đội thì practice')
+    parser.add_argument('--mode',choices=['auto','timed','practice'],default='auto',
+                        help='Mặc định tự nhận: trận có đồng hồ ngày là timed, Practice là practice')
     parser.add_argument('--seconds',type=float,
                         help='Trần giây lập kế hoạch mỗi ngày; mặc định daySeconds của config trừ --reserve')
     parser.add_argument('--reserve',type=float,default=4.,
@@ -667,8 +667,7 @@ def main():
         PARAMS['native']=False
     if args.preflight:
         parser.exit(1 if preflight(api,game_id,folder,workers,args.reserve) else 0)
-    mode=args.mode or ('practice' if ':' in game_id else 'timed')
-    runner=MatchRunner(api,game_id,folder,algorithm=args.algorithm,mode=mode,seconds=args.seconds,
+    runner=MatchRunner(api,game_id,folder,algorithm=args.algorithm,mode=args.mode,seconds=args.seconds,
         reserve=args.reserve,selection_seconds=args.selection_seconds,roles=args.roles,kinds=args.types,
         poll=args.poll,dry_run=args.dry_run,inspect=args.inspect,max_days=args.max_days,team_id=team,
         predictor=partial(predict,workers=workers,seed=args.seed,parallel_objective=args.parallel_objective),

@@ -91,8 +91,8 @@ cuối `Kết quả: sẵn sàng.` Mỗi dòng `CẢNH BÁO` cần xử lý trư
 python play.py ID_TRAN
 ```
 
-Chỉ vậy là đủ: mặc định là trận tính giờ, planner `tour` (C++), số luồng = số nhân CPU − 2 (tối đa
-14), không cần `-X utf8`. Runner sẽ:
+Chỉ vậy là đủ: runner tự nhận trận tính giờ hay Practice, planner `tour` (C++), số luồng = số nhân
+CPU − 2 (tối đa 14), không cần `-X utf8`. Runner sẽ:
 
 1. **Chọn vai trò** trong `agent_selection_time_limit − 4` giây: mô phỏng cả trận cho tối đa 16 đội
    hình bằng C++ nhiều luồng, loại dần đội hình kém, rồi nộp đội hình tốt nhất.
@@ -132,8 +132,9 @@ runner tự dọn khi đọc được kết quả cuối trận. Muốn giữ lo
 
 ## 3. Chạy Practice (luyện tập trên website BTC)
 
-ID Practice có dạng `ID_CAU_HOI:ID_DOI` (ví dụ `4567:62`). Practice không tính giờ; ID có dấu `:`
-thì runner tự chuyển sang chế độ practice.
+ID Practice lấy trên website (dạng mã game hoặc `ID_CAU_HOI:ID_DOI`). Practice không tính giờ; runner
+tự nhận chế độ practice. Nếu runner báo đang chờ máy chủ chuyển ngày mà không tiến, chạy lại kèm
+`--mode practice`.
 
 ```powershell
 python play.py ID_CAU_HOI:62
@@ -149,7 +150,7 @@ bị thay bằng lượt mới), rồi chạy với `--run-dir` mới.
 | Tham số | Mặc định | Ý nghĩa |
 |---|---|---|
 | `ID_TRAN` hoặc `--game-id` | hỏi khi chạy | ID trận, hoặc `câu_hỏi:đội` cho Practice |
-| `--mode` | `timed` (ID có `:` thì `practice`) | Ép chế độ: `timed`, `practice` hoặc `auto` (tự nhận theo máy chủ) |
+| `--mode` | `auto` | Tự nhận theo máy chủ (trận có đồng hồ ngày là `timed`, Practice là `practice`); ép bằng `timed` hoặc `practice` nếu runner báo không phân biệt được |
 | `--algorithm` | `tour` | `tour` (khuyên dùng), `greedy` (dự phòng đơn giản) |
 | `--workers` | số nhân − 2, tối đa 14 | Số luồng C++ (hoặc tiến trình Python) lập tuyến song song |
 | `--seconds` | `daySeconds − reserve` | Trần thời gian lập tuyến mỗi ngày |
