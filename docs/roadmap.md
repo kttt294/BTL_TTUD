@@ -207,3 +207,20 @@ thử bản dựng không nhiễu. Sửa cả ba (`experiments/suite.py`, 1 giâ
 Mất D ở 1 giây/ngày ngang nhau (Q01 3/8 cả hai, Q03 0/8 so với 1/8). Diễn tập thi tính giờ
 (12 giây/ngày, độ trễ 0,3 giây, 5% lỗi 503): Q01 (20, 200, 615), Q03 (20, 200, 693), không ngày
 nào thiếu bài. Đo bộ chọn đội hình: gần bằng đội hình tốt nhất (xem giai đoạn 5).
+
+## Các hướng giảng viên gợi ý (nhánh test, 10/2026)
+
+Đo trên bộ 300 bản đồ (`experiments/suite.py`, dev 200 + test 100, chạy xen kẽ) và 8 đề BTC.
+
+| Hướng | Kết quả | Quyết định |
+|---|---|---|
+| C++ (`native/hexplan.cpp`) | Nhanh hơn Python 16–24 lần. Cùng 1 giây/ngày, 1 luồng: btc Q +4,05% (thắng 98/100), wide +0,86%, thêm D. Ngân sách thi (14 luồng × 10 giây): +6,6 suất/trận, +1 D, thắng 6/8 đề BTC | Bật mặc định |
+| Nhiệt độ (SA, T=2) | 4 luồng × 1 giây: dev btc +0,78–0,95%, wide +0,34–0,36%; test btc +0,93%, wide +0,63%; ngân sách thi +5,4 suất/trận, thắng 6/8 | Bật mặc định |
+| K nhiệt độ (mỗi luồng một T, 0→4) | dev btc +0,62–0,80%, wide +0,61%, D tốt nhất; test btc +0,50%, wide +0,15% | Kém SA trên tập test, giữ làm tùy chọn |
+| PSO rời rạc (quần thể) | btc +0,40–0,58%, wide 0% | Kém SA, giữ làm tùy chọn |
+| Beam/top-k qua ngày (độ sâu 2) | btc +0,19–0,36%, wide +0,33% nhưng mất 3–6 D | Loại |
+| ILP (CP-SAT) | 8×8: chứng minh tối ưu 40/40 ngày và tour đạt đúng tối ưu cả 40 ngày; 16×16: không chứng minh kịp, kế hoạch kém tour 20 suất/ngày; 32×32: kém xa. Ensemble không thắng tour ngày nào | Giữ làm công cụ đo |
+
+Diễn tập thi tính giờ với C++ + SA (12 giây/ngày, độ trễ 0,3 giây, 5% lỗi 503): Q01 (20, 200, 638),
+Q03 (20, 200, 707), 3011 (14, 126, 702), không ngày nào thiếu bài; thời gian phản hồi lũy kế tăng
+khoảng 8 giây/trận vì tìm được bài tốt hơn muộn hơn.

@@ -408,10 +408,11 @@ def extended_move(problem, routes, variants, rng, kind=None):
 # Tham số tìm kiếm (giá trị mặc định = cấu hình đã kiểm chứng). Các thí nghiệm ghi đè trong tiến
 # trình con. OPERATOR_WEIGHTS: xác suất chọn từng toán tử phá; ALNS > 0 bật tự điều chỉnh trọng số
 # theo mức thành công (tốc độ học), 0 = giữ cố định.
-# native: chạy bản C++ (native/hexplan.cpp) khi có file chạy, lỗi thì quay về bản Python.
+# native: chạy bản C++ (native/hexplan.cpp) khi có file chạy, lỗi thì quay về bản Python. temperature 2:
+# SA đo trên 300 bản đồ +0,8–0,9% suất (btc), ngân sách thi 14 luồng × 10 giây +5,4 suất/trận.
 # temperature, ktemp, search ("lns" | "pso"): chỉ bản C++ dùng (xem native/hexplan.cpp).
-PARAMS = {"positions": 3, "noise": 0.5, "max_remove": 4, "segment": 4, "alns": 0.0, "escort": True, "native": False,
-          "temperature": 0.0, "ktemp": False, "search": "lns",
+PARAMS = {"positions": 3, "noise": 0.5, "max_remove": 4, "segment": 4, "alns": 0.0, "escort": True, "native": True,
+          "temperature": 2.0, "ktemp": False, "search": "lns",
           "weights": {"variant_segment": 0.105, "segment": 0.14, "random": 0.455,
                       "reverse": 0.12, "swap": 0.09, "worst": 0.09}}
 EXTENDED = ("reverse", "swap", "worst")

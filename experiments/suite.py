@@ -28,6 +28,7 @@ from hexudon.simulator import simulate_day
 SPLITS = {"dev": [("btc", 2000, 100), ("wide", 3000, 100)], "test": [("btc", 8000, 50), ("wide", 8500, 50)]}
 VARIANTS = {
     "base": {},
+    "python": {"native": False, "temperature": 0.0},
     "base2": {},
     "alns": {"alns": 0.2},
     "alns_fast": {"alns": 0.5},
@@ -41,6 +42,11 @@ VARIANTS = {
     "native_sa": {"native": True, "temperature": 2.0},
     "native_ktemp": {"native": True, "temperature": 4.0, "ktemp": True},
     "native_pso": {"native": True, "search": "pso"},
+    "native2": {"native": True},
+    "native_sa1": {"native": True, "temperature": 1.0},
+    "native_sa4": {"native": True, "temperature": 4.0},
+    "native_ktemp2": {"native": True, "temperature": 2.0, "ktemp": True},
+    "native_ktemp8": {"native": True, "temperature": 8.0, "ktemp": True},
     "extended_heavy": {"weights": {"variant_segment": 0.08, "segment": 0.1, "random": 0.27,
                                    "reverse": 0.25, "swap": 0.15, "worst": 0.15}},
 }

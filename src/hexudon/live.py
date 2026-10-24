@@ -17,7 +17,8 @@ from .model import Agent, Board, State
 from .planner import plan_day
 from .simulator import simulate_day
 from .team_selection import select_types
-from .tour import make_session, plan_key, reaches_bound, warm_up
+from . import native
+from .tour import PARAMS, make_session, plan_key, reaches_bound, warm_up
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -565,6 +566,9 @@ def preflight(api, game_id, folder, workers, reserve):
             report(min(seconds)-reserve >= 5, f'Ngân sách lập kế hoạch nhỏ nhất {min(seconds)-reserve:.0f} giây/ngày.')
     cores = os.cpu_count() or 1
     report(cores >= workers+2, f'{cores} nhân CPU, dùng {workers} tiến trình song song.')
+    if PARAMS['native']:
+        report(native.available(), f'Planner C++ {"sẵn sàng" if native.available() else "KHÔNG chạy được, dùng bản Python"} '
+                                   f'({native.EXE.name}).')
     if workers > 1:
         from .tour import warm_up
         started = time.perf_counter()
@@ -617,6 +621,7 @@ def main():
     parser.add_argument('--seed', type=int, default=0, help='Seed đầu tiên; mỗi tiến trình dùng một seed kế tiếp')
     parser.add_argument('--parallel-objective', choices=['score', 'lookahead'], default='lookahead',
                         help='score: chọn theo U,D,Q cuối ngày; lookahead: xét thêm dự báo loại ngày mai')
+    parser.add_argument('--no-native',action='store_true',help='Không dùng planner C++, chạy bản Python')
     parser.add_argument('--max-days',type=int)
     parser.add_argument('--dry-run',action='store_true')
     parser.add_argument('--inspect',action='store_true',help='Chỉ đọc cấu hình/trạng thái, không chọn vai trò hay nộp bài')
@@ -640,6 +645,12 @@ def main():
     if ':' in game_id and game_id.rsplit(':',1)[1]!=team:
         parser.error('Hậu tố ID Practice không khớp ID đội trong token/--team.')
     folder=Path(args.run_dir) if args.run_dir else ROOT/'results/live'/f"{game_id.split(':')[0]}_{team}"
+    if args.no_native:
+        PARAMS['native']=False
+    elif PARAMS['native'] and args.algorithm=='tour' and not native.build():
+        # Thiếu g++ hoặc biên dịch lỗi: vẫn thi được bằng planner Python.
+        print('CẢNH BÁO: không biên dịch được planner C++; dùng bản Python.',flush=True)
+        PARAMS['native']=False
     if args.preflight:
         parser.exit(1 if preflight(api,game_id,folder,workers,args.reserve) else 0)
     runner=MatchRunner(api,game_id,folder,algorithm=args.algorithm,mode=args.mode,seconds=args.seconds,

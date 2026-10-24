@@ -90,7 +90,7 @@ def solve_day(board, state, steps, seconds=30.0, workers=8, hint=None):
     model.Maximize(big * (len(brands) + 1) * sum(new_brands) + big * sum(covered_brand) + sum(portions))
     if hint:
         for (car, i), var in visit.items():
-            model.AddHint(var, i in hint.get(car, ()))
+            model.AddHint(var, spots[i]["pos"] in hint.get(car, ()))
     solver = cp_model.CpSolver()
     solver.parameters.max_time_in_seconds = seconds
     solver.parameters.num_workers = workers
@@ -129,6 +129,23 @@ def plan_from_routes(board, state, steps, routes):
     return tour.commands(problem, runs, {car: hub for car, hub in option})
 
 
+def visited_spots(board, state, actions):
+    """Điểm udon mỗi xe tuần tra đi qua theo lệnh (dùng làm gợi ý khởi đầu cho CP-SAT)."""
+    spots = {s["pos"] for s in board.spots}
+    hint = {}
+    for car, commands in enumerate(actions):
+        if state.agents[car].kind != 0:
+            continue
+        pos, seen = state.agents[car].pos, set()
+        for command in commands:
+            if command >= 0:
+                pos = board.neighbor(pos, command)
+                if pos in spots:
+                    seen.add(pos)
+        hint[car] = seen
+    return hint
+
+
 def config_path(name):
     path = EVIDENCE / f"{name}_config.json"
     return path if path.exists() else MOCK / f"{name}.json"
@@ -156,7 +173,7 @@ def main():
             tour_after = simulate_day(board, state, actions, steps).state
             tour_score = (len(tour_after.brands - state.brands), tour_after.daily_sum - state.daily_sum,
                           tour_after.portions - state.portions)
-            result = solve_day(board, state, steps, args.seconds)
+            result = solve_day(board, state, steps, args.seconds, hint=visited_spots(board, state, actions))
             ilp_plan = ilp_score = None
             if result:
                 bound, value, routes, status = result
