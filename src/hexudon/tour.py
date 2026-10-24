@@ -773,23 +773,29 @@ def next_coverage(board, state):
     return types_coverage(board, state, steps, hubs)
 
 
-def plan_tour_parallel(board, state, steps, seconds=2.0, alpha=1.0, workers=8):
+def plan_tour_parallel(board, state, steps, seconds=2.0, alpha=1.0, workers=8,
+                       seed=0, objective="lookahead", return_details=False):
     """Chạy nhiều seed song song, chọn theo (U, loại hôm nay, loại ngày mai, số suất).
 
     Mỗi tiến trình gửi một kế hoạch tạm ở nửa ngân sách; nếu kết quả cuối không kịp về (bản đồ
     quá lớn, máy quá tải) thì dùng kế hoạch tạm tốt nhất thay vì bỏ trống.
     """
     started = time.time()
-    session = AnytimeSession(board, state, steps, seconds, seconds * 0.5, workers, alpha)
+    session = AnytimeSession(board, state, steps, seconds, seconds * 0.5, workers, alpha,
+                             seed=seed, objective=objective)
     if not session.futures:
         # Nhóm tiến trình hỏng hoặc đã đóng: hôm nay chạy một tiến trình, ngày sau tạo lại nhóm.
-        return plan_tour(board, state, steps, max(0.0, started + seconds * 0.8 - time.time()), alpha, 0)
-    return session.final()
+        actions = plan_tour(board, state, steps, max(0.0, started + seconds * 0.8 - time.time()), alpha, seed)
+    else:
+        actions = session.final()
+    details = session.details(actions)
+    return (actions, details) if return_details else actions
 
 
-def choose_best(board, state, steps, candidates, limit):
+def choose_best(board, state, steps, candidates, limit, objective="lookahead"):
     """Chọn theo (U, loại hôm nay, loại ngày mai ước lượng, số suất) trong các kế hoạch hợp lệ.
 
+    objective="score" chỉ dùng (U, loại hôm nay, số suất), phục vụ đối chứng nhiều seed.
     Ước lượng ngày mai tốn thời gian: chỉ xét nhóm có (U, loại hôm nay) cao nhất, theo số suất
     giảm dần, dừng ở kế hoạch đầu tiên đủ loại cho ngày mai hoặc khi quá `limit` (time.time()).
     """
@@ -803,6 +809,9 @@ def choose_best(board, state, steps, candidates, limit):
     if not plans:
         return None
     plans.sort(key=lambda item: item[0], reverse=True)
+    if objective == "score":
+        # Thử nghiệm thuần nhiều seed: chỉ so điểm thật cuối ngày, không thêm dự báo.
+        return plans[0][1]
     top = [item for item in plans if item[0][:2] == plans[0][0][:2]]
     full = len({s["brand"] for s in board.spots})
     best = None
@@ -888,8 +897,16 @@ class AnytimeSession:
     qua hàng đợi rồi tối ưu tiếp, nên bài cuối không phải chạy lại từ đầu.
     """
 
-    def __init__(self, board, state, steps, seconds, quick, workers=8, alpha=1.0, every=0.0):
+    def __init__(self, board, state, steps, seconds, quick, workers=8, alpha=1.0, every=0.0,
+                 seed=0, objective="lookahead"):
+        if workers < 1 or objective not in ("score", "lookahead"):
+            raise ValueError("Cần ít nhất một tiến trình và cách chọn score hoặc lookahead.")
         self.board, self.state, self.steps, self.workers = board, state, steps, workers
+        self.seeds = list(range(seed, seed + workers))
+        self.objective = objective
+        self.valid_count = self.invalid_count = 0
+        self.finished_count = self.failed_count = self.pending_count = 0
+        self.started = time.perf_counter()
         started = time.time()
         self.until = started + max(0.0, seconds - 0.4 - 0.05 * workers)
         self.quick_at = started + max(0.0, min(quick, seconds) - 0.3 - 0.03 * workers)
@@ -906,7 +923,7 @@ class AnytimeSession:
             self.queue = _queue()
             times = [self.quick_at] + self.marks
             jobs = [(board, state, steps, self.until, list(times), self.queue, alpha, seed)
-                    for seed in range(workers)]
+                    for seed in self.seeds]
             self.futures = [_pool(workers).submit(_anytime_job, job) for job in jobs]
         except Exception:
             _POOL, self.futures = None, []
@@ -931,7 +948,7 @@ class AnytimeSession:
         self._drain()
         early = [f.result() for f in self.futures if f.done() and f.exception() is None and f.result()]
         return choose_best(self.board, self.state, self.steps, self.candidates + early,
-                           time.time() + 0.3)
+                           time.time() + 0.3, self.objective)
 
     def _score_new(self, extra=()):
         """Chấm các kế hoạch mới nhận (và `extra`), giữ 4 kế hoạch tốt nhất theo (U, loại, suất)."""
@@ -940,10 +957,13 @@ class AnytimeSession:
         for actions in fresh:
             checked = simulate_day(self.board, self.state, actions, self.steps)
             if checked.valid:
+                self.valid_count += 1
                 after = checked.state
                 key = (len(after.brands), after.daily_sum - self.state.daily_sum,
                        after.portions - self.state.portions)
                 self.top.append((key, actions))
+            else:
+                self.invalid_count += 1
         self.top = sorted(self.top, key=lambda item: item[0], reverse=True)[:4]
 
     def best_until(self, moment):
@@ -955,7 +975,8 @@ class AnytimeSession:
         self._drain()
         done = [f.result() for f in self.futures if f.done() and f.exception() is None and f.result()]
         self._score_new(done)
-        return choose_best(self.board, self.state, self.steps, [a for _, a in self.top], time.time() + 0.3)
+        return choose_best(self.board, self.state, self.steps, [a for _, a in self.top],
+                           time.time() + 0.3, self.objective)
 
     def final(self):
         """Kế hoạch tốt nhất khi mọi tiến trình hết ngân sách, so cả với các kế hoạch tạm."""
@@ -963,10 +984,16 @@ class AnytimeSession:
         if not self.futures:
             return None
         done, pending = wait(self.futures, timeout=max(0.0, self.until + 0.3 - time.time()))
+        self.finished_count, self.pending_count = len(done), len(pending)
         for future in pending:
             future.cancel()
         results = []
         for future in done:
+            if future.cancelled():
+                self.failed_count += 1
+                continue
+            if future.exception() is not None:
+                self.failed_count += 1
             if isinstance(future.exception(), BrokenProcessPool):
                 _POOL = None
             if future.exception() is None and future.result() is not None:
@@ -974,10 +1001,20 @@ class AnytimeSession:
         self._drain()
         self._score_new(results)
         return choose_best(self.board, self.state, self.steps, [a for _, a in self.top],
-                           self.until + 0.3 + 0.05 * self.workers)
+                           self.until + 0.3 + 0.05 * self.workers, self.objective)
+
+    def details(self, actions):
+        """Lưu bằng chứng các seed đã chạy và điểm thật của kế hoạch được chọn."""
+        checked = simulate_day(self.board, self.state, actions, self.steps) if actions else None
+        return {"workers": self.workers, "seeds": self.seeds, "objective": self.objective,
+                "finished_workers": self.finished_count, "failed_workers": self.failed_count,
+                "pending_workers": self.pending_count, "valid_candidates": self.valid_count,
+                "invalid_candidates": self.invalid_count,
+                "selected_score": list(checked.state.score()) if checked and checked.valid else None,
+                "elapsed": time.perf_counter() - self.started}
 
 
-def plan_key(board, state, actions, after=None, floor=None):
+def plan_key(board, state, actions, after=None, floor=None, objective="lookahead"):
     """Thứ tự so hai kế hoạch cùng ngày: (U, loại hôm nay, loại ngày mai ước lượng, số suất).
 
     Kết quả trong ngày của đội mình chỉ phụ thuộc lệnh của đội và giao thông cố định của ngày,
@@ -992,4 +1029,6 @@ def plan_key(board, state, actions, after=None, floor=None):
     key = (len(after.brands), after.daily_sum - state.daily_sum)
     if floor is not None and key < floor[:2]:
         return None
+    if objective == "score":
+        return key + (after.portions - state.portions,)
     return key + (next_coverage(board, after), after.portions - state.portions)

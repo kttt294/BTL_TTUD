@@ -79,11 +79,12 @@ def authoritative_state(board, raw, own, journal):
     return state
 
 
-def predict(board, state, algorithm, seconds, workers=1):
+def predict(board, state, algorithm, seconds, workers=1, seed=0, parallel_objective="lookahead"):
     if algorithm != 'rollout':
-        plan = plan_day(board, state, board.day_steps[state.day], algorithm, seconds, workers=workers)
+        plan = plan_day(board, state, board.day_steps[state.day], algorithm, seconds, workers=workers,
+                        seed=seed, parallel_objective=parallel_objective)
         return plan.actions, {'algorithm': algorithm, 'fallback': plan.fallback,
-                              'searches': plan.searches}
+                              'searches': plan.searches, 'parallel': plan.details}
     deadline = time.monotonic() + seconds
     # Luôn tạo một kế hoạch khả thi trước; không dùng giả định tương lai để kiểm tra ngày hiện tại.
     candidates = []
@@ -116,7 +117,8 @@ class MatchRunner:
     def __init__(self, api, game_id, folder, algorithm='greedy', mode='auto',
                  seconds=20., reserve=4., selection_seconds=8., roles='auto', kinds=None,
                  poll=1., dry_run=False, inspect=False, max_days=None, clock=time,
-                 predictor=predict, team_id=None, resubmit=True, workers=1):
+                 predictor=predict, team_id=None, resubmit=True, workers=1, seed=0,
+                 parallel_objective="lookahead"):
         self.api, self.game_id, self.folder = api, game_id, Path(folder)
         self.team_id = str(team_id or api.team_id or '')
         if not self.team_id:
@@ -129,6 +131,7 @@ class MatchRunner:
         self.resubmit, self.config = resubmit, {}
         # workers > 1 với tour: một phiên tìm kiếm cho cả ngày, nộp nhanh rồi lấy bài cuối.
         self.workers, self.session = workers, None
+        self.seed, self.parallel_objective = seed, parallel_objective
         self.folder.mkdir(parents=True, exist_ok=True)
         self.checkpoint = self.folder/('preview_checkpoint.json' if dry_run else 'checkpoint.json')
         self.journal = json.loads(self.checkpoint.read_text(encoding='utf-8')) if self.checkpoint.exists() else {'submitted': {}}
@@ -160,7 +163,8 @@ class MatchRunner:
 
     def submit_if_better(self, board, state, day, entry, candidate, deadline, mode, label):
         """Nộp `candidate` nếu simulator xác nhận tốt hơn bài đã nộp; True khi máy chủ đã nhận."""
-        old_key, new_key = plan_key(board, state, entry['actions']), plan_key(board, state, candidate)
+        old_key = plan_key(board, state, entry['actions'], objective=self.parallel_objective)
+        new_key = plan_key(board, state, candidate, objective=self.parallel_objective)
         if new_key is None or old_key is not None and new_key <= old_key:
             return False
         if deadline is not None and deadline-self.clock.monotonic() <= .5:
@@ -381,7 +385,8 @@ class MatchRunner:
                     quick = min(5., max(2., .12*budget))
                     # Các tiến trình gửi kế hoạch mỗi 2 giây để nộp lại ngay khi có bài tốt hơn.
                     self.session = AnytimeSession(board, state, board.day_steps[day], budget, quick,
-                                                  self.workers, every=CHECK_EVERY)
+                                                  self.workers, every=CHECK_EVERY, seed=self.seed,
+                                                  objective=self.parallel_objective)
                     actions, metrics, budget = self.session.quick(), {'algorithm': 'tour', 'anytime': True}, quick
                 if actions is None:
                     # Phiên song song chưa kịp có bài nhanh: lập nhanh một bài riêng, giữ phiên để lấy bài cuối.
@@ -482,7 +487,8 @@ class MatchRunner:
                     better, metrics = self.predictor(board, state, self.algorithm, max(.5, budget-2))
             else:
                 better, metrics = self.predictor(board, state, self.algorithm, budget)
-            old_key, new_key = plan_key(board, state, entry['actions']), plan_key(board, state, better)
+            old_key = plan_key(board, state, entry['actions'], objective=self.parallel_objective)
+            new_key = plan_key(board, state, better, objective=self.parallel_objective)
         except Exception as error:
             entry['improve'] = {'error': f'{type(error).__name__}: {error}'[:200]}
             self.save()
@@ -608,6 +614,9 @@ def main():
     parser.add_argument('--poll',type=float,default=1.)
     parser.add_argument('--workers',type=int,
                         help='Số tiến trình chạy seed song song cho tour; mặc định số nhân CPU trừ 2')
+    parser.add_argument('--seed', type=int, default=0, help='Seed đầu tiên; mỗi tiến trình dùng một seed kế tiếp')
+    parser.add_argument('--parallel-objective', choices=['score', 'lookahead'], default='lookahead',
+                        help='score: chọn theo U,D,Q cuối ngày; lookahead: xét thêm dự báo loại ngày mai')
     parser.add_argument('--max-days',type=int)
     parser.add_argument('--dry-run',action='store_true')
     parser.add_argument('--inspect',action='store_true',help='Chỉ đọc cấu hình/trạng thái, không chọn vai trò hay nộp bài')
@@ -619,6 +628,8 @@ def main():
         parser.error('ID trận không hợp lệ; chỉ nhập ID, không nhập toàn bộ URL.')
     workers=args.workers if args.workers is not None else (
         max(1,min(14,(os.cpu_count() or 2)-2)) if args.algorithm=='tour' else 1)
+    if workers < 1:
+        parser.error('--workers phải ít nhất là 1.')
     if (args.seconds is not None and args.seconds<=0) or args.reserve<1 or args.poll<=0 or (
             args.selection_seconds is not None and args.selection_seconds<0):
         parser.error('Ngân sách và poll phải dương; reserve ít nhất một giây.')
@@ -634,7 +645,8 @@ def main():
     runner=MatchRunner(api,game_id,folder,algorithm=args.algorithm,mode=args.mode,seconds=args.seconds,
         reserve=args.reserve,selection_seconds=args.selection_seconds,roles=args.roles,kinds=args.types,
         poll=args.poll,dry_run=args.dry_run,inspect=args.inspect,max_days=args.max_days,team_id=team,
-        predictor=partial(predict,workers=workers),resubmit=not args.no_resubmit,workers=workers)
+        predictor=partial(predict,workers=workers,seed=args.seed,parallel_objective=args.parallel_objective),
+        resubmit=not args.no_resubmit,workers=workers,seed=args.seed,parallel_objective=args.parallel_objective)
     try:
         with run_lock(folder):
             finished = runner.run()

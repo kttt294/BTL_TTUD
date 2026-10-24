@@ -15,17 +15,21 @@ class Plan:
     fallback: bool
     errors: list[str]
     searches: int
+    details: dict = None
 
 
-def plan_day(board, state, steps, strategy="greedy", seconds=2.0, alpha=1.0, workers=1, seed=0):
+def plan_day(board, state, steps, strategy="greedy", seconds=2.0, alpha=1.0, workers=1, seed=0,
+             parallel_objective="lookahead"):
     if strategy not in ("greedy", "lookahead", "tour"):
         raise ValueError("Chiến lược phải là greedy, lookahead hoặc tour.")
     started = time.perf_counter()
     if strategy == "tour":
         from .tour import plan_tour, plan_tour_parallel
+        details = None
         try:
             if workers > 1:
-                actions = plan_tour_parallel(board, state, steps, seconds * 0.9, alpha, workers)
+                actions, details = plan_tour_parallel(board, state, steps, seconds * 0.9, alpha, workers,
+                                                     seed, parallel_objective, return_details=True)
             else:
                 actions = plan_tour(board, state, steps, seconds * 0.9, alpha, seed)
         except Exception as error:  # Lỗi lập trình trên bản đồ lạ không được làm mất ngày thi.
@@ -34,7 +38,7 @@ def plan_day(board, state, steps, strategy="greedy", seconds=2.0, alpha=1.0, wor
         if actions is not None:
             checked = simulate_day(board, state, actions, steps)
             if checked.valid:
-                return Plan(actions, time.perf_counter() - started, False, [], 0)
+                return Plan(actions, time.perf_counter() - started, False, [], 0, details)
         # Tuyến cả đội lỗi thì dùng Greedy với phần thời gian còn lại, không đứng chờ cả ngày.
         plan = plan_day(board, state, steps, "greedy", max(0.05, seconds - (time.perf_counter() - started)))
         plan.fallback = True
