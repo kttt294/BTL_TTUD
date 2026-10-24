@@ -1,6 +1,6 @@
 # Hướng dẫn vận hành ngày thi
 
-Dành cho người chạy máy thi. Mọi lệnh chạy từ thư mục gốc dự án, PowerShell, Python 3.10+.
+Dành cho người chạy máy thi. Mọi lệnh chạy từ thư mục gốc dự án, PowerShell, Python 3.10+ (không cần `-X utf8`).
 
 ## Trước trận (làm sớm, ít nhất 30 phút trước giờ chọn vai trò)
 
@@ -12,7 +12,7 @@ Dành cho người chạy máy thi. Mọi lệnh chạy từ thư mục gốc d�
 3. **Kiểm tra trước trận** khi đã có ID trận (chỉ đọc, không nộp bài):
 
    ```powershell
-   python -X utf8 play_match.py --preflight --game-id ID_TRAN --algorithm tour
+   python play.py ID_TRAN --preflight
    ```
 
    Phải thấy `Kết quả: sẵn sàng.` Nếu có `CẢNH BÁO`, xử lý trước khi chạy thật (token, mạng,
@@ -21,7 +21,7 @@ Dành cho người chạy máy thi. Mọi lệnh chạy từ thư mục gốc d�
 ## Chạy trận
 
 ```powershell
-python -X utf8 play_match.py --algorithm tour --mode timed ID_TRAN
+python play.py ID_TRAN
 ```
 
 - Không cần thêm tham số: ngân sách lập kế hoạch tự lấy theo `daySeconds` của config trừ 4 giây

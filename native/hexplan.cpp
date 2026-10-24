@@ -21,6 +21,7 @@
 #include <condition_variable>
 #include <cstdio>
 #include <cstdlib>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -53,6 +54,7 @@ struct Spot {
 
 struct Board {
     int width = 0, height = 0, fuel_limit = 0, brand_count = 0;
+    double busy_threshold = 3, jammed_threshold = 4;
     vector<int> terrain, day_steps, spot_index;  // spot_index: ô -> chỉ số điểm, -1 nếu không có
     vector<Spot> spots;                          // brand đã đánh lại 0..brand_count-1
 
@@ -92,6 +94,9 @@ struct State {
     unordered_map<int, int> traffic;
     Bits brands;
     int day = 0;
+    // Chỉ chế độ chọn đội hình dùng: lịch sử 2 ngày số lần xe đứng trên ô đường, điểm cộng dồn.
+    vector<unordered_map<int, int>> road_history;
+    int daily_sum = 0, portions = 0;
 };
 
 // ---------------------------------------------------------------- số ngẫu nhiên (giao diện như random.Random)
@@ -247,6 +252,8 @@ struct Params {
     double temperature = 0.0;
     bool ktemp = false;
     int search = 0;
+    // last_day_free: ngày cuối không chừa nhiên liệu quay về điểm hẹn (không còn ngày sau).
+    bool last_day_free = false;
 };
 enum Operator { VARIANT_SEGMENT, SEGMENT, RANDOM, REVERSE, SWAP, WORST };
 
@@ -304,6 +311,7 @@ struct DayProblem {
 
     int reserve(int pos) {
         if (hubs.empty()) return 0;
+        if (params.last_day_free && state.day >= (int)board.day_steps.size() - 1) return 0;
         auto it = reserves.find(pos);
         if (it != reserves.end()) return it->second;
         int best = INF;
@@ -536,7 +544,8 @@ map<int, Insertion> car_insertions(DayProblem& problem, int car, const vector<in
             trial.push_back(spot);
             trial.insert(trial.end(), route.begin() + k, route.end());
             CarRun run = problem.run(car, trial, variant);
-            // Giữ đúng phép so của bản Python: chi phí tuyệt đối so với mức tăng đã lưu.
+            // Giữ đúng phép so của bản Python: chi phí tuyệt đối so với mức tăng đã lưu (so mức tăng với
+            // mức tăng đo trên 200 bản đồ không tốt hơn).
             if (run.feasible && (!best || run.cost < best->delta))
                 best = Insertion{run.cost - current.cost, move(trial), move(run)};
         }
@@ -624,33 +633,6 @@ int types_coverage(const Board& board, const State& state, int steps, const vect
     return best;
 }
 
-// Ứng viên: (lời giải, phương án điểm hẹn, bài toán). Bài toán giữ bằng shared_ptr để dùng lại.
-struct Candidate {
-    Solution solution;
-    Option option;
-    shared_ptr<DayProblem> problem;
-};
-
-Candidate cover_types(vector<Candidate>& candidates, double deadline, Rng& rng, const vector<int>& variants,
-                      Candidate best) {
-    size_t attempt = 0;
-    while (seconds_now() < deadline) {
-        Candidate& cand = candidates[attempt % candidates.size()];
-        int variant = variants[(attempt / candidates.size()) % variants.size()];
-        // Lượt đầu mỗi (phương án, kiểu đường) dựng không nhiễu.
-        double noise = attempt < candidates.size() * variants.size() ? 0.0 : 1.0 + rng.random();
-        ++attempt;
-        auto skeleton = construct(*cand.problem, variant, deadline, true, &rng, noise);
-        if (!skeleton || skeleton->score[1] < best.solution.score[1]) continue;
-        insert_greedy(*cand.problem, skeleton->routes, skeleton->variants, skeleton->runs, nullptr, 0.0, deadline,
-                      false);
-        skeleton->score = cand.problem->score(skeleton->runs);
-        if (skeleton->score > best.solution.score) best = Candidate{*skeleton, cand.option, cand.problem};
-        if (best.solution.score[1] == cand.problem->board.brand_count) break;
-    }
-    return best;
-}
-
 // ---------------------------------------------------------------- mốc gửi kế hoạch tạm
 
 struct Checkpoint {
@@ -679,6 +661,35 @@ struct Worker {
         checkpoint->answered[index] = request;
     }
 };
+
+// Ứng viên: (lời giải, phương án điểm hẹn, bài toán). Bài toán giữ bằng shared_ptr để dùng lại.
+struct Candidate {
+    Solution solution;
+    Option option;
+    shared_ptr<DayProblem> problem;
+};
+
+Candidate cover_types(vector<Candidate>& candidates, double deadline, Rng& rng, const vector<int>& variants,
+                      Candidate best, Worker& worker) {
+    size_t attempt = 0;
+    while (seconds_now() < deadline) {
+        Candidate& cand = candidates[attempt % candidates.size()];
+        int variant = variants[(attempt / candidates.size()) % variants.size()];
+        // Lượt đầu mỗi (phương án, kiểu đường) dựng không nhiễu.
+        double noise = attempt < candidates.size() * variants.size() ? 0.0 : 1.0 + rng.random();
+        ++attempt;
+        auto skeleton = construct(*cand.problem, variant, deadline, true, &rng, noise);
+        if (!skeleton || skeleton->score[1] < best.solution.score[1]) continue;
+        insert_greedy(*cand.problem, skeleton->routes, skeleton->variants, skeleton->runs, nullptr, 0.0, deadline,
+                      false);
+        skeleton->score = cand.problem->score(skeleton->runs);
+        if (skeleton->score > best.solution.score) best = Candidate{*skeleton, cand.option, cand.problem};
+        if (best.solution.score[1] == cand.problem->board.brand_count) break;
+        // Trả lời mốc nộp nhanh bằng lời giải tốt nhất hiện có (ngày ngắn có thể ở đây khá lâu).
+        worker.emit(*best.problem, best.solution.runs);
+    }
+    return best;
+}
 
 // ---------------------------------------------------------------- phá và dựng lại
 
@@ -954,7 +965,7 @@ map<int, int> spread_anchors(DayProblem& problem, const map<int, vector<pair<int
 
 // Ô dừng cuối ngày của từng xe để ngày mai phủ đủ loại, đi ít step nhất; nullopt nếu có xe không tới được ô nào.
 optional<pair<map<int, int>, int>> find_anchors(DayProblem& problem, const map<int, CarRun>& runs, double deadline,
-                                                 Rng& rng) {
+                                                 Rng& rng, const function<void()>& tick) {
     vector<int> cells;
     for (auto& s : problem.board.spots) cells.push_back(s.pos);
     for (auto& [hub, _] : problem.hubs)
@@ -1002,6 +1013,7 @@ optional<pair<map<int, int>, int>> find_anchors(DayProblem& problem, const map<i
     auto current_key = best;
     int stale = 0;
     while (seconds_now() < deadline && best.first < problem.board.brand_count) {
+        tick();
         if (stale >= 40) {
             // Kẹt: quay về một bộ khởi đầu khác rồi xáo trộn một xe.
             current = scored[rng.randrange((int)scored.size())].second;
@@ -1067,6 +1079,7 @@ vector<vector<int>> plan_tour(const Board& board, const State& state, int steps,
         for (auto& [car, hub] : option)
             if (hub.escort < 0) hubs.push_back({hub.pos, hub.arrival});
         auto problem = make_shared<DayProblem>(board, state, steps, hubs, allowance, following, legs, params);
+        problem->option = option;
         for (auto& [car, hub] : option)
             if (hub.escort >= 0) problem->escort[hub.escort] = {car, hub.arrival};
         return problem;
@@ -1089,10 +1102,12 @@ vector<vector<int>> plan_tour(const Board& board, const State& state, int steps,
         }
     }
     if (!best) return {};
+    worker.emit(*best->problem, best->solution.runs);
     if (best->solution.score[1] < brand_count && !patrols.empty()) {
         // Ngày ngắn: phủ đủ loại là bài toán chặt, chèn tham lam một lượt dễ thiếu một loại.
         double cover_until = seconds_now() + max(0.0, deadline - seconds_now()) * 0.4;
-        best = cover_types(candidates, cover_until, rng, supplies.empty() ? vector<int>{0, 2} : variants, *best);
+        best = cover_types(candidates, cover_until, rng, supplies.empty() ? vector<int>{0, 2} : variants, *best,
+                           worker);
     }
     // Một bình đầy đi tối đa 2 step mỗi nhiên liệu, nên 2 × bình < số step nghĩa là không đủ cả ngày.
     if (params.escort && !supplies.empty() && 2 * board.fuel_limit < steps && best->solution.score[1] < brand_count &&
@@ -1131,7 +1146,8 @@ vector<vector<int>> plan_tour(const Board& board, const State& state, int steps,
             Candidate rescue = *max_element(tried.begin(), tried.end(), [](auto& x, auto& y) {
                 return x.solution.score < y.solution.score;
             });
-            if (rescue.solution.score[1] < brand_count) rescue = cover_types(tried, escort_until, rng, {0}, rescue);
+            if (rescue.solution.score[1] < brand_count)
+                rescue = cover_types(tried, escort_until, rng, {0}, rescue, worker);
             if (make_pair(rescue.solution.score[0], rescue.solution.score[1]) >
                 make_pair(best->solution.score[0], best->solution.score[1]))
                 best = rescue;
@@ -1149,7 +1165,8 @@ vector<vector<int>> plan_tour(const Board& board, const State& state, int steps,
         int covered = problem->coverage(solution.runs);
         if (covered < brand_count) {
             double share = following < steps ? 0.4 : 0.25;
-            auto found = find_anchors(*problem, solution.runs, seconds_now() + remaining() * share, rng);
+            auto found = find_anchors(*problem, solution.runs, seconds_now() + remaining() * share, rng,
+                                      [&]() { worker.emit(*problem, solution.runs); });
             if (found && found->second > covered) {
                 auto anchored = make_shared<DayProblem>(board, state, steps, problem->hubs, allowance, following, legs,
                                                         params);
@@ -1181,8 +1198,49 @@ vector<vector<int>> plan_tour(const Board& board, const State& state, int steps,
 
 // ---------------------------------------------------------------- đọc đầu vào, chạy nhiều luồng
 
-void print_plan(const string& tag, int seed, const vector<vector<int>>& actions) {
-    string out = "PLAN " + tag + " " + to_string(seed) + " " + to_string(actions.size()) + "\n";
+bool simulate_day(const Board& board, State& state, const vector<vector<int>>& actions, int steps);
+
+// Khóa so kế hoạch như tour.plan_key: (hợp lệ, U, loại hôm nay, loại ngày mai ước lượng, suất hôm nay).
+struct PlanKey {
+    int valid = 0, u = 0, d = 0, cov = -1, q = 0;
+};
+
+// Chấm các kế hoạch bằng simulator C++; với objective 1 (lookahead) ước lượng thêm số loại ngày mai
+// cho nhóm có (U, loại hôm nay) cao nhất, dựng chỉ nhắm loại từ trạng thái cuối ngày như next_coverage.
+vector<PlanKey> plan_keys(const Board& board, const State& state, int steps, const vector<vector<vector<int>>>& plans,
+                          int objective, const Params& params) {
+    vector<PlanKey> keys(plans.size());
+    vector<State> afters(plans.size());
+    for (size_t i = 0; i < plans.size(); ++i) {
+        afters[i] = state;
+        if (!simulate_day(board, afters[i], plans[i], steps)) continue;
+        keys[i] = {1, (int)afters[i].brands.count(), afters[i].daily_sum - state.daily_sum, -1,
+                   afters[i].portions - state.portions};
+    }
+    if (objective != 1) return keys;
+    pair<int, int> top{-1, -1};
+    for (auto& k : keys)
+        if (k.valid) top = max(top, {k.u, k.d});
+    for (size_t i = 0; i < plans.size(); ++i) {
+        if (!keys[i].valid || make_pair(keys[i].u, keys[i].d) != top) continue;
+        const State& after = afters[i];
+        if (after.day >= (int)board.day_steps.size()) {
+            keys[i].cov = 0;
+            continue;
+        }
+        vector<pair<int, int>> hubs;
+        for (auto& a : after.agents)
+            if (a.kind == 1) hubs.push_back({a.pos, 0});
+        Legs legs(board, after.traffic);
+        keys[i].cov = types_coverage(board, after, board.day_steps[after.day], hubs, 1.0, legs, params);
+    }
+    return keys;
+}
+
+void print_plan(const string& tag, int seed, const vector<vector<int>>& actions, const PlanKey& key) {
+    string out = "PLAN " + tag + " " + to_string(seed) + " " + to_string(actions.size()) + " " +
+                 to_string(key.valid) + " " + to_string(key.u) + " " + to_string(key.d) + " " + to_string(key.cov) +
+                 " " + to_string(key.q) + "\n";
     for (auto& car : actions) {
         out += to_string(car.size());
         for (int c : car) out += " " + to_string(c);
@@ -1192,16 +1250,7 @@ void print_plan(const string& tag, int seed, const vector<vector<int>>& actions)
     fflush(stdout);
 }
 
-int main() {
-    ios::sync_with_stdio(false);
-    string magic;
-    int version;
-    cin >> magic >> version;
-    if (magic != "HEXPLAN" || version != 1) {
-        fprintf(stderr, "sai định dạng đầu vào\n");
-        return 2;
-    }
-    Board board;
+bool read_board(Board& board, map<int, int>& brand_ids) {
     cin >> board.width >> board.height;
     board.terrain.resize(board.size());
     for (int& t : board.terrain) cin >> t;
@@ -1214,9 +1263,8 @@ int main() {
     cin >> nspots;
     if (nspots > MAXS) {
         fprintf(stderr, "quá nhiều điểm udon\n");
-        return 2;
+        return false;
     }
-    map<int, int> brand_ids;
     board.spot_index.assign(board.size(), -1);
     for (int i = 0; i < nspots; ++i) {
         Spot s;
@@ -1227,6 +1275,40 @@ int main() {
         board.spots.push_back(s);
     }
     board.brand_count = (int)brand_ids.size();
+    return true;
+}
+
+Params read_params() {
+    Params params;
+    int escort;
+    cin >> params.positions >> params.noise >> params.max_remove >> params.segment >> params.alns >> escort;
+    params.escort = escort != 0;
+    for (double& w : params.weights) cin >> w;
+    int ktemp;
+    int last_day_free;
+    cin >> params.temperature >> ktemp >> params.search >> last_day_free;
+    params.last_day_free = last_day_free != 0;
+    params.ktemp = ktemp != 0;
+    return params;
+}
+
+int select_main();
+int sim_main();
+
+int main() {
+    ios::sync_with_stdio(false);
+    string magic;
+    int version;
+    cin >> magic >> version;
+    if (magic == "HEXSELECT" && version == 1) return select_main();
+    if (magic == "HEXSIM" && version == 1) return sim_main();
+    if (magic != "HEXPLAN" || version != 1) {
+        fprintf(stderr, "sai định dạng đầu vào\n");
+        return 2;
+    }
+    Board board;
+    map<int, int> brand_ids;
+    if (!read_board(board, brand_ids)) return 2;
     State state;
     int nagents;
     cin >> nagents;
@@ -1251,18 +1333,30 @@ int main() {
     cin >> steps >> alpha >> seed >> workers >> until >> ncheck;
     vector<double> checks(ncheck);
     for (double& c : checks) cin >> c;
-    Params params;
-    int escort;
-    cin >> params.positions >> params.noise >> params.max_remove >> params.segment >> params.alns >> escort;
-    params.escort = escort != 0;
-    for (double& w : params.weights) cin >> w;
-    int ktemp;
-    cin >> params.temperature >> ktemp >> params.search;
-    params.ktemp = ktemp != 0;
+    Params params = read_params();
+    // Cách chọn (0 score, 1 lookahead) và lịch sử ô đường 2 ngày để simulator tính mặt đường ngày mai.
+    int objective, nhistory;
+    cin >> objective >> nhistory;
+    for (int h = 0; h < nhistory; ++h) {
+        int count;
+        cin >> count;
+        unordered_map<int, int> history;
+        for (int i = 0; i < count; ++i) {
+            int pos, value;
+            cin >> pos >> value;
+            history[pos] = value;
+        }
+        state.road_history.push_back(history);
+    }
+    cin >> board.busy_threshold >> board.jammed_threshold;
     if (!cin) {
         fprintf(stderr, "thiếu dữ liệu đầu vào\n");
         return 2;
     }
+    auto emit_all = [&](const string& tag, const vector<int>& seeds, const vector<vector<vector<int>>>& plans) {
+        auto keys = plan_keys(board, state, steps, plans, objective, params);
+        for (size_t i = 0; i < plans.size(); ++i) print_plan(tag, seeds[i], plans[i], keys[i]);
+    };
 
     Checkpoint checkpoint;
     checkpoint.answered.assign(workers, -1);
@@ -1301,11 +1395,18 @@ int main() {
             if (all) break;
             this_thread::sleep_for(chrono::milliseconds(5));
         }
-        lock_guard<mutex> guard(checkpoint.lock);
-        for (int w = 0; w < workers; ++w) {
-            if (done[w] && !finals[w].empty()) print_plan(to_string(k), seed + w, finals[w]);
-            else if (checkpoint.answered[w] == (int)k) print_plan(to_string(k), seed + w, checkpoint.snapshots[w]);
+        vector<int> seeds;
+        vector<vector<vector<int>>> plans;
+        {
+            lock_guard<mutex> guard(checkpoint.lock);
+            for (int w = 0; w < workers; ++w) {
+                if (done[w] && !finals[w].empty()) plans.push_back(finals[w]);
+                else if (checkpoint.answered[w] == (int)k) plans.push_back(checkpoint.snapshots[w]);
+                else continue;
+                seeds.push_back(seed + w);
+            }
         }
+        emit_all(to_string(k), seeds, plans);
     }
     // Kế hoạch cuối: chờ tới hạn cộng 0,25 giây; luồng chưa xong bị bỏ.
     double limit = until + 0.25;
@@ -1315,8 +1416,14 @@ int main() {
         if (all) break;
         this_thread::sleep_for(chrono::milliseconds(5));
     }
+    vector<int> final_seeds;
+    vector<vector<vector<int>>> final_plans;
     for (int w = 0; w < workers; ++w)
-        if (done[w] && !finals[w].empty()) print_plan("F", seed + w, finals[w]);
+        if (done[w] && !finals[w].empty()) {
+            final_seeds.push_back(seed + w);
+            final_plans.push_back(finals[w]);
+        }
+    emit_all("F", final_seeds, final_plans);
     fprintf(stderr, "STAT rounds %lld\n", improve_rounds.load());
     fputs("DONE\n", stdout);
     fflush(stdout);
@@ -1327,4 +1434,254 @@ int main() {
         return 0;
     }
     _Exit(0);  // còn luồng chạy quá hạn: thoát ngay, không chờ
+}
+
+// ---------------------------------------------------------------- chọn đội hình: mô phỏng cả trận
+
+// Một ngày của một đội, đúng như src/hexudon/simulator.py (kiểm tra lệnh, đi từng step, đổ xăng
+// khi cùng ô xe tiếp tế, đếm ô đường, thu hàng, giao thông hôm sau từ 2 ngày gần nhất). false: lỗi.
+bool simulate_day(const Board& board, State& state, const vector<vector<int>>& actions, int steps) {
+    int n = (int)state.agents.size();
+    if ((int)actions.size() != n) return false;
+    auto cost = [&](int pos) {
+        int t = board.terrain[pos];
+        if (t == 0) return pair<int, int>{2, 1};
+        if (t == 2) return pair<int, int>{3, 2};
+        auto it = state.traffic.find(pos);
+        static const int road[3] = {1, 2, 4};
+        return pair<int, int>{road[it == state.traffic.end() ? 0 : it->second], 2};
+    };
+    for (int car = 0; car < n; ++car) {
+        int pos = state.agents[car].pos, total = 0;
+        for (int command : actions[car]) {
+            if (command > 5) return false;
+            if (command < 0) {
+                total -= command;
+            } else {
+                int target = board.neighbor(pos, command);
+                if (target < 0) return false;
+                total += cost(pos).first;
+                pos = target;
+            }
+            if (total > steps) return false;
+        }
+        if (total != steps) return false;
+    }
+    vector<int> stocks(board.spots.size()), pointer(n, 0), remaining(n, 0), destination(n, -1), fuel_cost(n, 0);
+    for (size_t i = 0; i < board.spots.size(); ++i) stocks[i] = board.spots[i].stocks;
+    vector<Bits> visited(n);
+    vector<bool> arrived(n, false);
+    Bits today;
+    unordered_map<int, int> roads;
+    for (int tick = 0; tick < steps; ++tick) {
+        for (int car = 0; car < n; ++car) {
+            Agent& agent = state.agents[car];
+            if (remaining[car] == 0) {
+                int command = actions[car][pointer[car]++];
+                if (command < 0) {
+                    remaining[car] = -command;
+                    destination[car] = -1;
+                    fuel_cost[car] = 0;
+                } else {
+                    auto [duration, fuel] = cost(agent.pos);
+                    if (agent.kind == 0 && agent.fuel < fuel) return false;
+                    remaining[car] = duration;
+                    destination[car] = board.neighbor(agent.pos, command);
+                    fuel_cost[car] = agent.kind == 0 ? fuel : 0;
+                }
+            }
+        }
+        for (int car = 0; car < n; ++car) {
+            Agent& agent = state.agents[car];
+            if (--remaining[car] == 0 && destination[car] >= 0) {
+                agent.pos = destination[car];
+                agent.fuel -= fuel_cost[car];
+                arrived[car] = true;
+            }
+        }
+        vector<int> supply;
+        for (auto& a : state.agents)
+            if (a.kind == 1) supply.push_back(a.pos);
+        for (int car = 0; car < n; ++car) {
+            Agent& agent = state.agents[car];
+            int pos = agent.pos;
+            if (agent.kind == 0 && find(supply.begin(), supply.end(), pos) != supply.end()) agent.fuel = board.fuel_limit;
+            if (board.terrain[pos] == 1 && (destination[car] < 0 || arrived[car])) ++roads[pos];
+            int index = board.spot_index[pos];
+            if (agent.kind == 0 && index >= 0 && !visited[car][index]) {
+                visited[car].set(index);
+                if (stocks[index] > 0) {
+                    --stocks[index];
+                    today.set(board.spots[index].brand);
+                    state.brands.set(board.spots[index].brand);
+                    ++state.portions;
+                }
+            }
+        }
+    }
+    ++state.day;
+    state.daily_sum += (int)today.count();
+    state.road_history.push_back(roads);
+    if (state.road_history.size() > 2) state.road_history.erase(state.road_history.begin());
+    unordered_map<int, int> total;
+    for (auto& history : state.road_history)
+        for (auto [pos, count] : history) total[pos] += count;
+    state.traffic.clear();
+    for (auto [pos, count] : total) {
+        int status = count >= board.jammed_threshold ? 2 : count >= board.busy_threshold ? 1 : 0;
+        if (status) state.traffic[pos] = status;
+    }
+    return true;
+}
+
+struct Trial {
+    int candidate, seed;
+    array<int, 3> score{};
+    bool complete = false;
+};
+
+// Một trận trọn vẹn của một đội hình với planner tour (day_seconds mỗi ngày, cùng seed cho mọi đội hình).
+Trial evaluate(const Board& board, const vector<int>& starts, const vector<int>& kinds, int candidate, int seed,
+               double day_seconds, const Params& params, double until) {
+    Trial trial{candidate, seed};
+    State state;
+    for (size_t i = 0; i < kinds.size(); ++i)
+        state.agents.push_back({kinds[i], starts[i], kinds[i] == 0 ? board.fuel_limit : 0});
+    for (int steps : board.day_steps) {
+        if (now_epoch() > until) return trial;
+        Worker worker{0, nullptr};
+        auto actions = plan_tour(board, state, steps, day_seconds, 1.0, seed, params, worker);
+        if (actions.empty()) actions.assign(state.agents.size(), {-steps});
+        if (!simulate_day(board, state, actions, steps)) return trial;
+    }
+    trial.score = {(int)state.brands.count(), state.daily_sum, state.portions};
+    trial.complete = true;
+    return trial;
+}
+
+// Đầu vào sau "HEXSELECT 1": bản đồ như HEXPLAN, rồi busy jammed, nagents start*, ncand kinds*,
+// threads until day_seconds, rồi dòng tham số như HEXPLAN. Loại dần: vòng đầu mỗi đội hình một trận,
+// sau mỗi vòng giữ nửa tốt nhất theo (U thấp nhất, D thấp nhất, Q trung bình); mọi đội hình trong
+// một vòng dùng cùng seed để so cặp. In "RESULT ứng_viên seed U D Q đủ_trận", "BEST ứng_viên", "DONE".
+int select_main() {
+    Board board;
+    map<int, int> brand_ids;
+    if (!read_board(board, brand_ids)) return 2;
+    int nagents, ncand, threads;
+    cin >> board.busy_threshold >> board.jammed_threshold >> nagents;
+    vector<int> starts(nagents);
+    for (int& p : starts) cin >> p;
+    cin >> ncand;
+    vector<vector<int>> candidates(ncand, vector<int>(nagents));
+    for (auto& kinds : candidates)
+        for (int& k : kinds) cin >> k;
+    double until, day_seconds;
+    cin >> threads >> until >> day_seconds;
+    Params params = read_params();
+    if (!cin || ncand == 0) {
+        fprintf(stderr, "thiếu dữ liệu đầu vào\n");
+        return 2;
+    }
+    vector<vector<Trial>> trials(ncand);
+    auto key = [&](int c) {
+        // (đủ trận, U thấp nhất, D thấp nhất, Q trung bình): đội hình chưa có trận đủ đứng cuối.
+        double u = 1e9, d = 1e9, q = 0;
+        int count = 0;
+        for (auto& t : trials[c])
+            if (t.complete) {
+                u = min(u, (double)t.score[0]);
+                d = min(d, (double)t.score[1]);
+                q += t.score[2];
+                ++count;
+            }
+        return count ? make_tuple(1, u, d, q / count) : make_tuple(0, 0.0, 0.0, 0.0);
+    };
+    vector<int> alive(ncand);
+    iota(alive.begin(), alive.end(), 0);
+    mutex lock;
+    for (int round = 0; now_epoch() < until - 0.05; ++round) {
+        int per = round == 0 ? 1 : max(1, threads / (int)alive.size());
+        vector<pair<int, int>> tasks;
+        for (int s = 0; s < per; ++s)
+            for (int c : alive) tasks.push_back({c, round * 1000 + s});
+        atomic<size_t> next{0};
+        vector<thread> pool;
+        for (int w = 0; w < threads; ++w) {
+            pool.emplace_back([&]() {
+                for (size_t i = next++; i < tasks.size() && now_epoch() < until; i = next++) {
+                    Trial t = evaluate(board, starts, candidates[tasks[i].first], tasks[i].first, tasks[i].second,
+                                       day_seconds, params, until);
+                    lock_guard<mutex> guard(lock);
+                    trials[t.candidate].push_back(t);
+                    printf("RESULT %d %d %d %d %d %d\n", t.candidate, t.seed, t.score[0], t.score[1], t.score[2],
+                           (int)t.complete);
+                    fflush(stdout);
+                }
+            });
+        }
+        for (auto& t : pool) t.join();
+        stable_sort(alive.begin(), alive.end(), [&](int a, int b) { return key(a) > key(b); });
+        if (alive.size() > 2) alive.resize(max<size_t>(2, (alive.size() + 1) / 2));
+    }
+    printf("BEST %d\nDONE\n", alive[0]);
+    fflush(stdout);
+    return 0;
+}
+
+// Kiểm tra simulator: "HEXSIM 1", bản đồ như HEXPLAN, busy jammed, trạng thái (nagents (kind pos fuel)*,
+// day ntraffic (pos status)* nbrands brand* daily_sum portions nhistory (n (pos count)*)*), steps, lệnh
+// từng xe (n lệnh*). In "OK pos fuel ... | U D Q | traffic" hoặc "INVALID".
+int sim_main() {
+    Board board;
+    map<int, int> brand_ids;
+    if (!read_board(board, brand_ids)) return 2;
+    State state;
+    int nagents, ntraffic, nbrands, nhistory, steps;
+    cin >> board.busy_threshold >> board.jammed_threshold >> nagents;
+    state.agents.resize(nagents);
+    for (auto& a : state.agents) cin >> a.kind >> a.pos >> a.fuel;
+    cin >> state.day >> ntraffic;
+    for (int i = 0; i < ntraffic; ++i) {
+        int pos, status;
+        cin >> pos >> status;
+        state.traffic[pos] = status;
+    }
+    cin >> nbrands;
+    for (int i = 0; i < nbrands; ++i) {
+        int brand;
+        cin >> brand;
+        state.brands.set(brand_ids[brand]);
+    }
+    cin >> state.daily_sum >> state.portions >> nhistory;
+    for (int h = 0; h < nhistory; ++h) {
+        int count;
+        cin >> count;
+        unordered_map<int, int> history;
+        for (int i = 0; i < count; ++i) {
+            int pos, value;
+            cin >> pos >> value;
+            history[pos] = value;
+        }
+        state.road_history.push_back(history);
+    }
+    cin >> steps;
+    vector<vector<int>> actions(nagents);
+    for (auto& car : actions) {
+        int count;
+        cin >> count;
+        car.resize(count);
+        for (int& c : car) cin >> c;
+    }
+    if (!simulate_day(board, state, actions, steps)) {
+        puts("INVALID");
+        return 0;
+    }
+    printf("OK");
+    for (auto& a : state.agents) printf(" %d %d", a.pos, a.fuel);
+    printf(" | %d %d %d |", (int)state.brands.count(), state.daily_sum, state.portions);
+    vector<pair<int, int>> traffic(state.traffic.begin(), state.traffic.end());
+    sort(traffic.begin(), traffic.end());
+    for (auto [pos, status] : traffic) printf(" %d:%d", pos, status);
+    puts("");
+    return 0;
 }

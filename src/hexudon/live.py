@@ -162,10 +162,22 @@ class MatchRunner:
                     raise
             self.clock.sleep(self.poll)
 
+    def keys(self, board, state, old, new):
+        """Khóa so bài đã nộp và bài mới: dùng khóa C++ của phiên nếu có cho cả hai, không thì cùng
+        chấm bằng Python (không so lẫn hai cách ước lượng ngày mai)."""
+        known = getattr(self.session, 'key_of', None)
+        if known is not None:
+            pair = known(old), known(new)
+            if None not in pair:
+                return pair
+        return (plan_key(board, state, old, objective=self.parallel_objective),
+                plan_key(board, state, new, objective=self.parallel_objective))
+
     def submit_if_better(self, board, state, day, entry, candidate, deadline, mode, label):
         """Nộp `candidate` nếu simulator xác nhận tốt hơn bài đã nộp; True khi máy chủ đã nhận."""
-        old_key = plan_key(board, state, entry['actions'], objective=self.parallel_objective)
-        new_key = plan_key(board, state, candidate, objective=self.parallel_objective)
+        if not simulate_day(board, state, candidate, board.day_steps[day]).valid:
+            return False
+        old_key, new_key = self.keys(board, state, entry['actions'], candidate)
         if new_key is None or old_key is not None and new_key <= old_key:
             return False
         if deadline is not None and deadline-self.clock.monotonic() <= .5:
@@ -379,11 +391,13 @@ class MatchRunner:
                 actions = entry['actions']
             else:
                 budget = self.day_budget(day, deadline)
-                staged = mode=='timed' and self.resubmit and not self.dry_run and budget > 8
+                # Nộp nhanh rồi nộp lại khi ngân sách đủ dài (bản C++ có bài nhanh sau khoảng 1 giây).
+                fast = PARAMS['native'] and native.available()
+                staged = mode=='timed' and self.resubmit and not self.dry_run and budget > (4 if fast else 8)
                 actions = None
                 if staged and self.algorithm=='tour' and self.workers>1:
-                    # Nộp nhanh sau 2-5 giây; các tiến trình tối ưu tiếp tới hết ngân sách.
-                    quick = min(5., max(2., .12*budget))
+                    # Nộp nhanh sau 2-5 giây (bản C++ khởi động ngay: 1-3 giây); tối ưu tiếp tới hết ngân sách.
+                    quick = min(3., max(1., .05*budget)) if PARAMS['native'] and native.available() else min(5., max(2., .12*budget))
                     # Các tiến trình gửi kế hoạch mỗi 2 giây để nộp lại ngay khi có bài tốt hơn.
                     self.session = make_session(board, state, board.day_steps[day], budget, quick,
                                                 self.workers, every=CHECK_EVERY, seed=self.seed,
@@ -488,8 +502,7 @@ class MatchRunner:
                     better, metrics = self.predictor(board, state, self.algorithm, max(.5, budget-2))
             else:
                 better, metrics = self.predictor(board, state, self.algorithm, budget)
-            old_key = plan_key(board, state, entry['actions'], objective=self.parallel_objective)
-            new_key = plan_key(board, state, better, objective=self.parallel_objective)
+            old_key, new_key = self.keys(board, state, entry['actions'], better)
         except Exception as error:
             entry['improve'] = {'error': f'{type(error).__name__}: {error}'[:200]}
             self.save()
@@ -599,8 +612,9 @@ def main():
     parser = argparse.ArgumentParser(description='Tự lấy trạng thái và nộp kế hoạch HEXUDON trên website BTC Việt Nam.')
     parser.add_argument('game_id',nargs='?',help='ID trận hoặc ID Practice, có thể nhập khi được hỏi')
     parser.add_argument('--game-id',dest='id_option')
-    parser.add_argument('--algorithm','--predict',choices=['greedy','lookahead','rollout','tour'],default='greedy')
-    parser.add_argument('--mode',choices=['auto','timed','practice'],default='auto')
+    parser.add_argument('--algorithm','--predict',choices=['greedy','lookahead','rollout','tour'],default='tour')
+    parser.add_argument('--mode',choices=['auto','timed','practice'],
+                        help='Mặc định timed; ID có dạng câu_hỏi:đội thì practice')
     parser.add_argument('--seconds',type=float,
                         help='Trần giây lập kế hoạch mỗi ngày; mặc định daySeconds của config trừ --reserve')
     parser.add_argument('--reserve',type=float,default=4.,
@@ -653,7 +667,8 @@ def main():
         PARAMS['native']=False
     if args.preflight:
         parser.exit(1 if preflight(api,game_id,folder,workers,args.reserve) else 0)
-    runner=MatchRunner(api,game_id,folder,algorithm=args.algorithm,mode=args.mode,seconds=args.seconds,
+    mode=args.mode or ('practice' if ':' in game_id else 'timed')
+    runner=MatchRunner(api,game_id,folder,algorithm=args.algorithm,mode=mode,seconds=args.seconds,
         reserve=args.reserve,selection_seconds=args.selection_seconds,roles=args.roles,kinds=args.types,
         poll=args.poll,dry_run=args.dry_run,inspect=args.inspect,max_days=args.max_days,team_id=team,
         predictor=partial(predict,workers=workers,seed=args.seed,parallel_objective=args.parallel_objective),

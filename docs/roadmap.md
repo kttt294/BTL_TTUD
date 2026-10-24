@@ -12,7 +12,7 @@ thật (trận tính giờ, nhiều đội, bản đồ chưa biết), không ph
    - Thời gian phản hồi chỉ quyết định khi hòa Q (dễ xảy ra trên bản đồ nhỏ, Q chạm trần).
      Không bao giờ đổi Q lấy thời gian: chỉ nộp lại khi bài mới tốt hơn; dừng sớm khi đã chạm
      cận trên của ngày.
-2. **Luôn giữ script thi an toàn**: `play_match.py` chỉ chạy phần đã kiểm chứng. Mọi hướng mới
+2. **Luôn giữ script thi an toàn**: `play.py` chỉ chạy phần đã kiểm chứng. Mọi hướng mới
    nằm sau công tắc mặc định tắt, chỉ bật mặc định khi đã đo và thống nhất; hướng đã đo mà không
    tốt hơn thì xóa khỏi code (21/10 đã xóa LOOKAHEAD, ROLLOUT, TOPUP, β, chọn vai trò nhiều kịch bản). Mọi kế hoạch qua simulator trước khi gửi; lỗi
    planner phải chuyển sang phương án dự phòng, không bỏ trống ngày.
@@ -52,7 +52,7 @@ thật (trận tính giờ, nhiều đội, bản đồ chưa biết), không ph
       - 20/10, tắt runner (như Ctrl+C) ở ngày 3 giây 24,9 rồi chạy lại sau 5 giây cùng checkpoint:
         ngày 3 giữ bài nộp nhanh lúc 3,0 giây, runner mới tiếp tục từ ngày 4, không nộp trùng,
         không ngày trống bài, (20, 200, 622). Cách xử lý khi runner chết: chạy lại đúng lệnh cũ.
-- [x] Lệnh kiểm tra trước trận `play_match.py --preflight --game-id ID` (chỉ GET): token, độ trễ,
+- [x] Lệnh kiểm tra trước trận `play.py ID --preflight` (chỉ GET): token, độ trễ,
       config, CPU, khởi động tiến trình, thư mục checkpoint, thử lập kế hoạch ngày 1. Chạy trên
       máy chủ thật 20/10: sẵn sàng, không cảnh báo.
 - [ ] Thử Competitive Practice (nếu BTC mở) để kiểm chứng trận nhiều đội thật.

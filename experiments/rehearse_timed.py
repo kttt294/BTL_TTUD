@@ -130,6 +130,7 @@ def main():
     parser.add_argument("--crash-at", type=float,
                         help="Ngắt runner (như Ctrl+C) ở giây thứ X kể từ đầu trận, rồi chạy lại runner mới cùng checkpoint")
     parser.add_argument("--restart-delay", type=float, default=5.0, help="Giây chờ trước khi chạy lại")
+    parser.add_argument("--json", help="Ghi điểm, đội hình, số loại/suất và thời gian phản hồi từng ngày")
     args = parser.parse_args()
     config = json.loads((ROOT / "output/team_selection" / args.case / "config.json").read_text(encoding="utf-8"))
     if args.selection_seconds:
@@ -166,6 +167,18 @@ def main():
     print(f"{args.case}: điểm {server.state.score()} | vai trò {server.kinds} | ngày không có bài: {missed}")
     print("Các lần nộp (ngày, giây kể từ đầu ngày):", server.submissions)
     print(f"Thời gian phản hồi lũy kế {sum(server.response):.1f} giây | chạy {time.monotonic() - started:.0f} giây")
+    if args.json:
+        # Chơi lại các bài máy chủ giả đã giữ để lấy số loại, số suất từng ngày.
+        state, daily = State.initial(server.board, server.kinds), []
+        for day, steps in enumerate(server.board.day_steps):
+            actions = server.pending.get(day, [[-steps]] * len(server.board.starts))
+            after = simulate_day(server.board, state, actions, steps).state
+            daily.append({"day": day + 1, "types": after.daily_sum - state.daily_sum,
+                          "servings": after.portions - state.portions, "response": round(server.response[day], 2)})
+            state = after
+        Path(args.json).write_text(json.dumps({"case": args.case, "score": list(server.state.score()),
+                                               "kinds": server.kinds, "missed": missed, "daily": daily,
+                                               "response": round(sum(server.response), 2)}, indent=1), encoding="utf-8")
     Path(ROOT / "results/rehearsal").mkdir(parents=True, exist_ok=True)
     (ROOT / f"results/rehearsal/{args.case}_{int(time.time())}.log").write_text(log.getvalue(), encoding="utf-8")
 

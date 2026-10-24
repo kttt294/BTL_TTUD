@@ -148,6 +148,17 @@ def select_types_parallel(board, seconds=20.0, strategy="tour", limit=16, worker
 
 def select_types(board, seconds=20.0, strategy="greedy", limit=16):
     if strategy == "tour":
+        from . import native
+        from .tour import PARAMS
+        if PARAMS["native"] and PARAMS.get("native_selection", True) and native.available():
+            # Bản C++: mô phỏng cả trận nhiều luồng trong một tiến trình, loại dần, cùng seed mỗi vòng.
+            started = time.perf_counter()
+            threads = max(1, min(14, (os.cpu_count() or 2) - 2))
+            chosen = native.select_types(board, seconds, candidate_types(board, limit), threads)
+            if chosen is not None:
+                return chosen[0], chosen[1], time.perf_counter() - started
+            native.fallback("chọn đội hình", "tiến trình lỗi hoặc không có kết quả")
+            seconds = max(0.0, seconds - (time.perf_counter() - started))
         return select_types_parallel(board, seconds, strategy, limit)
     started = time.perf_counter()
     deadline = started + max(0, seconds)

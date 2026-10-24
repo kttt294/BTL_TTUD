@@ -412,7 +412,7 @@ def extended_move(problem, routes, variants, rng, kind=None):
 # SA đo trên 300 bản đồ +0,8–0,9% suất (btc), ngân sách thi 14 luồng × 10 giây +5,4 suất/trận.
 # temperature, ktemp, search ("lns" | "pso"): chỉ bản C++ dùng (xem native/hexplan.cpp).
 PARAMS = {"positions": 3, "noise": 0.5, "max_remove": 4, "segment": 4, "alns": 0.0, "escort": True, "native": True,
-          "temperature": 2.0, "ktemp": False, "search": "lns",
+          "temperature": 2.0, "ktemp": False, "search": "lns", "last_day_free": True,
           "weights": {"variant_segment": 0.105, "segment": 0.14, "random": 0.455,
                       "reverse": 0.12, "swap": 0.09, "worst": 0.09}}
 EXTENDED = ("reverse", "swap", "worst")
@@ -621,10 +621,13 @@ def find_anchors(problem, runs, deadline, rng):
 def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0):
     if PARAMS["native"] and _CHECKPOINT is None:
         from . import native
-        if native.available():
+        if not native.available():
+            native.fallback("lập tuyến", "chưa có file chạy")
+        else:
             actions = native.plan_tour(board, state, steps, seconds, alpha, seed)
             if actions is not None:
                 return actions
+            native.fallback("lập tuyến", "không có kế hoạch kịp hạn")
     started = time.perf_counter()
     deadline = started + max(0.0, seconds)
     first_deadline = started + max(seconds, 0.5)
@@ -1082,11 +1085,14 @@ def make_session(board, state, steps, seconds, quick, workers=8, alpha=1.0, ever
                  seed=0, objective="lookahead"):
     """Phiên tìm kiếm song song: bản C++ nhiều luồng nếu bật và chạy được, không thì nhiều tiến trình."""
     if PARAMS["native"]:
-        from .native import NativeSession, available
-        if available():
+        from .native import NativeSession, available, fallback
+        if not available():
+            fallback("phiên song song", "chưa có file chạy")
+        else:
             session = NativeSession(board, state, steps, seconds, quick, workers, alpha, every, seed, objective)
             if session.futures:
                 return session
+            fallback("phiên song song", "không khởi động được tiến trình")
     return AnytimeSession(board, state, steps, seconds, quick, workers, alpha, every, seed, objective)
 
 

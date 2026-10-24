@@ -43,6 +43,7 @@ VARIANTS = {
     "native_ktemp": {"native": True, "temperature": 4.0, "ktemp": True},
     "native_pso": {"native": True, "search": "pso"},
     "native2": {"native": True},
+    "keep_reserve": {"last_day_free": False},
     "native_sa1": {"native": True, "temperature": 1.0},
     "native_sa4": {"native": True, "temperature": 4.0},
     "native_ktemp2": {"native": True, "temperature": 2.0, "ktemp": True},
@@ -73,6 +74,8 @@ def play(job):
     tour.PARAMS.clear()
     tour.PARAMS.update(deepcopy(DEFAULTS))
     tour.PARAMS.update(settings)
+    from hexudon import native
+    native.FALLBACKS.clear()
     board = Board.from_dict(generate_config(seed, profile))
     kinds = central_supply(board)
     state = State.initial(board, kinds)
@@ -84,6 +87,7 @@ def play(job):
         state = simulate_day(board, state, plan.actions, steps).state
     return {"profile": profile, "seed": seed, "variant": variant, "score": list(state.score()),
             "max_u": brands, "max_d": brands * len(board.day_steps), "fallbacks": fallbacks,
+            "native_fallbacks": dict(native.FALLBACKS),
             "seconds": round(time.perf_counter() - started, 1)}
 
 
