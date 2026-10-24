@@ -37,9 +37,13 @@ def build(force=False):
     env = dict(os.environ)
     # g++ của MSYS2 cần thư mục bin của nó trong PATH để chạy cc1plus.
     env["PATH"] = str(Path(compiler).parent) + os.pathsep + env.get("PATH", "")
-    command = [compiler, "-O2", "-std=c++20", "-static", "-pthread", "-o", str(EXE), str(SOURCE)]
-    result = subprocess.run(command, env=env, capture_output=True, text=True, encoding="utf-8", errors="replace")
-    return result.returncode == 0 and EXE.exists()
+    # Link tĩnh để file chạy không cần DLL của MSYS2; máy thiếu thư viện tĩnh (một số Linux) thì link động.
+    for flags in (["-static"], []):
+        command = [compiler, "-O2", "-std=c++20", *flags, "-pthread", "-o", str(EXE), str(SOURCE)]
+        result = subprocess.run(command, env=env, capture_output=True, text=True, encoding="utf-8", errors="replace")
+        if result.returncode == 0 and EXE.exists():
+            return True
+    return False
 
 
 def available():
@@ -327,6 +331,26 @@ def simulate_native(board, state, actions, steps, exe=None):
     return [(cars[i], cars[i + 1]) for i in range(0, len(cars), 2)], score, traffic
 
 
+def evaluate_all(board, candidates, seeds, day_seconds, threads=14, seconds=3600.0, exe=None):
+    """Chạy mọi đội hình × `seeds` seed (cùng seed cho mọi đội hình), không loại dần, để tạo dữ liệu học.
+
+    Trả danh sách {"types", "seed", "score", "complete"}.
+    """
+    started = time.time()
+    text = "\n".join(["HEXSELECT 1", _board_text(board), f"{len(board.starts)} " + " ".join(map(str, board.starts)),
+                      f"{len(candidates)}"] + [" ".join(map(str, kinds)) for kinds in candidates] +
+                     [f"{threads} {started + seconds!r} {day_seconds!r} {seeds}", _params_text()]) + "\n"
+    result = subprocess.run([str(exe or EXE)], input=text, capture_output=True, text=True, encoding="utf-8",
+                            errors="replace", timeout=seconds + 30)
+    records = []
+    for line in result.stdout.splitlines():
+        parts = line.split()
+        if parts and parts[0] == "RESULT":
+            c, seed, u, d, q, complete = map(int, parts[1:])
+            records.append({"types": list(candidates[c]), "seed": seed, "score": [u, d, q], "complete": bool(complete)})
+    return records
+
+
 def select_types(board, seconds, candidates, threads=14, exe=None):
     """Chọn đội hình bằng mô phỏng cả trận trong C++ (nhiều luồng, loại dần, cùng seed mỗi vòng).
 
@@ -339,7 +363,7 @@ def select_types(board, seconds, candidates, threads=14, exe=None):
     day_seconds = min(0.5, max(0.02, usable * 0.3 / (waves * len(board.day_steps))))
     text = "\n".join(["HEXSELECT 1", _board_text(board), f"{len(board.starts)} " + " ".join(map(str, board.starts)),
                       f"{len(candidates)}"] + [" ".join(map(str, kinds)) for kinds in candidates] +
-                     [f"{threads} {started + usable!r} {day_seconds!r}", _params_text()]) + "\n"
+                     [f"{threads} {started + usable!r} {day_seconds!r} 0", _params_text()]) + "\n"
     try:
         result = subprocess.run([str(exe or EXE)], input=text, capture_output=True, text=True, encoding="utf-8",
                                 errors="replace",

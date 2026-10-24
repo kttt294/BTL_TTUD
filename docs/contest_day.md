@@ -36,13 +36,13 @@ python play.py ID_TRAN
 
 ## Khi có sự cố
 
-| Tình huống | Làm gì |
-|---|---|
-| Runner dừng, mất mạng, lỡ tay Ctrl+C | **Chạy lại đúng lệnh cũ.** Runner đọc checkpoint, không nộp trùng, tiếp tục ngày hiện tại nếu còn giờ. Bài đã nộp sớm trong ngày vẫn được máy chủ giữ. |
-| Báo token hết hạn | Lấy token mới vào `.env`, chạy lại đúng lệnh cũ. |
-| Báo `Trận đã lùi ngày hoặc được reset` | BTC đã reset trận: chạy lại với `--run-dir` mới. |
-| Báo `Planner lỗi ...; dùng Greedy` | Runner đã tự dùng phương án dự phòng; để chạy tiếp, lưu log để kiểm tra sau. |
-| Máy quá chậm, nhiều ngày `dự phòng` | Giảm số tiến trình: thêm `--workers 8`. |
+| Tình huống                                       | Làm gì                                                                                                                                                                                     |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Runner dừng, mất mạng, lỡ tay Ctrl+C           | **Chạy lại đúng lệnh cũ.** Runner đọc checkpoint, không nộp trùng, tiếp tục ngày hiện tại nếu còn giờ. Bài đã nộp sớm trong ngày vẫn được máy chủ giữ. |
+| Báo token hết hạn                               | Lấy token mới vào `.env`, chạy lại đúng lệnh cũ.                                                                                                                                  |
+| Báo `Trận đã lùi ngày hoặc được reset` | BTC đã reset trận: chạy lại với `--run-dir` mới.                                                                                                                                    |
+| Báo `Planner lỗi ...; dùng Greedy`            | Runner đã tự dùng phương án dự phòng; để chạy tiếp, lưu log để kiểm tra sau.                                                                                                |
+| Máy quá chậm, nhiều ngày `dự phòng`       | Giảm số tiến trình: thêm `--workers 8`.                                                                                                                                               |
 
 ## Không làm
 

@@ -1575,8 +1575,10 @@ int select_main() {
     vector<vector<int>> candidates(ncand, vector<int>(nagents));
     for (auto& kinds : candidates)
         for (int& k : kinds) cin >> k;
+    // exhaustive > 0: không loại dần, mọi đội hình chạy đúng `exhaustive` seed (0..exhaustive-1) để tạo dữ liệu.
     double until, day_seconds;
-    cin >> threads >> until >> day_seconds;
+    int exhaustive;
+    cin >> threads >> until >> day_seconds >> exhaustive;
     Params params = read_params();
     if (!cin || ncand == 0) {
         fprintf(stderr, "thiếu dữ liệu đầu vào\n");
@@ -1599,8 +1601,8 @@ int select_main() {
     vector<int> alive(ncand);
     iota(alive.begin(), alive.end(), 0);
     mutex lock;
-    for (int round = 0; now_epoch() < until - 0.05; ++round) {
-        int per = round == 0 ? 1 : max(1, threads / (int)alive.size());
+    for (int round = 0; now_epoch() < until - 0.05 && (!exhaustive || round == 0); ++round) {
+        int per = exhaustive ? exhaustive : round == 0 ? 1 : max(1, threads / (int)alive.size());
         vector<pair<int, int>> tasks;
         for (int s = 0; s < per; ++s)
             for (int c : alive) tasks.push_back({c, round * 1000 + s});
