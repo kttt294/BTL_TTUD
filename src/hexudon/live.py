@@ -17,7 +17,7 @@ from .model import Agent, Board, State
 from .planner import plan_day
 from .simulator import simulate_day
 from .team_selection import select_types
-from .tour import AnytimeSession, plan_key, reaches_bound, warm_up
+from .tour import make_session, plan_key, reaches_bound, warm_up
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -384,9 +384,9 @@ class MatchRunner:
                     # Nộp nhanh sau 2-5 giây; các tiến trình tối ưu tiếp tới hết ngân sách.
                     quick = min(5., max(2., .12*budget))
                     # Các tiến trình gửi kế hoạch mỗi 2 giây để nộp lại ngay khi có bài tốt hơn.
-                    self.session = AnytimeSession(board, state, board.day_steps[day], budget, quick,
-                                                  self.workers, every=CHECK_EVERY, seed=self.seed,
-                                                  objective=self.parallel_objective)
+                    self.session = make_session(board, state, board.day_steps[day], budget, quick,
+                                                self.workers, every=CHECK_EVERY, seed=self.seed,
+                                                objective=self.parallel_objective)
                     actions, metrics, budget = self.session.quick(), {'algorithm': 'tour', 'anytime': True}, quick
                 if actions is None:
                     # Phiên song song chưa kịp có bài nhanh: lập nhanh một bài riêng, giữ phiên để lấy bài cuối.

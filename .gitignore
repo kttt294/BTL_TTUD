@@ -8,52 +8,19 @@ __pycache__/
 !.env.example
 ~$*
 *.log
-*.pt
-*.pth
-*.ckpt
 
-# Dữ liệu sinh ra và tài liệu kiểm tra bố cục tại máy
+# File chạy C++ biên dịch tại máy (src/hexudon/native.py tự biên dịch khi thiếu)
+/native/hexplan
+/native/*.exe
+
+# Dữ liệu sinh ra, log trận, dữ liệu API thô và tài liệu cá nhân tại máy
 /results/
 /scratch/
-/experiments/archive/
-/experiments/leaderboard_inspection/
-/output/*
-!/output/docx/
-/output/docx/*
-!/output/docx/bao_cao_hexudon.docx
-
-# Phản hồi API, trạng thái từng ngày, replay và bài nộp
-/experiments/api_evidence/*
-!/experiments/api_evidence/summary.json
-!/experiments/api_evidence/manifest.json
-/experiments/legacy_branch_evidence/*
-!/experiments/legacy_branch_evidence/summary.json
-/experiments/rl_branch_evidence/*
-!/experiments/rl_branch_evidence/summary.json
-!/experiments/rl_branch_evidence/model_metadata.json
-/experiments/team_selection_api_evidence/*
-!/experiments/team_selection_api_evidence/summary.json
-/experiments/team_selection_results/*
-!/experiments/team_selection_results/summary.json
-!/experiments/team_selection_results/metadata.json
-!/experiments/team_selection_results/upper_bounds.json
-/examples/demo_replay.json
-/examples/types.json
-
-# Tài liệu BTC tải thêm tại máy; giữ đề và input mẫu đã có trong repo
-/Đề bài/Techinical_Presentation.pptx
-/docs/api/sample_games.json
-
-# Thử nghiệm RL mở rộng: giữ tổng hợp, không đưa mọi kế hoạch/ngày lên GitHub.
-/experiments/rl_extension_results/*
-!/experiments/rl_extension_results/summary.json
-!/experiments/rl_extension_results/metadata.json
-!/experiments/rl_extension_results/audit.json
-/experiments/rl_extension_api_evidence/*
-!/experiments/rl_extension_api_evidence/summary.json
-
-# RL học lại: lưu số liệu tổng hợp, bỏ checkpoint và mọi output chi tiết.
-/experiments/rl_policy_results/*
-!/experiments/rl_policy_results/training_metadata.json
-!/experiments/rl_policy_results/evaluation_summary.json
-!/experiments/rl_policy_results/evaluation_audit.json
+/output/
+/experiments/data/
+/examples/
+/docs/api/
+/Đề bài/
+*.docx
+*.pptx
+*.pdf

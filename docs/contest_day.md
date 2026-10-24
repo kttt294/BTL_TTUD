@@ -48,7 +48,7 @@ python -X utf8 play_match.py --algorithm tour --mode timed ID_TRAN
 
 - Không reset trận, không gửi bài bằng tay song song với runner.
 - Không đổi `--seconds`/`--reserve` nhỏ hơn mặc định: dưới 5 giây/ngày tỷ lệ mất D tăng.
-- Không bật các công tắc thử nghiệm (`LOOKAHEAD`, `ROLLOUT`, `SELECTION_SCENARIOS`) trong ngày thi.
+- Không đổi `tour.PARAMS` hay `--parallel-objective` trong ngày thi ngoài cấu hình đã diễn tập.
 
 ## Sau trận
 

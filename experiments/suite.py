@@ -35,6 +35,12 @@ VARIANTS = {
     "noise1": {"noise": 1.0},
     "remove6": {"max_remove": 6, "segment": 6},
     "escort": {"escort": True},
+    "native": {"native": True},
+    # Các hướng gợi ý (bản C++): beam độ sâu 2, nhiệt độ, K nhiệt độ theo luồng, quần thể PSO rời rạc.
+    "native_rollout": {"native": True, "objective": "rollout"},
+    "native_sa": {"native": True, "temperature": 2.0},
+    "native_ktemp": {"native": True, "temperature": 4.0, "ktemp": True},
+    "native_pso": {"native": True, "search": "pso"},
     "extended_heavy": {"weights": {"variant_segment": 0.08, "segment": 0.1, "random": 0.27,
                                    "reverse": 0.25, "swap": 0.15, "worst": 0.15}},
 }
@@ -55,17 +61,19 @@ def central_supply(board):
 
 
 def play(job):
-    profile, seed, variant, seconds = job
+    profile, seed, variant, seconds, threads = job
+    settings = deepcopy(VARIANTS[variant])
+    objective = settings.pop("objective", "lookahead")
     tour.PARAMS.clear()
     tour.PARAMS.update(deepcopy(DEFAULTS))
-    tour.PARAMS.update(deepcopy(VARIANTS[variant]))
+    tour.PARAMS.update(settings)
     board = Board.from_dict(generate_config(seed, profile))
     kinds = central_supply(board)
     state = State.initial(board, kinds)
     brands = len({s["brand"] for s in board.spots})
     started, fallbacks = time.perf_counter(), 0
     for steps in board.day_steps:
-        plan = plan_day(board, state, steps, "tour", seconds, seed=seed)
+        plan = plan_day(board, state, steps, "tour", seconds, seed=seed, workers=threads, parallel_objective=objective)
         fallbacks += plan.fallback
         state = simulate_day(board, state, plan.actions, steps).state
     return {"profile": profile, "seed": seed, "variant": variant, "score": list(state.score()),
@@ -101,13 +109,16 @@ def main():
     parser.add_argument("--variants", nargs="+", default=["base"])
     parser.add_argument("--seconds", type=float, default=1.0)
     parser.add_argument("--workers", type=int, default=14)
+    parser.add_argument("--threads", type=int, default=1, help="Số luồng/tiến trình tour mỗi trận")
     args = parser.parse_args()
-    output = ROOT / f"results/suite/{args.split}_{args.seconds:g}s.json"
+    suffix = f"_{args.threads}t" if args.threads > 1 else ""
+    output = ROOT / f"results/suite/{args.split}_{args.seconds:g}s{suffix}.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     results = json.loads(output.read_text(encoding="utf-8")) if output.exists() else []
     done = {(r["profile"], r["seed"], r["variant"]) for r in results}
     # Xen kẽ biến thể theo từng bản đồ để các biến thể chạy cùng điều kiện tải máy.
-    jobs = [(p, s, v, args.seconds) for p, s in maps(args.split) for v in args.variants if (p, s, v) not in done]
+    jobs = [(p, s, v, args.seconds, args.threads) for p, s in maps(args.split) for v in args.variants
+            if (p, s, v) not in done]
     with ProcessPoolExecutor(args.workers) as pool:
         for result in pool.map(play, jobs):
             results.append(result)

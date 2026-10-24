@@ -408,7 +408,10 @@ def extended_move(problem, routes, variants, rng, kind=None):
 # Tham số tìm kiếm (giá trị mặc định = cấu hình đã kiểm chứng). Các thí nghiệm ghi đè trong tiến
 # trình con. OPERATOR_WEIGHTS: xác suất chọn từng toán tử phá; ALNS > 0 bật tự điều chỉnh trọng số
 # theo mức thành công (tốc độ học), 0 = giữ cố định.
-PARAMS = {"positions": 3, "noise": 0.5, "max_remove": 4, "segment": 4, "alns": 0.0, "escort": True,
+# native: chạy bản C++ (native/hexplan.cpp) khi có file chạy, lỗi thì quay về bản Python.
+# temperature, ktemp, search ("lns" | "pso"): chỉ bản C++ dùng (xem native/hexplan.cpp).
+PARAMS = {"positions": 3, "noise": 0.5, "max_remove": 4, "segment": 4, "alns": 0.0, "escort": True, "native": False,
+          "temperature": 0.0, "ktemp": False, "search": "lns",
           "weights": {"variant_segment": 0.105, "segment": 0.14, "random": 0.455,
                       "reverse": 0.12, "swap": 0.09, "worst": 0.09}}
 EXTENDED = ("reverse", "swap", "worst")
@@ -615,6 +618,12 @@ def find_anchors(problem, runs, deadline, rng):
 
 
 def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0):
+    if PARAMS["native"] and _CHECKPOINT is None:
+        from . import native
+        if native.available():
+            actions = native.plan_tour(board, state, steps, seconds, alpha, seed)
+            if actions is not None:
+                return actions
     started = time.perf_counter()
     deadline = started + max(0.0, seconds)
     first_deadline = started + max(seconds, 0.5)
@@ -781,13 +790,18 @@ def plan_tour_parallel(board, state, steps, seconds=2.0, alpha=1.0, workers=8,
     quá lớn, máy quá tải) thì dùng kế hoạch tạm tốt nhất thay vì bỏ trống.
     """
     started = time.time()
-    session = AnytimeSession(board, state, steps, seconds, seconds * 0.5, workers, alpha,
-                             seed=seed, objective=objective)
+    # rollout: tìm kiếm trong 65% ngân sách, phần còn lại lập nhanh ngày mai cho vài kế hoạch tốt nhất.
+    search = seconds * 0.65 if objective == "rollout" else seconds
+    session = make_session(board, state, steps, search, search * 0.5, workers, alpha,
+                           seed=seed, objective="score" if objective == "rollout" else objective)
     if not session.futures:
         # Nhóm tiến trình hỏng hoặc đã đóng: hôm nay chạy một tiến trình, ngày sau tạo lại nhóm.
         actions = plan_tour(board, state, steps, max(0.0, started + seconds * 0.8 - time.time()), alpha, seed)
     else:
         actions = session.final()
+        if objective == "rollout" and session.top:
+            chosen = choose_best(board, state, steps, [a for _, a in session.top], started + seconds - 0.05, "rollout")
+            actions = chosen or actions
     details = session.details(actions)
     return (actions, details) if return_details else actions
 
@@ -813,6 +827,10 @@ def choose_best(board, state, steps, candidates, limit, objective="lookahead"):
         # Thử nghiệm thuần nhiều seed: chỉ so điểm thật cuối ngày, không thêm dự báo.
         return plans[0][1]
     top = [item for item in plans if item[0][:2] == plans[0][0][:2]]
+    if objective == "rollout":
+        chosen = rollout_best(board, state, top, limit)
+        if chosen is not None:
+            return chosen
     full = len({s["brand"] for s in board.spots})
     best = None
     for (u, d, q), actions, after in top:
@@ -822,6 +840,47 @@ def choose_best(board, state, steps, candidates, limit, objective="lookahead"):
         if covered == full or time.time() > limit:
             break
     return best[1]
+
+
+def rollout_best(board, state, top, limit, width=4):
+    """Beam độ sâu 2: lập nhanh ngày mai (bản C++, song song) cho tối đa `width` kế hoạch cùng
+    (U, loại hôm nay); chọn theo (loại ngày mai, suất hôm nay + suất ngày mai). None nếu không chạy được."""
+    from . import native
+    if not native.available() or state.day + 1 >= len(board.day_steps):
+        return None
+    seen, beam = set(), []
+    for key, actions, after in top:
+        signature = tuple((a.pos, a.fuel) for a in after.agents)
+        if signature not in seen:
+            seen.add(signature)
+            beam.append((key, actions, after))
+        if len(beam) == width:
+            break
+    if len(beam) < 2:
+        return None
+    tomorrow = board.day_steps[state.day + 1]
+    until = min(limit, time.time() + 0.6) - 0.1
+    if until - time.time() < 0.1:
+        return None
+    runs = [native.NativeRun(board, after, tomorrow, until, [], 1.0, 0, 1) for _, _, after in beam]
+    try:
+        best = None
+        for (key, actions, after), run in zip(beam, runs):
+            run.wait(max(0.0, until + 0.6 - time.time()))
+            plans = run.tagged("F")
+            if not plans:
+                return None
+            checked = simulate_day(board, after, plans[0], tomorrow)
+            if not checked.valid:
+                return None
+            nxt = checked.state
+            value = (nxt.daily_sum - after.daily_sum, key[2] + nxt.portions - after.portions)
+            if best is None or value > best[0]:
+                best = value, actions
+        return best[1]
+    finally:
+        for run in runs:
+            run.close()
 
 
 def day_bound(board, state):
@@ -870,6 +929,10 @@ def _ping(value):
 def warm_up(workers):
     """Khởi động sẵn nhóm tiến trình và hàng đợi để ngày 1 không mất vài giây cho việc này."""
     global _POOL
+    if PARAMS["native"]:
+        from . import native
+        if native.available():
+            return True
     try:
         pool = _pool(workers)
         list(pool.map(_ping, range(workers)))
@@ -899,8 +962,8 @@ class AnytimeSession:
 
     def __init__(self, board, state, steps, seconds, quick, workers=8, alpha=1.0, every=0.0,
                  seed=0, objective="lookahead"):
-        if workers < 1 or objective not in ("score", "lookahead"):
-            raise ValueError("Cần ít nhất một tiến trình và cách chọn score hoặc lookahead.")
+        if workers < 1 or objective not in ("score", "lookahead", "rollout"):
+            raise ValueError("Cần ít nhất một tiến trình và cách chọn score, lookahead hoặc rollout.")
         self.board, self.state, self.steps, self.workers = board, state, steps, workers
         self.seeds = list(range(seed, seed + workers))
         self.objective = objective
@@ -1012,6 +1075,18 @@ class AnytimeSession:
                 "invalid_candidates": self.invalid_count,
                 "selected_score": list(checked.state.score()) if checked and checked.valid else None,
                 "elapsed": time.perf_counter() - self.started}
+
+
+def make_session(board, state, steps, seconds, quick, workers=8, alpha=1.0, every=0.0,
+                 seed=0, objective="lookahead"):
+    """Phiên tìm kiếm song song: bản C++ nhiều luồng nếu bật và chạy được, không thì nhiều tiến trình."""
+    if PARAMS["native"]:
+        from .native import NativeSession, available
+        if available():
+            session = NativeSession(board, state, steps, seconds, quick, workers, alpha, every, seed, objective)
+            if session.futures:
+                return session
+    return AnytimeSession(board, state, steps, seconds, quick, workers, alpha, every, seed, objective)
 
 
 def plan_key(board, state, actions, after=None, floor=None, objective="lookahead"):

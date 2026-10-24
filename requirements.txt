@@ -1,2 +1,3 @@
-# Chương trình thuật toán và thực nghiệm chỉ dùng thư viện chuẩn của Python.
-# ReportLab chỉ cần khi chạy riêng experiments/build_report.py để xuất lại PDF.
+# Chương trình thi chỉ dùng thư viện chuẩn của Python (3.10+) và trình biên dịch g++ cho
+# planner C++ (native/hexplan.cpp). Thí nghiệm ILP (experiments/ilp_day.py) cần thêm:
+#   pip install ortools
