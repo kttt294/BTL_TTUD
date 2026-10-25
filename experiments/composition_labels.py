@@ -16,10 +16,11 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "experiments"))
 from hexudon import native
 from hexudon.generator import generate_config
 from hexudon.model import Board
-from hexudon.selector import composition_features, map_features
+from composition_features import composition_features, map_features
 from hexudon.team_selection import candidate_types
 
 

@@ -224,3 +224,36 @@ nào thiếu bài. Đo bộ chọn đội hình: gần bằng đội hình tốt
 Diễn tập thi tính giờ với C++ + SA (12 giây/ngày, độ trễ 0,3 giây, 5% lỗi 503): Q01 (20, 200, 638),
 Q03 (20, 200, 707), 3011 (14, 126, 702), không ngày nào thiếu bài; thời gian phản hồi lũy kế tăng
 khoảng 8 giây/trận vì tìm được bài tốt hơn muộn hơn.
+
+## Chọn đội hình: model ML, luật và mô phỏng (nhánh test, 25/10/2026)
+
+Dữ liệu: 2.400 bản đồ sinh (btc 1.200, wide 600, mix 600) × tối đa 24 đội hình × 4 seed ở 0,2 giây/ngày
+(`experiments/composition_labels.py`, local + 2 tài khoản Kaggle), và 12 đề BTC × khoảng 8 đội hình ở ngân sách
+thi thật (`experiments/composition_eval.py`, Kaggle 4 luồng × 3,5×(daySeconds−4) và local 14 luồng × (daySeconds−4)).
+
+- Số xe tiếp tế quyết định gần hết: cả 12 đề BTC và 1.200/1.200 bản đồ btc đều tốt nhất với đúng 1 xe tiếp tế;
+  2 xe mất khoảng 200 Q, toàn tuần tra mất D. Bản đồ wide/mix: toàn tuần tra thắng khi một bình đủ cả trận
+  (`match_tanks` < 1), đôi khi 2 xe tiếp tế thắng khi xăng rất thiếu.
+- Vị trí xe tiếp tế: chênh 5–20 Q, ngang độ lệch giữa hai lần chạy. Luật trung tâm theo điểm bán, trung tâm
+  theo xe, xa điểm bán nhất đều ngang chọn ngẫu nhiên.
+- 480 bản đồ giữ riêng, chọn bằng seed 0, chấm bằng seed 1–3 (`experiments/train_selector.py`):
+
+| Cách chọn | Mất D (bản đồ / tổng) | % Q mất TB |
+|---|---|---|
+| Mô phỏng mọi đội hình | 19 / 27 | 0,33 |
+| Chỉ 0/1 xe tiếp tế + mô phỏng | 20 / 32 | 0,45 |
+| Model LightGBM lấy 4 + mô phỏng | 18 / 28 | 0,55 |
+| Luật bình xăng (0 hoặc 1 xe) + mô phỏng | 17 / 29 | 0,84 |
+| 1 xe tiếp tế ở vị trí trung tâm | 28 / 42 | 1,44 |
+| Model LightGBM một mình | 33 / 56 | 1,57 |
+
+Khi đủ 3.600 bản đồ (giữ riêng 720), thứ tự không đổi: mô phỏng mọi đội hình 33 / 41, 0,28%; model top4 +
+mô phỏng 33 / 47, 0,55%; model một mình 40 / 67, 1,46%; 1 xe trung tâm 49 / 82, 1,75%.
+
+- Bộ chọn khi thi (C++, 26 giây, `experiments/selector_check.py`): 12/12 đề BTC chọn 1 xe tiếp tế, kém đội hình
+  đo được tốt nhất 0–7 Q (trong mức nhiễu); 240 bản đồ giữ riêng: mất D ở 9 bản đồ (tổng 15), % Q mất 0,34,
+  ngang mô phỏng một trận (12 / 17, 0,27).
+
+Quyết định: giữ bộ chọn bằng mô phỏng C++; bỏ model ML và các luật vị trí (`src/hexudon/selector.py` đã xóa,
+đặc trưng chuyển sang `experiments/composition_features.py`). Không chạy tầng 2 (4 giây/ngày) vì tầng 3 đã
+cho thấy ngân sách thấp và ngân sách thi chọn cùng số xe tiếp tế.

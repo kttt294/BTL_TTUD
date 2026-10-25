@@ -3,9 +3,9 @@
 Mỗi mẫu là một cặp (bản đồ, đội hình). Nhãn gộp các seed như bộ chọn: U thấp nhất, D thấp nhất, Q trung
 bình; so với đội hình tốt nhất cùng bản đồ: mất D và % Q mất. Hai model LightGBM: dự đoán mất D và % Q
 mất; chọn đội hình có (mất D dự đoán, % Q mất dự đoán) nhỏ nhất. Cây quyết định nông cho quy tắc đọc
-được về số xe tiếp tế. Model xuất ra JSON để runner tính bằng Python thuần.
+được về số xe tiếp tế. Kết quả: mô phỏng mọi đội hình thắng model, nên model không dùng khi thi (docs/roadmap.md).
 
-python -X utf8 experiments/train_selector.py --labels "results/labels/*.jsonl" --out src/hexudon/selector_model.json
+python -X utf8 experiments/train_selector.py --labels "results/labels/**/*.jsonl"
 """
 
 import argparse
@@ -18,16 +18,19 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from hexudon.selector import FEATURES, row_features
+sys.path.insert(0, str(ROOT / "experiments"))
+from composition_features import FEATURES, row_features
 
 
 def load(pattern):
     maps, seen = [], set()
-    for path in sorted(glob.glob(str(ROOT / pattern) if not Path(pattern).is_absolute() else pattern)):
+    for path in sorted(glob.glob(str(ROOT / pattern) if not Path(pattern).is_absolute() else pattern, recursive=True)):
         for line in Path(path).read_text(encoding="utf-8").splitlines():
             if not line.strip():
                 continue
             row = json.loads(line)
+            if "candidates" not in row:  # dòng tầng 2/3 (composition_eval.py) có định dạng khác
+                break
             key = (row["profile"], row["seed"])
             if key in seen:
                 continue
@@ -37,15 +40,20 @@ def load(pattern):
                 runs = [r for r in c["runs"] if r[4]]
                 if not runs:
                     continue
+                # Seed đầu dùng cho "một trận mỗi đội hình"; các seed còn lại để chấm công bằng (held).
+                held = runs[1:] or runs
                 cands.append({"types": c["types"], "features": c["features"],
                               "u": min(r[1] for r in runs), "d": min(r[2] for r in runs),
                               "q": statistics.mean(r[3] for r in runs),
+                              "hu": min(r[1] for r in held), "hd": min(r[2] for r in held),
+                              "hq": statistics.mean(r[3] for r in held),
                               "q0": runs[0][3], "d0": runs[0][2], "u0": runs[0][1]})
             if len(cands) >= 2:
-                best = max(cands, key=lambda c: (c["u"], c["d"], c["q"]))
-                for c in cands:
-                    c["d_loss"] = (best["u"] - c["u"]) * 1000 + (best["d"] - c["d"])
-                    c["q_regret"] = 100.0 * (best["q"] - c["q"]) / max(1.0, best["q"])
+                for p, (u, d, q) in (("", ("u", "d", "q")), ("h", ("hu", "hd", "hq"))):
+                    best = max(cands, key=lambda c: (c[u], c[d], c[q]))
+                    for c in cands:
+                        c[p + "d_loss"] = (best[u] - c[u]) * 1000 + (best[d] - c[d])
+                        c[p + "q_regret"] = 100.0 * (best[q] - c[q]) / max(1.0, best[q])
                 maps.append({"profile": row["profile"], "seed": row["seed"], "features": row["features"], "cands": cands})
     return maps
 
@@ -62,11 +70,12 @@ def matrix(maps):
 
 
 def evaluate(maps, choose):
-    """Đội hình được chọn trên mỗi bản đồ: số bản đồ mất D, tổng D mất, % Q mất TB, tỷ lệ trúng tốt nhất."""
+    """Đội hình được chọn trên mỗi bản đồ, chấm bằng các seed 1.. (không dùng seed đầu mà one_run dùng để chọn):
+    số bản đồ mất D, tổng D mất, % Q mất TB, tỷ lệ trúng tốt nhất."""
     picks = [choose(m) for m in maps]
-    return {"maps": len(maps), "d_loss_maps": sum(p["d_loss"] > 0 for p in picks),
-            "d_loss": sum(p["d_loss"] for p in picks), "q_regret": statistics.mean(p["q_regret"] for p in picks),
-            "best": sum(p["d_loss"] == 0 and p["q_regret"] == 0 for p in picks)}
+    return {"maps": len(maps), "d_loss_maps": sum(p["hd_loss"] > 0 for p in picks),
+            "d_loss": sum(p["hd_loss"] for p in picks), "q_regret": statistics.mean(p["hq_regret"] for p in picks),
+            "best": sum(p["hd_loss"] == 0 and p["hq_regret"] == 0 for p in picks)}
 
 
 def central(m):
@@ -80,11 +89,31 @@ def one_run(m):
     return max(m["cands"], key=lambda c: (c["u0"], c["d0"], c["q0"]))
 
 
+def single_run(m):
+    """Chỉ xét đội hình đúng 1 xe tiếp tế, chọn bằng một trận mỗi đội hình."""
+    single = [c for c in m["cands"] if c["features"]["supplies"] == 1] or m["cands"]
+    return max(single, key=lambda c: (c["u0"], c["d0"], c["q0"]))
+
+
+def tanks_rule_run(m):
+    """Toàn tuần tra khi một bình đủ cả trận (match_tanks < 1), ngược lại 1 xe tiếp tế; chọn vị trí bằng một trận."""
+    f = m["features"]
+    want = 0 if f["steps_mean"] * f["days"] / (2.0 * f["fuel"]) < 1 else 1
+    pool = [c for c in m["cands"] if c["features"]["supplies"] == want] or m["cands"]
+    return max(pool, key=lambda c: (c["u0"], c["d0"], c["q0"]))
+
+
+def small_run(m):
+    """Xét 0 và 1 xe tiếp tế, chọn bằng một trận mỗi đội hình."""
+    pool = [c for c in m["cands"] if c["features"]["supplies"] <= 1] or m["cands"]
+    return max(pool, key=lambda c: (c["u0"], c["d0"], c["q0"]))
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--labels", default="results/labels/*.jsonl")
+    parser.add_argument("--labels", default="results/labels/**/*.jsonl")
     parser.add_argument("--holdout", type=float, default=0.2)
-    parser.add_argument("--out", default=str(ROOT / "src/hexudon/selector_model.json"))
+    parser.add_argument("--out", default=str(ROOT / "results/labels/selector_model.json"))
     args = parser.parse_args()
     import lightgbm as lgb
     from sklearn.tree import DecisionTreeClassifier, export_text
@@ -108,14 +137,23 @@ def main():
         best = min((i for i in range(len(rows)) if pd[i] <= floor + 0.3), key=lambda i: pq[i])
         return m["cands"][best]
 
+    def learned_top(m, k=4):
+        rows = [row_features(m["features"], c["features"]) for c in m["cands"]]
+        pd, pq = model_d.predict(rows), model_q.predict(rows)
+        order = sorted(range(len(rows)), key=lambda i: (pd[i] > min(pd) + 0.3, pq[i]))[:k]
+        return max((m["cands"][i] for i in order), key=lambda c: (c["u0"], c["d0"], c["q0"]))
+
+    methods = (("quy tắc trung tâm", central), ("một trận mỗi đội hình", one_run), ("model", learned),
+               ("1 tiếp tế + một trận", single_run), ("0/1 tiếp tế + một trận", small_run),
+               ("luật bình + một trận", tanks_rule_run), ("model top4 + một trận", learned_top))
     report = {}
     for name, split in (("học", train), ("giữ riêng", test)):
-        for label, fn in (("quy tắc trung tâm", central), ("một trận mỗi đội hình", one_run), ("model", learned)):
+        for label, fn in methods:
             report[f"{name} | {label}"] = evaluate(split, fn)
     for prof in ("btc", "wide", "mix"):
         part = [m for m in test if m["profile"] == prof]
         if part:
-            for label, fn in (("quy tắc trung tâm", central), ("một trận mỗi đội hình", one_run), ("model", learned)):
+            for label, fn in methods:
                 report[f"giữ riêng {prof} | {label}"] = evaluate(part, fn)
     for k, v in report.items():
         print(f"{k:45} mất D ở {v['d_loss_maps']:3}/{v['maps']} bản đồ (tổng {v['d_loss']}), "
