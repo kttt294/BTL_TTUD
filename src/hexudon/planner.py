@@ -17,7 +17,7 @@ class Plan:
     searches: int
 
 
-def plan_day(board, state, steps, strategy="greedy", seconds=2.0, alpha=1.0, workers=1, seed=0):
+def plan_day(board, state, steps, strategy="greedy", seconds=2.0, alpha=1.0, workers=1, seed=0, road_weights=None):
     if strategy not in ("greedy", "lookahead", "tour"):
         raise ValueError("Chiến lược phải là greedy, lookahead hoặc tour.")
     started = time.perf_counter()
@@ -27,7 +27,7 @@ def plan_day(board, state, steps, strategy="greedy", seconds=2.0, alpha=1.0, wor
             if workers > 1:
                 actions = plan_tour_parallel(board, state, steps, seconds * 0.9, alpha, workers)
             else:
-                actions = plan_tour(board, state, steps, seconds * 0.9, alpha, seed)
+                actions = plan_tour(board, state, steps, seconds * 0.9, alpha, seed, road_weights)
         except Exception as error:  # Lỗi lập trình trên bản đồ lạ không được làm mất ngày thi.
             print(f"Planner tour lỗi ({type(error).__name__}: {error}); dùng Greedy.", flush=True)
             actions = None

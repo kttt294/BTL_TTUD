@@ -5,6 +5,7 @@ from itertools import product
 import os
 import time
 
+from .bounds import score_bounds
 from .model import State
 from .simulator import simulate_day
 
@@ -74,6 +75,35 @@ def evaluate_with_budget(board, kinds, day_seconds, strategy, budget, seed=0):
     return evaluate_types(board, kinds, day_seconds, strategy, time.perf_counter() + budget, seed)
 
 
+SCREEN_D_SLACK = 2
+
+
+def screen_key(score, bound):
+    """Khóa chọn đội hình vào vòng tinh chỉnh từ điểm sàng lọc.
+
+    Sàng lọc chỉ có vài phần mười giây mỗi ngày nên D hụt 1–2 điểm là nhiễu: ở Q06, đội hình một
+    xe tiếp tế được D 149 khi sàng lọc nên bị loại, dù chạy đủ giờ đạt (15, 150, 747) so với
+    (15, 150, 617) của đội hình được chọn. D được nới tối đa SCREEN_D_SLACK nhưng không vượt cận.
+    """
+    return score[0], min(score[1] + SCREEN_D_SLACK, bound[1]), score[2]
+
+
+# Ở 70 lượt câu Mock 24/10 chọn đúng nhóm, điểm luôn đạt ít nhất 81,2% cận MST cao nhất (Q18:
+# 285/351, Q06: 847/1039). Một đội hình có cận (U, D không hơn) dưới 81% mức đó vì vậy không thắng
+# được điểm thực tế của nhóm dẫn đầu, nhưng khi tám câu tranh CPU, sàng lọc nhiễu vẫn chọn nhầm
+# chúng: Q01 toàn tuần tra (cận 640/825) được 318 so với 716, Q06 hai xe tiếp tế (cận 832/1039)
+# được 683 so với 855. Bỏ trước khi sàng lọc còn để dành giờ cho các đội hình còn lại. Q11 toàn
+# tuần tra (cận 315/366, 86%) vẫn được mô phỏng.
+GROUP_BOUND_RATIO = 0.81
+
+
+def viable_types(candidates, bounds):
+    top = max(bounds.values())
+    return [k for k in candidates
+            if not (bounds[tuple(k)][0] <= top[0] and bounds[tuple(k)][1] <= top[1]
+                    and bounds[tuple(k)][2] < GROUP_BOUND_RATIO * top[2])]
+
+
 def average_trials(trials):
     """Gộp các lần mô phỏng của một đội hình: (U thấp nhất, D thấp nhất, Q trung bình)."""
     scores = [t["score"] for t in trials]
@@ -86,21 +116,32 @@ def select_types_parallel(board, seconds=20.0, strategy="tour", limit=16, worker
     started = time.perf_counter()
     deadline = started + max(0, seconds)
     candidates = candidate_types(board, limit)
-    workers = workers or max(1, min(len(candidates), (os.cpu_count() or 2) - 1))
-    rounds = -(-len(candidates) // workers)
     days = len(board.day_steps)
     # Chừa khoảng hai giây cho việc khởi động tiến trình trên Windows và ghi kết quả.
     usable = max(0, seconds - 2.0)
-    screen_seconds = max(0.05, usable * 0.35 / (rounds * days * 1.5))
-    best_types, best_score, records = [0] * len(board.starts), None, []
+    # Hết giờ trước khi mô phỏng xong: dùng một xe tiếp tế gần tâm các điểm (candidates[1]). Trên 9
+    # bản đồ Practice, đội hình một xe tiếp tế luôn hơn toàn tuần tra (ví dụ Q01 khoảng 600 so với 303).
+    fallback = candidates[1] if len(candidates) > 1 and sum(candidates[1]) == 1 else candidates[0]
+    best_types, best_score, records = fallback[:], None, []
     if usable <= 0:
         return best_types, records, time.perf_counter() - started
+    # Dijkstra giữa các điểm dùng chung mọi đội hình nên cả bảng cận chỉ mất khoảng nửa giây.
+    cache = {}
+    bounds = {tuple(k): score_bounds(board, k, cache)["route"] for k in candidates}
+    candidates = viable_types(candidates, bounds)
+    if fallback not in candidates:
+        fallback = max(candidates, key=lambda k: bounds[tuple(k)])
+        best_types = fallback[:]
+    workers = workers or max(1, min(len(candidates), (os.cpu_count() or 2) - 1))
+    rounds = -(-len(candidates) // workers)
+    screen_seconds = max(0.05, usable * 0.35 / (rounds * days * 1.5))
 
-    def run(pool, kinds_list, day_seconds, phase, repeats=1):
-        nonlocal best_types, best_score
+    def submit(pool, kinds_list, day_seconds, repeats=1):
         budget = max(0, deadline - time.perf_counter() - 0.5)
-        futures = {pool.submit(evaluate_with_budget, board, k, day_seconds, strategy, budget, seed): k
-                   for k in kinds_list for seed in range(repeats)}
+        return {pool.submit(evaluate_with_budget, board, k, day_seconds, strategy, budget, seed): k
+                for k in kinds_list for seed in range(repeats)}
+
+    def collect(futures, phase):
         done, pending = wait(futures, timeout=max(0, deadline - time.perf_counter()))
         for future in pending:
             future.cancel()
@@ -116,39 +157,62 @@ def select_types_parallel(board, seconds=20.0, strategy="tour", limit=16, worker
 
     pool = ProcessPoolExecutor(workers)
     try:
-        screened = run(pool, candidates, screen_seconds, "screen")
+        futures = submit(pool, candidates, screen_seconds)
+        screened = collect(futures, "screen")
         if not screened:
-            # Bản đồ quá lớn so với hạn giờ: các đội hình chạy song song cùng tốc độ nên so
-            # được theo số ngày đã mô phỏng rồi đến điểm tại ngày đó.
+            # Bản đồ quá lớn so với hạn giờ: khi mọi đội hình chạy song song cùng tốc độ thì so được
+            # theo số ngày đã mô phỏng rồi đến điểm tại ngày đó. Ít tiến trình hơn thì đội hình nộp
+            # trước luôn đi xa hơn (Mock Q01 vòng 1–2: ra toàn tuần tra), nên giữ đội hình dự phòng.
             partial = [r for r in records if r["days"] and 0 in r["types"]]
-            if partial:
+            if partial and workers >= len(candidates):
                 best = max(partial, key=lambda r: (len(r["days"]), tuple(r["score"])))
                 best_types = best["types"][:]
             return best_types, records, time.perf_counter() - started
-        ranked = sorted(screened, key=lambda r: tuple(r["score"]), reverse=True)
-        best_types, best_score = ranked[0]["types"][:], tuple(ranked[0]["score"])
-        finalists = [r["types"] for r in ranked[:min(workers, 4)]]
+        best = max(screened, key=lambda r: tuple(r["score"]))
+        best_types, best_score = best["types"][:], tuple(best["score"])
+        # Cận nhỏ hơn điểm đã đạt (thứ tự từ điển) chứng minh đội hình đó không thể thắng.
+        alive = [r for r in screened if bounds[tuple(r["types"])] >= best_score]
+        ranked = sorted(alive, key=lambda r: screen_key(r["score"], bounds[tuple(r["types"])]), reverse=True)
+        # Sàng lọc quá ngắn nên rất nhiễu (Q07: cùng đội hình được 623 rồi 394 ở hai lượt), không đủ
+        # để loại cả một nhóm số xe tiếp tế. Mỗi nhóm còn khả năng thắng có một đại diện, nhóm có cận
+        # cao hơn vào trước, phần còn lại lấy theo điểm sàng lọc.
+        representatives = {}
+        for trial in ranked:
+            representatives.setdefault(sum(trial["types"]), trial)
+        order = sorted(representatives.values(), key=lambda r: bounds[tuple(r["types"])], reverse=True)
+        finalists = []
+        for trial in order + ranked:
+            if trial["types"] not in finalists:
+                finalists.append(trial["types"])
+        finalists = finalists[:min(workers, 4)]
+        # Không kịp tinh chỉnh (ít tiến trình hoặc sắp hết giờ) thì tin nhóm có cận cao nhất hơn
+        # một lần sàng lọc nhiễu; trên 9 bản đồ Practice nhóm đó luôn là số xe tiếp tế tốt nhất.
+        best_types = finalists[0][:]
         remaining = deadline - time.perf_counter() - 1.0
         refine_seconds = remaining * 0.7 / (days * 1.5)
         if len(finalists) > 1 and refine_seconds > screen_seconds:
             # Một lần mô phỏng dao động ±15–20 Q, cỡ chênh lệch giữa các đội hình tốt; dùng hết tiến
             # trình rảnh để chạy mỗi đội hình nhiều seed, so theo (U, D thấp nhất, Q trung bình).
             repeats = max(1, workers // len(finalists))
-            refined = run(pool, finalists, refine_seconds, "refine", repeats)
+            refined = collect(submit(pool, finalists, refine_seconds, repeats), "refine")
             groups = {}
             for trial in refined:
                 groups.setdefault(tuple(trial["types"]), []).append(trial)
             if groups:
-                kinds, trials = max(groups.items(), key=lambda item: average_trials(item[1]))
+                # D thấp nhất qua vài lượt ngắn vẫn nhiễu 1–2 điểm (Mock Q04, 24/10: đội hình hai xe tiếp tế
+                # thắng nhờ D 200 so với 199 dù kém hơn 200 suất, chạy thật được 470 so với 710–720).
+                kinds, trials = max(groups.items(),
+                                    key=lambda item: screen_key(average_trials(item[1]), bounds[item[0]]))
                 best_types, best_score = list(kinds), average_trials(trials)
     finally:
         pool.shutdown(wait=False, cancel_futures=True)
     return best_types, records, time.perf_counter() - started
 
 
-def select_types(board, seconds=20.0, strategy="greedy", limit=16):
+def select_types(board, seconds=20.0, strategy="greedy", limit=16, workers=None):
+    """workers giới hạn tiến trình của bộ chọn tour khi nhiều trận chạy chung một máy."""
     if strategy == "tour":
-        return select_types_parallel(board, seconds, strategy, limit)
+        return select_types_parallel(board, seconds, strategy, limit, workers)
     started = time.perf_counter()
     deadline = started + max(0, seconds)
     candidates = candidate_types(board, limit)

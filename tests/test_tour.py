@@ -25,6 +25,46 @@ def line_board(fuel=40, days=(30, 30, 30)):
 
 
 class TourTests(unittest.TestCase):
+    def test_road_penalty_changes_route_but_not_real_steps(self):
+        from hexudon.tour import road_penalties
+        # Hàng trên là đường, hàng dưới đồng bằng; ngưỡng mặc định đông 3, tắc 4.
+        board = Board([[1] * 8, [0] * 8], [], [0, 8], [40], 40)
+        state = State.initial(board, [0, 0])
+        state.road_history = [{1: 2, 2: 3}]
+        penalty = road_penalties(board, state, (0.5, 2, 6))
+        # Ô 1: 2 lượt hôm qua + 1 hôm nay = 3 → đông; ô 2: 3 + 1 = 4 → tắc; ô 3 còn thông; đồng bằng không phạt.
+        self.assertEqual(penalty[1:4], [2, 6, 0.5])
+        self.assertEqual(penalty[8:16], [0.0] * 8)
+        free = Legs(board, {}, set()).leg(0, 7, 0)[0]
+        legs = Legs(board, {}, set(), [10.0 if board.terrain(p) == 1 else 0.0 for p in range(16)])
+        steps = legs.leg(0, 7, 0)[0]
+        self.assertEqual(free, 7)
+        self.assertGreater(steps, free)
+        pos, total = 0, 0
+        for direction in legs.directions(0, 7, 0):
+            total += board.cost(pos, {})[0]
+            pos = board.neighbor(pos, direction)
+        self.assertEqual((pos, total), (7, steps))
+
+    def test_two_day_session_only_returns_better_valid_plan(self):
+        from hexudon.simulator import simulate_day
+        from hexudon.two_day import TwoDaySession, two_day_value
+        board = line_board(days=(12, 12, 12))
+        state = State.initial(board, [0, 0])
+        steps = board.day_steps[0]
+        idle = [[-steps], [-steps]]
+        session = TwoDaySession(board, state, steps, 4.0, 1)
+        better, info = session.choose(idle)
+        # Đứng yên cả ngày không thu được gì nên phải có phương án tốt hơn, hợp lệ và đúng số bước.
+        self.assertIsNotNone(better)
+        self.assertTrue(simulate_day(board, state, better, steps).valid)
+        self.assertGreater(info["best_value"], info["submitted_value"])
+        self.assertEqual(two_day_value(board, state, better, 0, 0.1, True), simulate_day(board, state, better, steps).state.score())
+        # Bài đã nộp tốt sẵn: chỉ trả phương án khi điểm sau hai ngày cao hơn hẳn.
+        again, info = TwoDaySession(board, state, steps, 4.0, 1).choose(better)
+        if again is not None:
+            self.assertGreater(info["best_value"], info["submitted_value"])
+
     def test_unreachable_leg_is_infinite_and_has_no_directions(self):
         # Cột ao ngăn hai vùng; truy vết trước đây bị lặp ở nút cha -1.
         board = Board([[0, 0, 3, 0, 0] for _ in range(3)], [], [0, 5, 10], [12], 40)

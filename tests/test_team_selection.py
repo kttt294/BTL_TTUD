@@ -8,7 +8,7 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from hexudon.model import Board
-from hexudon.team_selection import candidate_types, evaluate_types, select_types
+from hexudon.team_selection import candidate_types, evaluate_types, select_types, viable_types
 
 
 class TeamSelectionTests(unittest.TestCase):
@@ -44,6 +44,16 @@ class TeamSelectionTests(unittest.TestCase):
         kinds, records, _ = select_types(self.board, seconds=0)
         self.assertEqual(kinds, [0, 0, 0])
         self.assertEqual(records, [])
+
+    def test_layouts_far_below_top_bound_are_not_screened(self):
+        # Cận MST của Mock Q01 và Q11: toàn tuần tra bị bỏ ở Q01 (640/825) nhưng giữ ở Q11 (315/366).
+        bounds = {(0, 0, 0): (20, 200, 640), (0, 0, 1): (20, 200, 825), (0, 1, 1): (20, 200, 550)}
+        self.assertEqual(viable_types([list(k) for k in bounds], bounds), [[0, 0, 1]])
+        bounds = {(0, 0, 0): (16, 112, 315), (0, 0, 1): (16, 112, 366), (0, 1, 1): (16, 112, 244)}
+        self.assertEqual(viable_types([list(k) for k in bounds], bounds), [[0, 0, 0], [0, 0, 1]])
+        # Cận D cao hơn nhóm dẫn đầu thì vẫn được mô phỏng dù U và Q thấp hơn.
+        bounds = {(0, 0, 1): (16, 112, 366), (0, 1, 1): (15, 120, 100)}
+        self.assertEqual(viable_types([list(k) for k in bounds], bounds), [[0, 0, 1], [0, 1, 1]])
 
     def test_large_team_keeps_each_possible_single_supply(self):
         self.board.starts = list(range(8))

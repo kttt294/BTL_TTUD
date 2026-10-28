@@ -37,8 +37,8 @@ class CarRun:
 class Legs:
     """Cây đường ngắn nhất từ từng ô nguồn, tính lười và lưu lại trong ngày."""
 
-    def __init__(self, board, traffic, spot_set):
-        self.board, self.spot_set = board, spot_set
+    def __init__(self, board, traffic, spot_set, penalty=None):
+        self.board, self.spot_set, self.penalty = board, spot_set, penalty
         size = board.width * board.height
         self.cost = [board.cost(p, traffic) if board.terrain(p) != 3 else (0, 0) for p in range(size)]
         self.nbrs = [board.neighbors(p) if board.terrain(p) != 3 else [] for p in range(size)]
@@ -53,13 +53,14 @@ class Legs:
             parent, pdir = [-1] * size, [-1] * size
             dist[source] = 0.0
             heap = [(0.0, source)]
-            cost, nbrs = self.cost, self.nbrs
+            cost, nbrs, penalty = self.cost, self.nbrs, self.penalty
             while heap:
                 d, u = heapq.heappop(heap)
                 if d > dist[u]:
                     continue
                 su, fu = cost[u]
-                nd, ns, nf = d + a * su + b * fu, steps[u] + su, fuel[u] + fu
+                # Phạt chỉ đổi đường được chọn; số bước và nhiên liệu vẫn theo chi phí thật.
+                nd, ns, nf = d + a * su + b * fu + (penalty[u] if penalty else 0), steps[u] + su, fuel[u] + fu
                 for direction, v in nbrs[u]:
                     if nd < dist[v] - 1e-9:
                         dist[v], steps[v], fuel[v] = nd, ns, nf
@@ -97,11 +98,11 @@ class Legs:
 
 
 class DayProblem:
-    def __init__(self, board, state, steps, hubs, allowance, next_steps=None, legs=None):
+    def __init__(self, board, state, steps, hubs, allowance, next_steps=None, legs=None, penalty=None):
         self.board, self.state, self.steps = board, state, steps
         self.next_steps = next_steps
         self.spot_at = {s["pos"]: s for s in board.spots}
-        self.legs = legs or Legs(board, state.traffic, set(self.spot_at))
+        self.legs = legs or Legs(board, state.traffic, set(self.spot_at), penalty)
         self.patrols = [i for i, a in enumerate(state.agents) if a.kind == 0]
         self.hubs = hubs  # danh sách (ô hẹn, step xe tiếp tế tới nơi)
         self.hub_arrival = {}
@@ -614,7 +615,32 @@ def find_anchors(problem, runs, deadline, rng):
     return best_anchors, best[0]
 
 
-def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0):
+# (ô còn thông, ô sẽ đông, ô sẽ tắc) cho road_penalties; (0, 0, 0) là planner gốc. Dò tham số 28/10
+# (Q04, Q01, Q06, 2 seed): bộ phạt nhẹ này hơn bộ (0.3/1/3 ... 2/4/10) ở Q01 (620 so với 611), ngang ở
+# Q04/Q06; bộ phạt mạnh hơn kém đi. ROAD_WEIGHTS_FEW dùng khi ít tiến trình.
+ROAD_WEIGHTS = [(0, 0, 0), (0.1, 0.5, 1.5), (0.2, 1, 3), (0.3, 1, 3), (0, 1, 4), (0.5, 2, 6)]
+ROAD_WEIGHTS_FEW = [(0, 0, 0), (0.2, 1, 3), (0.5, 2, 6)]
+
+
+def road_penalties(board, state, weights):
+    """Phạt chọn đường cho ô đường mà đi qua hôm nay sẽ làm ngày mai đông hoặc tắc.
+
+    weights = (ô còn thông, ô sẽ đông, ô sẽ tắc), tính bằng bước. Mỗi bước xe đứng trên ô đường là một
+    lượt; mặt đường ngày mai tính từ lượt của hôm qua và hôm nay. Dùng cho Practice (một đội, ngưỡng
+    không chia theo số đội): xe nhà làm tắc trục đường chính nên điểm gần bằng khi mọi đường luôn đông.
+    """
+    free, busy, jammed = weights
+    history = state.road_history[-1] if state.road_history else {}
+    penalty = [0.0] * (board.width * board.height)
+    for pos in range(len(penalty)):
+        if board.terrain(pos) == 1:
+            total = history.get(pos, 0) + board.cost(pos, state.traffic)[0]
+            penalty[pos] = (jammed if total >= board.jammed_threshold else
+                            busy if total >= board.busy_threshold else free)
+    return penalty
+
+
+def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0, road_weights=None):
     started = time.perf_counter()
     deadline = started + max(0.0, seconds)
     first_deadline = started + max(seconds, 0.5)
@@ -622,7 +648,8 @@ def plan_tour(board, state, steps, seconds=2.0, alpha=1.0, seed=0):
     supplies = [i for i, a in enumerate(state.agents) if a.kind == 1]
     allowance = allowances(board, state, steps, alpha)
     following = board.day_steps[state.day + 1] if state.day + 1 < len(board.day_steps) else None
-    base = DayProblem(board, state, steps, [], allowance, following)
+    penalty = road_penalties(board, state, road_weights) if road_weights and any(road_weights) else None
+    base = DayProblem(board, state, steps, [], allowance, following, penalty=penalty)
     options = [[]]
     for car in supplies:
         cands = hub_candidates(board, state, car, base.legs, steps)

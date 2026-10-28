@@ -11,13 +11,14 @@ import re
 import time
 from urllib.error import URLError
 
-from .live_api import APIError, LiveAPI
+from .live_api import APIError, GAME_ID, LiveAPI, resolve_game_id
 from .live_storage import cleanup_run, run_lock, write_json
 from .model import Agent, Board, State
 from .planner import plan_day
 from .simulator import simulate_day
 from .team_selection import select_types
 from .tour import AnytimeSession, plan_key, reaches_bound, warm_up
+from .two_day import TwoDaySession
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -116,7 +117,7 @@ class MatchRunner:
     def __init__(self, api, game_id, folder, algorithm='greedy', mode='auto',
                  seconds=20., reserve=4., selection_seconds=8., roles='auto', kinds=None,
                  poll=1., dry_run=False, inspect=False, max_days=None, clock=time,
-                 predictor=predict, team_id=None, resubmit=True, workers=1):
+                 predictor=predict, team_id=None, resubmit=True, workers=1, two_day=True):
         self.api, self.game_id, self.folder = api, game_id, Path(folder)
         self.team_id = str(team_id or api.team_id or '')
         if not self.team_id:
@@ -129,6 +130,8 @@ class MatchRunner:
         self.resubmit, self.config = resubmit, {}
         # workers > 1 với tour: một phiên tìm kiếm cho cả ngày, nộp nhanh rồi lấy bài cuối.
         self.workers, self.session = workers, None
+        # two_day: tìm bài nộp lại bằng TwoDaySession (chọn theo điểm sau ngày mai) thay cho AnytimeSession.
+        self.two_day = two_day
         self.folder.mkdir(parents=True, exist_ok=True)
         self.checkpoint = self.folder/('preview_checkpoint.json' if dry_run else 'checkpoint.json')
         self.journal = json.loads(self.checkpoint.read_text(encoding='utf-8')) if self.checkpoint.exists() else {'submitted': {}}
@@ -242,7 +245,7 @@ class MatchRunner:
             kinds = [0]*(len(board.starts)-1)+[1]
         else:
             strategy = self.algorithm if self.algorithm in ('lookahead', 'tour') else 'greedy'
-            kinds, _, _ = select_types(board, budget, strategy)
+            kinds, _, _ = select_types(board, budget, strategy, workers=max(1, self.workers))
         State.initial(board, kinds)
         if 0 not in kinds:
             raise ValueError('Đội hình cần ít nhất một xe tuần tra.')
@@ -376,7 +379,26 @@ class MatchRunner:
                 budget = self.day_budget(day, deadline)
                 staged = mode=='timed' and self.resubmit and not self.dry_run and budget > 8
                 actions = None
-                if staged and self.algorithm=='tour' and self.workers>1:
+                if staged and self.algorithm=='tour' and self.two_day:
+                    # Các phương án chạy trong nhóm tiến trình suốt ngày; bài nộp nhanh lập trong tiến trình
+                    # chính (một tiến trình) để không xếp hàng sau các phương án và trễ bài đầu tiên.
+                    try:
+                        self.session = TwoDaySession(board, state, board.day_steps[day], budget, self.workers,
+                                                     keep_traffic=(mode=='timed'))
+                    except Exception as error:
+                        print(f'Không khởi động được phiên hai ngày ({error}); dùng cách cũ.', flush=True)
+                        self.session = None
+                    if self.session is not None:
+                        quick = min(budget, max(3., .15*budget))
+                        try:
+                            plan = plan_day(board, state, board.day_steps[day], 'tour', quick)
+                            actions, metrics = plan.actions, {'algorithm': 'tour', 'two_day': True}
+                        except Exception as error:
+                            print(f'Planner lỗi ({error}); dùng Greedy.', flush=True)
+                            actions = plan_day(board, state, board.day_steps[day], 'greedy', min(quick, 2.)).actions
+                            metrics = {'algorithm': 'greedy', 'two_day': True}
+                        budget = quick
+                if actions is None and staged and self.algorithm=='tour' and self.workers>1:
                     # Nộp nhanh sau 2-5 giây; các tiến trình tối ưu tiếp tới hết ngân sách.
                     quick = min(5., max(2., .12*budget))
                     # Các tiến trình gửi kế hoạch mỗi 2 giây để nộp lại ngay khi có bài tốt hơn.
@@ -389,8 +411,9 @@ class MatchRunner:
                         # Nộp sớm một bài an toàn, phần thời gian còn lại dùng để tìm bài tốt hơn.
                         budget = min(budget, max(3., .15*budget))
                     actions, metrics = self.safe_predict(board, state, budget, deadline)
-                if staged and reaches_bound(board, state, actions):
+                if staged and not isinstance(self.session, TwoDaySession) and reaches_bound(board, state, actions):
                     # Đã đạt cận trên của ngày: không thể tốt hơn, nộp một lần để thời gian phản hồi thấp.
+                    # Phiên hai ngày vẫn chạy: bài cùng điểm hôm nay có thể để xe ở vị trí tốt hơn cho ngày mai.
                     staged, self.session = False, None
                 checked = simulate_day(board, state, actions, board.day_steps[day])
                 if not checked.valid:
@@ -460,6 +483,9 @@ class MatchRunner:
         if budget < 2:
             self.save()
             return
+        if isinstance(self.session, TwoDaySession):
+            self.improve_two_day(board, state, day, entry, deadline, mode)
+            return
         try:
             session, self.session = self.session, None
             if session is not None:
@@ -513,6 +539,44 @@ class MatchRunner:
         write_json(self.folder/f'day_{day+1:02d}_output.txt', better)
         self.save()
         print(f'Ngày {day+1}: đã nộp lại bài tốt hơn {old_key} → {new_key}.', flush=True)
+
+    def improve_two_day(self, board, state, day, entry, deadline, mode):
+        """Nộp lại phương án có điểm sau ngày mai cao hơn bài đã nộp (một lần, nếu còn giờ)."""
+        session, self.session = self.session, None
+        try:
+            better, info = session.choose(entry['actions'])
+        except Exception as error:
+            entry['improve'] = {'error': f'{type(error).__name__}: {error}'[:200]}
+            self.save()
+            print(f'Ngày {day+1}: phiên hai ngày lỗi ({error}); giữ bài đã nộp.', flush=True)
+            return
+        entry['improve'] = {key: (list(value) if isinstance(value, tuple) else value) for key, value in info.items()}
+        if better is None:
+            self.save()
+            print(f'Ngày {day+1}: không phương án nào hơn bài đã nộp sau hai ngày '
+                  f'({info["submitted_value"]} so với {info["best_value"]}); giữ bài đã nộp.', flush=True)
+            return
+        if deadline is not None and deadline-self.clock.monotonic() <= .5:
+            self.save()
+            print(f'Ngày {day+1}: hết giờ trước khi nộp lại; giữ bài đã nộp.', flush=True)
+            return
+        try:
+            response = self.request('POST', ENDPOINTS[mode],
+                                    {'game_id': self.game_id, 'day': day, 'actions': better}, deadline)
+        except (APIError, URLError, TimeoutError, OSError) as error:
+            entry['improve']['error'] = str(error)[:200]
+            self.save()
+            print(f'Ngày {day+1}: nộp lại lỗi ({error}); máy chủ vẫn giữ bài đầu.', flush=True)
+            return
+        checked = simulate_day(board, state, better, board.day_steps[day])
+        entry.update(actions=better, response=response)
+        entry['improve']['accepted'] = True
+        self.journal.update(brands=sorted(checked.state.brands), daily_sum=checked.state.daily_sum,
+                            road_history=checked.state.road_history)
+        write_json(self.folder/f'day_{day+1:02d}_output.txt', better)
+        self.save()
+        print(f'Ngày {day+1}: nộp lại bài tốt hơn sau hai ngày {info["submitted_value"]} -> '
+              f'{info["best_value"]} (phạt đường {info["weights"]}).', flush=True)
 
 
 def preflight(api, game_id, folder, workers, reserve):
@@ -587,14 +651,17 @@ def preflight(api, game_id, folder, workers, reserve):
 
 def main():
     parser = argparse.ArgumentParser(description='Tự lấy trạng thái và nộp kế hoạch HEXUDON trên website BTC Việt Nam.')
-    parser.add_argument('game_id',nargs='?',help='ID trận hoặc ID Practice, có thể nhập khi được hỏi')
+    parser.add_argument('game_id',nargs='?',help='ID trận, ID Practice hoặc tên câu như Q02; có thể nhập khi được hỏi')
     parser.add_argument('--game-id',dest='id_option')
+    parser.add_argument('--match',type=int,help='Mã trận chứa câu khi tên câu có ở nhiều trận (xem phan_tich_map.py --danh-sach)')
     parser.add_argument('--algorithm','--predict',choices=['greedy','lookahead','rollout','tour'],default='greedy')
     parser.add_argument('--mode',choices=['auto','timed','practice'],default='auto')
     parser.add_argument('--seconds',type=float,
                         help='Trần giây lập kế hoạch mỗi ngày; mặc định daySeconds của config trừ --reserve')
     parser.add_argument('--reserve',type=float,default=4.,
                         help='Giây chừa trong mỗi thời hạn để lấy /day, kiểm tra và nộp bài')
+    parser.add_argument('--no-hai-ngay',action='store_true',
+                        help='Tắt chọn bài nộp lại theo điểm sau ngày mai (dùng cách cũ theo điểm hôm nay)')
     parser.add_argument('--no-resubmit',action='store_true',
                         help='Trận tính giờ: không nộp sớm rồi nộp lại bài tốt hơn')
     parser.add_argument('--selection-seconds',type=float,
@@ -625,6 +692,19 @@ def main():
     if args.max_days is not None and args.max_days<1:
         parser.error('--max-days phải ít nhất là 1.')
     api=LiveAPI(args.env,args.base_url)
+    if not GAME_ID.fullmatch(game_id):
+        # Tên câu (Q02) được đổi thành game_id qua danh sách trận của website.
+        practice={'practice':True,'timed':False}.get(args.mode)
+        try:
+            resolved=resolve_game_id(api,game_id,args.match,practice)
+        except ValueError as error:
+            parser.error(str(error))
+        except (APIError,URLError,TimeoutError,OSError) as error:
+            print(f'Không đọc được danh sách trận ({error}); dùng nguyên ID đã nhập.',flush=True)
+            resolved=game_id
+        if resolved!=game_id:
+            print(f'Câu {game_id} -> game_id {resolved}',flush=True)
+        game_id=resolved
     team=str(args.team or api.team_id or '')
     if ':' in game_id and game_id.rsplit(':',1)[1]!=team:
         parser.error('Hậu tố ID Practice không khớp ID đội trong token/--team.')
@@ -634,7 +714,8 @@ def main():
     runner=MatchRunner(api,game_id,folder,algorithm=args.algorithm,mode=args.mode,seconds=args.seconds,
         reserve=args.reserve,selection_seconds=args.selection_seconds,roles=args.roles,kinds=args.types,
         poll=args.poll,dry_run=args.dry_run,inspect=args.inspect,max_days=args.max_days,team_id=team,
-        predictor=partial(predict,workers=workers),resubmit=not args.no_resubmit,workers=workers)
+        predictor=partial(predict,workers=workers),resubmit=not args.no_resubmit,workers=workers,
+        two_day=not args.no_hai_ngay)
     try:
         with run_lock(folder):
             finished = runner.run()
